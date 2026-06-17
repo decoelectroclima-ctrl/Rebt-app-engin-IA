@@ -1,0 +1,6 @@
+{
+  "name": "EnginIA REBT",
+  "description": "Estudio del Reglamento Electrotécnico de Baja Tensión REBT para Examen ASELaR con simuladores, calculadoras y pasarela de pago Google Play.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
