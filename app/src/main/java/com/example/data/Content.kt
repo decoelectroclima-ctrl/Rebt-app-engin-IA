@@ -175,7 +175,7 @@ object Content {
                 "Definición de servicios de seguridad obligatorios que deben salvaguardar la vida humana (evacuación, quirófanos, ventilación de parkings).",
                 "Las especificaciones particulares de distribuidoras deben aprobarse técnicamente por delegaciones de industria."
             ),
-            trap = "Prestar extremada atención al porcentaje exigible en Socorro (15% mínimo) vs Reserva (25% mínimo) vs Duplicado (50% mínimo). Las barajan cruzándote las cifras en los exámenes habituales de ASELaR.",
+            trap = "Prestar extremada atención al porcentaje exigible en Socorro (15% mínimo) vs Reserva (25% mínimo) vs Duplicado (50% mínimo). Las barajan cruzándote las cifras en los exámenes habituales de la certificadora.",
             keyConcept = "Suministro socorro = min 15%. Suministro de Reserva = min 25%. Suministro Duplicado = min 50%.",
             examReference = "Examen Madrid Comunidad - Pregunta Teórica de Suministros"
         ),
@@ -197,7 +197,7 @@ object Content {
             ),
             trap = "El silencio administrativo de las especificaciones particulares de las Compañías Distribuidoras es POSITIVO en 3 meses, pero el silencio para Excepciones Técnicas autorizadas por Industria es NEGATIVO (desestimatorio). Memorizar esta diferencia de impacto jurídico.",
             keyConcept = "Mantenimiento preventivo recae en propietario de la instalación. Las OCA tienen libre acceso de inspección.",
-            examReference = "ASELAR Comunidad Valenciana - Derecho Eléctrico"
+            examReference = "Comunidad Valenciana - Derecho Eléctrico (Certificadora)"
         ),
         UnderliningItcItem(
             id = "itc-01",
@@ -217,7 +217,7 @@ object Content {
             ),
             trap = "El examen suele meter la definición de 'Masa' sustituyendo la palabra 'no está normalmente en tensión' por 'siempre está en tensión'. Mantén la distinción clara de que masa no lleva corriente en servicio normal.",
             keyConcept = "Masa = Conductor pasivo normalmente frío. Tensión de contacto límite seca = 50V. Tensión mojada = 24V. Piscina = 12V.",
-            examReference = "Banco General ASELAR - Conceptos Básicos"
+            examReference = "Banco General Certificadora - Conceptos Básicos"
         ),
         UnderliningItcItem(
             id = "itc-03",
@@ -274,7 +274,7 @@ object Content {
             ),
             trap = "Mucho cuidado en no responder '5 años' para la OCA de un bloque de viviendas comunes residenciales. Si tiene potencia CGP > 100 kW, se pasa de forma extraordinaria cada 10 años.",
             keyConcept = "OCA Inicial: Pública Concurrencia, Quirófanos, Piscinas >10kW, Alumbrado >5kW. Periódica: Generales cada 5 años, Edificios cada 10 años, Quirófanos anual.",
-            examReference = "Histórico ASELAR OCA"
+            examReference = "Histórico Certificadora OCA"
         ),
         UnderliningItcItem(
             id = "itc-07",
@@ -397,7 +397,7 @@ object Content {
             ),
             trap = "¡Ojo al desdoblar el C4! Si eliges desdoblarlo en 3 ramales, se deben colocar 3 magnetotérmicos de 16 A independientes para lavadora, lavavajillas y termo, reduciendo la sección a 2,5 mm² bajo tubos individuales. No puedes dejar un único PIA de 20 A con ramales de 2,5 mm².",
             keyConcept = "C1 = 10A (1,5mm²). C2 = 16A (2,5mm²). C3 = 25A (6mm²). C4 = 20A (4mm²). C5 = 16A (2,5mm² - máx 6 tomas).",
-            examReference = "Examen General ASELAR Circuitos"
+            examReference = "Examen General Certificadora Circuitos"
         )
     )
 

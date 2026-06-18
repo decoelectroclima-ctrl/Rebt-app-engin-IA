@@ -14,6 +14,9 @@ class EnigmaRepository(private val context: Context) {
     val subscriptionFlow: Flow<SubscriptionRecordEntity?> = dao.getSubscriptionFlow()
     val supportRequestsFlow: Flow<List<SupportRequestEntity>> = dao.getSupportRequests()
     val postItsFlow: Flow<List<PostItEntity>> = dao.getPostIts()
+    val customDocumentsFlow: Flow<List<CustomDocumentEntity>> = dao.getCustomDocuments()
+    val customNewsFlow: Flow<List<CustomNewsEntity>> = dao.getCustomNews()
+    val userLeadsFlow: Flow<List<UserLeadEntity>> = dao.getUserLeads()
 
     // 2. Action functions
     suspend fun saveModuleProgress(progress: ModuleProgressEntity) {
@@ -147,5 +150,46 @@ class EnigmaRepository(private val context: Context) {
         cal.add(java.util.Calendar.DATE, -1)
         val sdf = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault())
         return sdf.format(cal.time)
+    }
+
+    // New methods for Custom Documents and News
+    suspend fun insertCustomDocument(document: CustomDocumentEntity) {
+        dao.insertCustomDocument(document)
+    }
+
+    suspend fun deleteCustomDocument(docId: String) {
+        dao.deleteCustomDocumentById(docId)
+    }
+
+    suspend fun clearCustomDocuments() {
+        dao.clearCustomDocuments()
+    }
+
+    suspend fun insertCustomNews(news: CustomNewsEntity) {
+        dao.insertCustomNews(news)
+    }
+
+    suspend fun deleteCustomNews(newsId: String) {
+        dao.deleteCustomNewsById(newsId)
+    }
+
+    suspend fun clearCustomNews() {
+        dao.clearCustomNews()
+    }
+
+    suspend fun insertUserLead(lead: UserLeadEntity) {
+        dao.insertUserLead(lead)
+    }
+
+    suspend fun updateUserLead(lead: UserLeadEntity) {
+        dao.updateUserLead(lead)
+    }
+
+    suspend fun deleteUserLead(id: Int) {
+        dao.deleteUserLeadById(id)
+    }
+
+    suspend fun clearUserLeads() {
+        dao.clearUserLeads()
     }
 }

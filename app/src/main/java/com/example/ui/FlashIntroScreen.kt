@@ -20,6 +20,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -49,24 +50,33 @@ fun FlashIntroScreen(viewModel: MainViewModel) {
         FeedbackManager.playIntroChime(context)
 
         // Steps sequence mimicking vintage electrical multimeter calibration & diagnostics
-        delay(300)
+        delay(400)
         progress = 0.15f
         currentStepText = "Calibrando multímetro..."
-        delay(600)
+        FeedbackManager.playTripPower(context) // Tap & vibrate
+        
+        delay(700)
         progress = 0.35f
         currentStepText = "Verificando derivación de tierra..."
-        delay(700)
+        FeedbackManager.playTripPower(context) // Tap & vibrate
+        
+        delay(800)
         progress = 0.60f
         currentStepText = "Cargando ITC-BT-52 (Vehículos eléctricos)..."
-        delay(850)
+        FeedbackManager.playTripPower(context) // Tap & vibrate
+        
+        delay(900)
         progress = 0.85f
         currentStepText = "Conectado al servidor de Industria..."
-        delay(600)
+        FeedbackManager.playTripPower(context) // Tap & vibrate
+        
+        delay(700)
         progress = 1.0f
         currentStepText = "Sistemas REBT calibrados a 230V [OK]"
+        FeedbackManager.playCorrect(context) // Success melody & vibration
         
         // Auto-complete intro screen after 4.5 seconds
-        delay(700)
+        delay(800)
         viewModel.showFlashIntro = false
     }
 
@@ -121,16 +131,17 @@ fun FlashIntroScreen(viewModel: MainViewModel) {
 
             Box(
                 modifier = Modifier
-                    .size(110.dp)
+                    .size(115.dp)
                     .background(neonBlue.copy(alpha = 0.08f), CircleShape)
-                    .border(BorderStroke(2.dp * scale, neonBlue.copy(alpha = 0.3f)), CircleShape),
+                    .border(BorderStroke(2.dp * scale, neonBlue.copy(alpha = 0.4f)), CircleShape),
                 contentAlignment = Alignment.Center
             ) {
-                Icon(
-                    imageVector = Icons.Default.Bolt,
-                    contentDescription = "Rayo",
-                    tint = neonGold,
-                    modifier = Modifier.size(64.dp)
+                Image(
+                    painter = painterResource(id = com.example.R.drawable.ic_engin_ia_logo_1781651072864),
+                    contentDescription = "Logo Oficial",
+                    modifier = Modifier
+                        .size(100.dp)
+                        .clip(CircleShape)
                 )
             }
 
@@ -278,7 +289,7 @@ fun FlashIntroScreen(viewModel: MainViewModel) {
             Spacer(modifier = Modifier.height(12.dp))
 
             Text(
-                text = "jj.terapias@gmail.com - Licencia Activa",
+                text = "decoelectroclima@gmail.com - Licencia Activa",
                 fontSize = 10.sp,
                 fontWeight = FontWeight.Medium,
                 fontFamily = FontFamily.Monospace,

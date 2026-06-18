@@ -62,3 +62,49 @@ data class PostItEntity(
     val createdAt: Long = System.currentTimeMillis()
 )
 
+@Entity(tableName = "custom_document")
+data class CustomDocumentEntity(
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    val docId: String, // Unique identifier e.g., "boe_rebt"
+    val title: String,
+    val description: String,
+    val fileName: String,
+    val fileSize: String,
+    val type: String, // "BOE", "Esquema", "Calculadora"
+    val isCustom: Boolean = true,
+    val uriString: String? = null,
+    val createdAt: Long = System.currentTimeMillis()
+)
+
+@Entity(tableName = "custom_news")
+data class CustomNewsEntity(
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    val newsId: String,
+    val title: String,
+    val summary: String,
+    val content: String,
+    val date: String,
+    val category: String, // "borrador", "ev", "autoconsumo", "inspecciones"
+    val categoryLabel: String,
+    val readTime: String = "3 min",
+    val hot: Boolean = false,
+    val isCustom: Boolean = true,
+    val createdAt: Long = System.currentTimeMillis()
+)
+
+@Entity(tableName = "user_lead")
+data class UserLeadEntity(
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    val email: String,
+    val name: String,
+    val subscriptionPlan: String, // "gratuito", "pro", "premium"
+    val isActive: Boolean = true,
+    val phoneNumber: String,
+    val companyName: String,
+    val province: String,
+    val isSold: Boolean = false,
+    val leadPrice: Double = 35.00,
+    val registrationDate: Long = System.currentTimeMillis()
+)
+
+

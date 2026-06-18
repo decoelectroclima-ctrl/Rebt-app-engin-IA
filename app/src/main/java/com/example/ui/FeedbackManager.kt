@@ -29,12 +29,17 @@ object FeedbackManager {
 
     private fun getVibrator(context: Context): Vibrator? {
         return try {
+            val targetContext = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                context.createAttributionContext("vibration")
+            } else {
+                context
+            }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                val vibratorManager = context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as? VibratorManager
+                val vibratorManager = targetContext.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as? VibratorManager
                 vibratorManager?.defaultVibrator
             } else {
                 @Suppress("DEPRECATION")
-                context.getSystemService(Context.VIBRATOR_SERVICE) as? Vibrator
+                targetContext.getSystemService(Context.VIBRATOR_SERVICE) as? Vibrator
             }
         } catch (e: Exception) {
             null

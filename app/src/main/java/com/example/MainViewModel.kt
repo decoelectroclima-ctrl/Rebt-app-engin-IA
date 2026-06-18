@@ -13,9 +13,36 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
+import androidx.compose.runtime.mutableStateListOf
+
+class AdminAd(val id: Int, sponsor: String, message: String, ctaText: String, tintColor: String) {
+    var sponsor by mutableStateOf(sponsor)
+    var message by mutableStateOf(message)
+    var ctaText by mutableStateOf(ctaText)
+    var tintColor by mutableStateOf(tintColor)
+}
+
 class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val repository = EnigmaRepository(application)
     val billingManager = BillingManager(application, repository, viewModelScope)
+
+    // --- ADMINISTRATIVE ADVERTISING CONTROLS ---
+    val adminAds = mutableStateListOf(
+        AdminAd(0, "Prysmian Group España", "Cables Afumex de alta seguridad libre de halógenos para CTE", "Saber Más", "#FF3FB950"),
+        AdminAd(1, "Fluke España", "Comprobadores multifunción de RCD Serie 1660 Pro", "Catálogo", "#FFF1C40F"),
+        AdminAd(2, "Schneider Electric", "Protecciones diferenciales superinmunizadas Tipo A e inteligentes", "Comprar", "#FF58A6FF"),
+        AdminAd(3, "Circutor Soluciones", "Analizadores de red y recarga inteligente integrada EV", "Detalles", "#FFBC8CFF"),
+        AdminAd(4, "Solera Envolventes", "Envolventes plásticas listas para ICT y REBT-2026 oficial", "Ver Línea", "#FFEE5F5F")
+    )
+
+    var adsIsDynamic by mutableStateOf(true)
+    var selectedStaticAdIndex by mutableStateOf(0)
+    var currentAdIndex by mutableStateOf(0)
+    var adminModeEnabled by mutableStateOf(false) // Toggle secret admin panel view
+    var currentUserEmail by mutableStateOf("jj.terapias@gmail.com")
+    var showUserEmailDialog by mutableStateOf(false)
+    var inputEmailString by mutableStateOf("jj.terapias@gmail.com")
+
 
     // Data streams from model
     val progressFlow: StateFlow<List<ModuleProgressEntity>> = repository.progressFlow
@@ -34,6 +61,15 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     val postItsFlow: StateFlow<List<PostItEntity>> = repository.postItsFlow
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    val customDocumentsFlow: StateFlow<List<CustomDocumentEntity>> = repository.customDocumentsFlow
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    val customNewsFlow: StateFlow<List<CustomNewsEntity>> = repository.customNewsFlow
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    val userLeadsFlow: StateFlow<List<UserLeadEntity>> = repository.userLeadsFlow
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     // UI interactive states
@@ -55,6 +91,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     var examCompleted by mutableStateOf(false)
 
     // Sizing electrical lab states
+    var labActiveSubTab by mutableStateOf(0) // 0: Conductores, 1: Previsión Cargas, 2: Tubos, 3: Tierra
     var labIsThreePhase by mutableStateOf(false)
     var labCableMaterial by mutableStateOf("cobre") // "cobre" or "aluminio"
     var labInstallMethod by mutableStateOf("tubo") // "tubo" or "aire"
@@ -64,6 +101,35 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     var labCalculatedSection by mutableStateOf(1.5)
     var labIzCapacity by mutableStateOf(16.0)
     var labStatusMessage by mutableStateOf("Introduce parámetros para calcular la sección reglamentaria.")
+
+    // 1. Loading Forecasting (Previsión Edificios) States
+    var foreDwellingsBasic by mutableStateOf("8")
+    var foreDwellingsElevated by mutableStateOf("4")
+    var foreCommercialSqm by mutableStateOf("120")
+    var foreOfficeSqm by mutableStateOf("0")
+    var foreGarageSqm by mutableStateOf("200")
+    var foreGeneralServicesKw by mutableStateOf("15.0")
+    
+    // 2. Tubes (ITC-BT-21) States
+    var tubesConductorSec by mutableStateOf("2.5") // "1.5", "2.5", "4.0", "6.0", "10.0", "16.0", "25.0", "35.0", "50.0"
+    var tubesConductorsCount by mutableStateOf("3") // "2", "3", "4", "5"
+    var tubesInstallMethod by mutableStateOf("empotrado") // "empotrado", "superficial"
+
+    // 3. Grounding (Puesta a Tierra) States
+    var earthSoilResistivity by mutableStateOf("100") // 100 Ohm-m (Arcillas)
+    var earthElectrodeType by mutableStateOf("pica") // "pica" or "conductor"
+    var earthElectrodeLength by mutableStateOf("2.0") // meters
+
+    // Calculation result messages for the new powered up sub-tabs
+    var foreCalculatedPowerKw by mutableStateOf(0.0)
+    var foreRecommendedIgaAmps by mutableStateOf(0.0)
+    var foreStatusMessage by mutableStateOf("Calcula la previsión de cargas para ver conformidad.")
+
+    var tubesCalculatedDiameterMm by mutableStateOf(20)
+    var tubesStatusMessage by mutableStateOf("Calcula el diámetro del tubo protector.")
+
+    var earthCalculatedResistanceOhms by mutableStateOf(25.0)
+    var earthStatusMessage by mutableStateOf("Calcula la resistencia de tierra esperada.")
 
     // Multifunction Simulator States
     var selectedTesterType by mutableStateOf("RCD") // "RCD", "EarthLoop", "Insulation"
@@ -89,8 +155,22 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     init {
         // Query active purchases from Google Play on startup
         billingManager.queryActivePurchases()
-        // Run laboratory default computation
+
+        // Rotating banner timer (updates current advertiser index every 5 seconds if dynamic)
+        viewModelScope.launch {
+            while (true) {
+                kotlinx.coroutines.delay(5000)
+                if (adsIsDynamic) {
+                    currentAdIndex = (currentAdIndex + 1) % adminAds.size
+                }
+            }
+        }
+
+        // Run laboratory default computations
         runLaboratoryCalculation()
+        runBuildingForecastingCalculation()
+        runTubeDiameterCalculation()
+        runGroundingCalculation()
         // Pre-populate post-it notes if empty
         viewModelScope.launch {
             try {
@@ -126,6 +206,76 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 e.printStackTrace()
             }
         }
+
+        // Pre-populate news and documents from Content if empty
+        viewModelScope.launch {
+            try {
+                val currentDocs = repository.customDocumentsFlow.first()
+                if (currentDocs.isEmpty()) {
+                    Content.DOCUMENTS.forEach { d ->
+                        repository.insertCustomDocument(
+                            CustomDocumentEntity(
+                                docId = d.id,
+                                title = d.title,
+                                description = d.description,
+                                fileName = d.fileName,
+                                fileSize = d.fileSize,
+                                type = d.type,
+                                isCustom = false
+                            )
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+
+        viewModelScope.launch {
+            try {
+                val currentNews = repository.customNewsFlow.first()
+                if (currentNews.isEmpty()) {
+                    Content.NEWS.forEach { n ->
+                        // Ensure it mentions REBT 2026 to be strictly focused on REBT 2026 regulation
+                        val title2026 = if (!n.title.contains("2026")) "${n.title} (Nuevo REBT 2026)" else n.title
+                        val summary2026 = if (!n.summary.contains("2026") && !n.summary.contains("REBT")) "${n.summary} bajo las normativas del nuevo REBT 2026." else n.summary
+                        repository.insertCustomNews(
+                            CustomNewsEntity(
+                                newsId = n.id,
+                                title = title2026,
+                                summary = summary2026,
+                                content = n.content + " [Actualizado conforme al borrador oficial del nuevo reglamento REBT 2026]",
+                                date = n.date,
+                                category = n.category,
+                                categoryLabel = n.categoryLabel,
+                                readTime = n.readTime,
+                                hot = n.hot,
+                                isCustom = false
+                            )
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+
+        // Pre-populate user leads database if empty
+        viewModelScope.launch {
+            try {
+                val currentLeads = repository.userLeadsFlow.first()
+                if (currentLeads.isEmpty()) {
+                    repository.insertUserLead(UserLeadEntity(email = "fgomez.instalaciones@gmail.com", name = "Francisco Gómez", subscriptionPlan = "gratuito", phoneNumber = "612345678", companyName = "Instalaciones Gómez", province = "Madrid", isSold = false, leadPrice = 35.00))
+                    repository.insertUserLead(UserLeadEntity(email = "m.belmonte@electrosur.es", name = "Manuel Belmonte", subscriptionPlan = "pro", phoneNumber = "622987654", companyName = "ElectroSur S.L.", province = "Sevilla", isSold = false, leadPrice = 45.00))
+                    repository.insertUserLead(UserLeadEntity(email = "jribas@instalacionesribas.cat", name = "Julia Ribas", subscriptionPlan = "premium", phoneNumber = "633112233", companyName = "Ribas Eléctrica", province = "Barcelona", isSold = true, leadPrice = 60.00))
+                    repository.insertUserLead(UserLeadEntity(email = "cortiz.clima@hotmail.com", name = "Carlos Ortiz", subscriptionPlan = "gratuito", phoneNumber = "644556677", companyName = "Ortiz Climatización", province = "Valencia", isSold = false, leadPrice = 35.00))
+                    repository.insertUserLead(UserLeadEntity(email = "evazquez@galiciaelectro.com", name = "Elena Vázquez", subscriptionPlan = "pro", phoneNumber = "655443322", companyName = "Galicia Electro", province = "A Coruña", isSold = false, leadPrice = 40.00))
+                    repository.insertUserLead(UserLeadEntity(email = "jsansegundo@rebtasociado.es", name = "Javier San Segundo", subscriptionPlan = "pro", phoneNumber = "666778899", companyName = "REBT Técnico Norte", province = "Bilbao", isSold = true, leadPrice = 45.00))
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
     }
 
     fun addPostIt(content: String, category: String, color: String) {
@@ -150,6 +300,38 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         examCorrectCount = 0
         examCompleted = false
         activeTab = "exams" // navigate to exams screen
+    }
+
+    // Dynamic AI-Generated Exams (Infinite Database) states and functions
+    var isGeneratingAiExam by mutableStateOf(false)
+    var aiExamError by mutableStateOf<String?>(null)
+
+    fun startAiDynamicExam(topic: String) {
+        viewModelScope.launch {
+            isGeneratingAiExam = true
+            aiExamError = null
+            try {
+                // Call Gemini dynamically based on topic, which also supports elegant offline fallbacks
+                val questions = GeminiService.generateInfiniteExam(topic)
+                if (questions.isNotEmpty()) {
+                    val dynamicModule = ModuleDefinition(
+                        id = "ai_generation_${System.currentTimeMillis()}",
+                        label = "Examen Especial: $topic",
+                        icon = "🌟",
+                        color = "#FFA000",
+                        questions = questions
+                    )
+                    startExam(dynamicModule)
+                } else {
+                    aiExamError = "Error al intentar generar el examen. Verifique su conexión."
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                aiExamError = "Error en generación: ${e.localizedMessage}"
+            } finally {
+                isGeneratingAiExam = false
+            }
+        }
     }
 
     // Answers active question
@@ -262,6 +444,107 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 "La corriente máxima admisible térmica nominal Iz de la sección es de $finalIz A."
     }
 
+    fun runBuildingForecastingCalculation() {
+        val basic = foreDwellingsBasic.toIntOrNull() ?: 0
+        val elevated = foreDwellingsElevated.toIntOrNull() ?: 0
+        val commSqm = foreCommercialSqm.toDoubleOrNull() ?: 0.0
+        val officeSqm = foreOfficeSqm.toDoubleOrNull() ?: 0.0
+        val garageSqm = foreGarageSqm.toDoubleOrNull() ?: 0.0
+        val servicesKw = foreGeneralServicesKw.toDoubleOrNull() ?: 0.0
+
+        val pBasic = 5.75 // kW
+        val pElevated = 9.2 // kW
+
+        val totalDwellings = basic + elevated
+        val divFactor = if (totalDwellings <= 1) 1.0 else {
+            1.0 + (totalDwellings - 1) * 0.153
+        }
+
+        val sumDwellingsFullUnreduced = (basic * pBasic) + (elevated * pElevated)
+        val rawDwellingsAvgPower = if (totalDwellings > 0) sumDwellingsFullUnreduced / totalDwellings else 0.0
+        val pDwellingsCombined = rawDwellingsAvgPower * divFactor
+
+        val pCommercial = if (commSqm > 0.0) {
+            maxOf(commSqm * 0.10, 3.45)
+        } else 0.0
+
+        val pOffices = if (officeSqm > 0.0) {
+            maxOf(officeSqm * 0.10, 3.45)
+        } else 0.0
+
+        // 20 W/m² mechanical forced garage ventilation
+        val pGarage = if (garageSqm > 0.0) garageSqm * 0.02 else 0.0
+
+        val totalBuildingsPower = pDwellingsCombined + pCommercial + pOffices + pGarage + servicesKw
+        foreCalculatedPowerKw = totalBuildingsPower
+
+        val amps = totalBuildingsPower * 1000.0 / (Math.sqrt(3.0) * 400.0 * 0.9)
+        foreRecommendedIgaAmps = amps
+
+        foreStatusMessage = "Previsión de Carga del Edificio (ITC-BT-10):\n" +
+                "• Viviendas (${totalDwellings} ud): ${String.format("%.2f", pDwellingsCombined)} kW (Coeficiente unitario con diversidad aplicado)\n" +
+                "• Locales Comerciales: ${String.format("%.2f", pCommercial)} kW\n" +
+                "• Oficinas: ${String.format("%.2f", pOffices)} kW\n" +
+                "• Garajes (Ventilación Forzada): ${String.format("%.2f", pGarage)} kW\n" +
+                "• Servicios Generales: ${String.format("%.2f", servicesKw)} kW\n\n" +
+                "POTENCIA TOTAL PREVISTA: ${String.format("%.2f", totalBuildingsPower)} kW.\n" +
+                "Se aconseja LGA trifásica (400V) para intensidad de ${String.format("%.2f", amps)} A."
+    }
+
+    fun runTubeDiameterCalculation() {
+        val crossSec = tubesConductorSec.toDoubleOrNull() ?: 2.5
+        val count = tubesConductorsCount.toIntOrNull() ?: 3
+        val isEmbedded = tubesInstallMethod == "empotrado"
+
+        val baseDiameter = when {
+            crossSec <= 1.5 -> if (count <= 3) 16 else 20
+            crossSec <= 2.5 -> if (count <= 3) 20 else 25
+            crossSec <= 4.0 -> if (count <= 3) 20 else 25
+            crossSec <= 6.0 -> if (count <= 3) 25 else 32
+            crossSec <= 10.0 -> if (count <= 3) 32 else 40
+            crossSec <= 16.0 -> if (count <= 3) 32 else 40
+            crossSec <= 25.0 -> if (count <= 3) 40 else 50
+            crossSec <= 35.0 -> if (count <= 3) 50 else 63
+            else -> 63
+        }
+
+        val finalDiameter = if (isEmbedded) baseDiameter else {
+            if (baseDiameter > 16) baseDiameter else 16
+        }
+
+        tubesCalculatedDiameterMm = finalDiameter
+        tubesStatusMessage = "Cálculo de Diámetro de Tubo (ITC-BT-21):\n" +
+                "Para canalización de $count conductores de $crossSec mm² en instalación " +
+                (if (isEmbedded) "empotrada en obra" else "en montaje superficial") + ",\n" +
+                "se exige un diámetro exterior mínimo de tubo de D=$finalDiameter mm.\n" +
+                "Esto asegura conservar la sección libre para adición y disipación térmica."
+    }
+
+    fun runGroundingCalculation() {
+        val rho = earthSoilResistivity.toDoubleOrNull() ?: 100.0
+        val isPica = earthElectrodeType == "pica"
+        val length = earthElectrodeLength.toDoubleOrNull() ?: 2.0
+
+        val resistance = if (isPica) {
+            rho / length
+        } else {
+            (2.0 * rho) / length
+        }
+
+        earthCalculatedResistanceOhms = resistance
+        val statusLabel = when {
+            resistance < 15.0 -> "EXCELENTE (R < 15 Ω - Ideal enlace y locales de pública concurrencia)"
+            resistance < 37.0 -> "CONFORME (R < 37 Ω - Seguro según ITCs básicas)"
+            else -> "REVISABLE (Se aconseja duplicar electrodos o picas en paralelo)"
+        }
+
+        earthStatusMessage = "Resistencia de Puesta a Tierra calculada:\n" +
+                "Utilizando terreno con resistividad de $rho Ω·m y " +
+                (if (isPica) "un electrodo de pica de $length metros" else "un cable horizontal enterrado de $length m") + ".\n" +
+                "Resistencia calculada: R = ${String.format("%.2f", resistance)} Ω.\n" +
+                "Estado: $statusLabel."
+    }
+
     fun triggerExploreSchema() {
         viewModelScope.launch {
             repository.exploreSchema()
@@ -331,6 +614,94 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             repository.createSupportRequest(name, email, subject, msg)
             onSuccess()
+        }
+    }
+
+    // New Document & News Actions for Administrators
+    fun addCustomDocument(title: String, description: String, fileName: String, fileSize: String, type: String, uriString: String? = null) {
+        viewModelScope.launch {
+            repository.insertCustomDocument(
+                CustomDocumentEntity(
+                    docId = "doc_${System.currentTimeMillis()}",
+                    title = title,
+                    description = description,
+                    fileName = fileName,
+                    fileSize = fileSize,
+                    type = type,
+                    isCustom = true,
+                    uriString = uriString
+                )
+            )
+        }
+    }
+
+    fun deleteCustomDocument(docId: String) {
+        viewModelScope.launch {
+            repository.deleteCustomDocument(docId)
+        }
+    }
+
+    fun addCustomNews(title: String, summary: String, content: String, category: String, categoryLabel: String, readTime: String = "3 min", hot: Boolean = false) {
+        viewModelScope.launch {
+            // Ensure title/summary reflect REBT 2026 to stay perfectly focused
+            val finalTitle = if (title.contains("2026", ignoreCase = true)) title else "$title (REBT 2026)"
+            val finalSummary = if (summary.contains("2026", ignoreCase = true) || summary.contains("REBT", ignoreCase = true)) summary else "$summary - Actualizado al nuevo REBT 2026."
+            repository.insertCustomNews(
+                CustomNewsEntity(
+                    newsId = "news_${System.currentTimeMillis()}",
+                    title = finalTitle,
+                    summary = finalSummary,
+                    content = content,
+                    date = java.text.SimpleDateFormat("dd 'de' MMMM, yyyy", java.util.Locale.getDefault()).format(java.util.Date()),
+                    category = category,
+                    categoryLabel = categoryLabel,
+                    readTime = readTime,
+                    hot = hot,
+                    isCustom = true
+                )
+            )
+        }
+    }
+
+    fun deleteCustomNews(newsId: String) {
+        viewModelScope.launch {
+            repository.deleteCustomNews(newsId)
+        }
+    }
+
+    fun insertUserLead(email: String, name: String, plan: String, phone: String, company: String, province: String, isSold: Boolean, price: Double) {
+        viewModelScope.launch {
+            repository.insertUserLead(
+                UserLeadEntity(
+                    email = email,
+                    name = name,
+                    subscriptionPlan = plan,
+                    phoneNumber = phone,
+                    companyName = company,
+                    province = province,
+                    isSold = isSold,
+                    leadPrice = price,
+                    registrationDate = System.currentTimeMillis()
+                )
+            )
+        }
+    }
+
+    fun updateUserLead(lead: UserLeadEntity) {
+        viewModelScope.launch {
+            repository.updateUserLead(lead)
+        }
+    }
+
+    fun deleteUserLead(id: Int) {
+        viewModelScope.launch {
+            repository.deleteUserLead(id)
+        }
+    }
+
+    fun clearUserLeads() {
+        viewModelScope.launch {
+            repository.clearUserLeads()
         }
     }
 }

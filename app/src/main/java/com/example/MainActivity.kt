@@ -27,6 +27,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -36,6 +38,10 @@ import com.example.data.*
 import com.example.ui.SyllabusVisualAid
 import com.example.ui.FeedbackManager
 import kotlinx.coroutines.launch
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import android.net.Uri
+import android.provider.OpenableColumns
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -93,6 +99,77 @@ fun MainAppLayout(viewModel: MainViewModel) {
     val subscription by viewModel.subscriptionFlow.collectAsState()
     val isPremium = subscription?.isActive == true
     val currentPlan = subscription?.plan ?: "gratuito"
+
+    if (viewModel.showUserEmailDialog) {
+        AlertDialog(
+            onDismissRequest = { viewModel.showUserEmailDialog = false },
+            title = {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        imageVector = Icons.Default.Person,
+                        contentDescription = "Autenticación",
+                        tint = if (viewModel.isDarkTheme) Color(0xFF58a6ff) else Color(0xFF0969da),
+                        modifier = Modifier.size(24.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = "Cuenta de Google",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = if (viewModel.isDarkTheme) Color.White else Color.Black
+                    )
+                }
+            },
+            text = {
+                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    Text(
+                        text = "Inicie sesión o simule su cuenta certificada de Google para sincronizar su progreso, comprobar suscripciones o validar accesos de control de la app.",
+                        fontSize = 11.sp,
+                        color = Color.Gray
+                    )
+
+                    OutlinedTextField(
+                        value = viewModel.inputEmailString,
+                        onValueChange = { viewModel.inputEmailString = it },
+                        label = { Text("Correo de Google (Gmail)") },
+                        modifier = Modifier.fillMaxWidth(),
+                        singleLine = true
+                    )
+                }
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        val parsedEmail = viewModel.inputEmailString.trim().lowercase()
+                        viewModel.currentUserEmail = parsedEmail
+                        if (parsedEmail == "decoelectroclima@gmail.com") {
+                            viewModel.adminModeEnabled = true
+                            viewModel.activeTab = "admin"
+                        } else {
+                            viewModel.adminModeEnabled = false
+                            if (viewModel.activeTab == "admin") {
+                                viewModel.activeTab = "dashboard"
+                            }
+                        }
+                        viewModel.showUserEmailDialog = false
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = if (viewModel.isDarkTheme) Color(0xFF58a6ff) else Color(0xFF0969da)
+                    )
+                ) {
+                    Text("Autenticar", color = Color.White, fontWeight = FontWeight.Bold)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { viewModel.showUserEmailDialog = false }) {
+                    Text("Cancelar", color = Color.Gray)
+                }
+            },
+            containerColor = if (viewModel.isDarkTheme) Color(0xFF161b22) else Color.White,
+            titleContentColor = if (viewModel.isDarkTheme) Color.White else Color.Black,
+            textContentColor = if (viewModel.isDarkTheme) Color.White else Color.Black
+        )
+    }
 
     Scaffold(
         topBar = {
@@ -219,6 +296,15 @@ fun MainAppLayout(viewModel: MainViewModel) {
                     label = { Text("Cálculo", fontSize = 11.sp, maxLines = 1) },
                     colors = NavigationBarItemDefaults.colors(selectedIconColor = MaterialTheme.colorScheme.primary)
                 )
+                if (viewModel.currentUserEmail == "decoelectroclima@gmail.com") {
+                    NavigationBarItem(
+                        selected = viewModel.activeTab == "admin",
+                        onClick = { viewModel.activeTab = "admin" },
+                        icon = { Icon(Icons.Default.AdminPanelSettings, contentDescription = "Admin", tint = Color(0xFFF39C12)) },
+                        label = { Text("Admin", fontSize = 11.sp, maxLines = 1, color = Color(0xFFF39C12)) },
+                        colors = NavigationBarItemDefaults.colors(selectedIconColor = Color(0xFFF39C12))
+                    )
+                }
             }
         },
         containerColor = MaterialTheme.colorScheme.background
@@ -228,17 +314,21 @@ fun MainAppLayout(viewModel: MainViewModel) {
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            // Floating Banner describing active status & active user email
+            // Floating Banner describing active status & active user email, clickable to simulate Google login
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(if (viewModel.isDarkTheme) Color(0xFF21262d) else Color(0xFFeaeef2))
+                    .clickable {
+                        viewModel.showUserEmailDialog = true
+                        viewModel.inputEmailString = viewModel.currentUserEmail
+                    }
                     .padding(8.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Usuario: jj.terapias@gmail.com",
+                    text = "Usuario: ${viewModel.currentUserEmail}",
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Medium,
                     color = if (viewModel.isDarkTheme) Color(0xFF8b949e) else Color(0xFF57606a)
@@ -263,6 +353,7 @@ fun MainAppLayout(viewModel: MainViewModel) {
                     "laboratory" -> LaboratorioCalculosTabContent(viewModel)
                     "documents" -> DocumentsCenterTabContent(viewModel, isPremium)
                     "news" -> NewsCenterTabContent(viewModel)
+                    "admin" -> AdminPanelTabContent(viewModel)
                     "support" -> SupportCenterTabContent(viewModel)
                     "billing" -> SubscriptionPlansPortalContent(viewModel, isPremium, currentPlan)
                 }
@@ -270,14 +361,26 @@ fun MainAppLayout(viewModel: MainViewModel) {
 
             // Interactive rotating Advertisement frame matching the exact web functionality
             if (!isPremium) {
+                val adIndex = viewModel.currentAdIndex.coerceIn(0, viewModel.adminAds.size.coerceAtLeast(1) - 1)
+                val activeAd = if (viewModel.adminAds.isNotEmpty()) viewModel.adminAds[adIndex] else null
+                val adTintColor = if (activeAd != null) {
+                    try {
+                        Color(android.graphics.Color.parseColor(activeAd.tintColor))
+                    } catch (e: Exception) {
+                        Color(0xFFF39C12)
+                    }
+                } else {
+                    Color(0xFFf85149)
+                }
+
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(8.dp)
                         .testTag("advertisement_banner_frame"),
                     shape = RoundedCornerShape(8.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color(0x33F8D7DA)),
-                    border = BorderStroke(1.dp, Color(0x66F5B7B1))
+                    colors = CardDefaults.cardColors(containerColor = adTintColor.copy(alpha = 0.15f)),
+                    border = BorderStroke(1.dp, adTintColor.copy(alpha = 0.4f))
                 ) {
                     Row(
                         modifier = Modifier
@@ -286,21 +389,23 @@ fun MainAppLayout(viewModel: MainViewModel) {
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
-                            imageVector = Icons.Default.Info,
-                            contentDescription = "Info Ad",
-                            tint = Color(0xFFf85149),
+                            imageVector = Icons.Default.Campaign,
+                            contentDescription = "Patrocinado",
+                            tint = adTintColor,
                             modifier = Modifier.size(24.dp)
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Column(modifier = Modifier.weight(1f)) {
                             Text(
-                                text = "ANUNCIO REBT patrocinado por ASELaR",
+                                text = "ANUNCIO REBT: " + (activeAd?.sponsor ?: "Certificadora Oficial"),
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 11.sp,
-                                color = Color(0xFFf85149)
+                                color = adTintColor,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
                             )
                             Text(
-                                text = "Consiga la habilitación oficial de instalador. Compre la Licencia Google Play Billing para remover esta publicidad.",
+                                text = activeAd?.message ?: "Consiga la habilitación de instalador oficial. Remueva la publicidad en soporte.",
                                 fontSize = 10.sp,
                                 color = Color.White,
                                 maxLines = 2,
@@ -312,9 +417,9 @@ fun MainAppLayout(viewModel: MainViewModel) {
                             onClick = { viewModel.activeTab = "billing" },
                             contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp),
                             modifier = Modifier.height(30.dp),
-                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFf85149))
+                            colors = ButtonDefaults.buttonColors(containerColor = adTintColor)
                         ) {
-                            Text("Quitar", fontSize = 10.sp, fontWeight = FontWeight.Bold, color = Color.White)
+                            Text(activeAd?.ctaText ?: "Quitar", fontSize = 10.sp, fontWeight = FontWeight.Bold, color = Color.Black)
                         }
                     }
                 }
@@ -343,6 +448,7 @@ fun MainAppLayout(viewModel: MainViewModel) {
 // 1. Dashboard Tab implementation
 @Composable
 fun DashboardTabContent(viewModel: MainViewModel, isPremium: Boolean) {
+    val context = LocalContext.current
     val dailyActivity by viewModel.dailyActivityFlow.collectAsState()
     val progressList by viewModel.progressFlow.collectAsState()
     val examHistoryList by viewModel.examHistoryFlow.collectAsState()
@@ -396,12 +502,17 @@ fun DashboardTabContent(viewModel: MainViewModel, isPremium: Boolean) {
                                 color = if (viewModel.isDarkTheme) Color(0xFF8b949e) else Color(0xFF57606a)
                             )
                         }
-                        // Avatar profile icon
+                        // Avatar profile icon, clickable to verify Google Identity
                         Box(
                             modifier = Modifier
                                 .size(48.dp)
                                 .clip(CircleShape)
-                                .background(if (viewModel.isDarkTheme) Color(0xFF58a6ff) else Color(0xFF0969da)),
+                                .background(if (viewModel.isDarkTheme) Color(0xFF58a6ff) else Color(0xFF0969da))
+                                .clickable {
+                                    viewModel.showUserEmailDialog = true
+                                    viewModel.inputEmailString = viewModel.currentUserEmail
+                                    FeedbackManager.playClick(context)
+                                },
                             contentAlignment = Alignment.Center
                         ) {
                             Icon(
@@ -415,7 +526,7 @@ fun DashboardTabContent(viewModel: MainViewModel, isPremium: Boolean) {
                     Spacer(modifier = Modifier.height(16.dp))
 
                     Text(
-                        text = "Su progreso de preparación reglamentaria para el examen oficial de ASELaR / Industria 2026:",
+                        text = "Su progreso de preparación reglamentaria para el examen oficial de la certificadora / Industria 2026:",
                         fontSize = 13.sp,
                         color = if (viewModel.isDarkTheme) Color(0xFFc9d1d9) else Color(0xFF24292f)
                     )
@@ -1453,6 +1564,99 @@ fun ExamCenterTabContent(viewModel: MainViewModel, isPremium: Boolean) {
             }
 
             item {
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(containerColor = Color(0xFF161b22)),
+                    border = BorderStroke(1.dp, Color(0xFF38444d))
+                ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text(text = "🌟", fontSize = 20.sp)
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = "Base de Exámenes Infinita (Gemini AI)",
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 15.sp,
+                                color = Color(0xFFffa000)
+                            )
+                        }
+                        Text(
+                            text = "Accede a exámenes dinámicos de la certificadora recopilados de foros de industria y simulados por Inteligencia Artificial en tiempo real sin límites.",
+                            fontSize = 11.sp,
+                            color = Color.Gray,
+                            modifier = Modifier.padding(top = 4.dp)
+                        )
+
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        var aiKeyword by remember { mutableStateOf("Cálculo y secciones reglamentarias") }
+
+                        OutlinedTextField(
+                            value = aiKeyword,
+                            onValueChange = { aiKeyword = it },
+                            label = { Text("Tema o ITC de búsqueda", color = Color.Gray) },
+                            textStyle = androidx.compose.ui.text.TextStyle(color = Color.White, fontSize = 13.sp),
+                            singleLine = true,
+                            modifier = Modifier.fillMaxWidth().testTag("ai_keyword_input"),
+                            colors = OutlinedTextFieldDefaults.colors(
+                                focusedBorderColor = Color(0xFFffa000),
+                                unfocusedBorderColor = Color(0xFF30363d)
+                            )
+                        )
+
+                        Spacer(modifier = Modifier.height(10.dp))
+
+                        // Suggestion chips
+                        Text("Temas sugeridos por foros de certificadora:", fontSize = 11.sp, color = Color.Gray)
+                        Row(
+                            modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+                            horizontalArrangement = Arrangement.spacedBy(6.dp)
+                        ) {
+                            val topics = listOf("ITC-BT-52 VE", "Puesta a Tierra", "ITC-BT-28 Locales")
+                            topics.forEach { topic ->
+                                Box(
+                                    modifier = Modifier
+                                        .clip(RoundedCornerShape(12.dp))
+                                        .background(Color(0xFF21262d))
+                                        .clickable { aiKeyword = topic }
+                                        .padding(horizontal = 8.dp, vertical = 4.dp)
+                                ) {
+                                    Text(topic, fontSize = 10.sp, color = Color.White)
+                                }
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        if (viewModel.isGeneratingAiExam) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.Center,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                CircularProgressIndicator(color = Color(0xFFffa000), modifier = Modifier.size(24.dp))
+                                Spacer(modifier = Modifier.width(12.dp))
+                                Text("Extrayendo preguntas del foro de la certificadora en red...", fontSize = 12.sp, color = Color(0xFFffa000))
+                            }
+                        } else {
+                            Button(
+                                onClick = { viewModel.startAiDynamicExam(aiKeyword) },
+                                modifier = Modifier.fillMaxWidth().testTag("ai_generate_button"),
+                                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFffa000), contentColor = Color.Black)
+                            ) {
+                                Text("GENERAR EXAMEN PERSONALIZADO", fontWeight = FontWeight.Bold, fontSize = 12.sp)
+                            }
+                        }
+
+                        viewModel.aiExamError?.let { err ->
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(text = err, color = Color.Red, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                        }
+                    }
+                }
+            }
+
+            item {
                 Text(
                     text = "Seleccione un Cuestionario para Iniciar:",
                     fontWeight = FontWeight.Bold,
@@ -1571,7 +1775,7 @@ fun ExamCenterTabContent(viewModel: MainViewModel, isPremium: Boolean) {
                         }
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            text = "Sugerencia: Se exige obtener mínimo 70% para pasar los exámenes de ASELaR.",
+                            text = "Sugerencia: Se exige obtener mínimo 70% para pasar los exámenes de la certificadora.",
                             fontSize = 10.sp,
                             color = Color.Gray,
                             textAlign = TextAlign.Center
@@ -2042,230 +2246,703 @@ fun LaboratorioCalculosTabContent(viewModel: MainViewModel) {
             .verticalScroll(rememberScrollState())
     ) {
         Text(
-            text = "Calculadora de Cables y Dimensionamiento",
+            text = "Laboratorio Técnico de Cálculos REBT",
             fontSize = 18.sp,
             fontWeight = FontWeight.ExtraBold,
             color = Color.White
         )
         Text(
-            text = "Calcula la sección obligatoria según ITC-BT-14/15/19 por caída de tensión y calentamiento Iz.",
+            text = "Herramientas de dimensionamiento homologado según el Reglamento Electrotécnico de Baja Tensión.",
             fontSize = 12.sp,
             color = Color.Gray
         )
 
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
-        // Left controls panel
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(containerColor = Color(0xFF161b22)),
-            border = BorderStroke(1.dp, Color(0xFF30363d))
+        // Navigation sub-tabs
+        ScrollableTabRow(
+            selectedTabIndex = viewModel.labActiveSubTab,
+            containerColor = Color(0xFF161b22),
+            contentColor = Color.White,
+            edgePadding = 0.dp,
+            modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(8.dp))
         ) {
-            Column(modifier = Modifier.padding(16.dp)) {
-                Text(
-                    text = "Ajustes de la Carga y Acometida:",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 13.sp,
-                    color = MaterialTheme.colorScheme.primary
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                // Phase switch
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text("Sistema de Alimentación:", fontSize = 13.sp)
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text("Monofásico (230V)", fontSize = 11.sp, color = if (!viewModel.labIsThreePhase) Color.White else Color.Gray)
-                        Switch(
-                            checked = viewModel.labIsThreePhase,
-                            onCheckedChange = {
-                                viewModel.labIsThreePhase = it
-                                viewModel.runLaboratoryCalculation()
-                            },
-                            modifier = Modifier
-                                .padding(horizontal = 8.dp)
-                                .testTag("lab_phase_switch")
-                        )
-                        Text("Trifásico (400V)", fontSize = 11.sp, color = if (viewModel.labIsThreePhase) Color.White else Color.Gray)
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                // Material selector
-                Text("Metal del Conductor del Cable:", fontSize = 13.sp)
-                Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                    FilterChip(
-                        selected = viewModel.labCableMaterial == "cobre",
-                        onClick = {
-                            viewModel.labCableMaterial = "cobre"
-                            viewModel.runLaboratoryCalculation()
-                        },
-                        label = { Text("Cobre (Cu)", fontSize = 12.sp) },
-                        modifier = Modifier.testTag("lab_chip_cobre")
-                    )
-                    FilterChip(
-                        selected = viewModel.labCableMaterial == "aluminio",
-                        onClick = {
-                            viewModel.labCableMaterial = "aluminio"
-                            viewModel.runLaboratoryCalculation()
-                        },
-                        label = { Text("Aluminio (Al)", fontSize = 12.sp) },
-                        modifier = Modifier.testTag("lab_chip_aluminio")
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                // Installation mode selector
-                Text("Método de canalización física:", fontSize = 13.sp)
-                Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                    FilterChip(
-                        selected = viewModel.labInstallMethod == "tubo",
-                        onClick = {
-                            viewModel.labInstallMethod = "tubo"
-                            viewModel.runLaboratoryCalculation()
-                        },
-                        label = { Text("Bajo tubo empotrado", fontSize = 12.sp) }
-                    )
-                    FilterChip(
-                        selected = viewModel.labInstallMethod == "aire",
-                        onClick = {
-                            viewModel.labInstallMethod = "aire"
-                            viewModel.runLaboratoryCalculation()
-                        },
-                        label = { Text("Al aire o bandeja", fontSize = 12.sp) }
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(16.dp))
-                HorizontalDivider(color = Color(0xFF21262d))
-                Spacer(modifier = Modifier.height(16.dp))
-
-                // Numerical inputs (Power, Length, Max tension Drop)
-                OutlinedTextField(
-                    value = viewModel.labPowerKw,
-                    onValueChange = {
-                        viewModel.labPowerKw = it
-                        viewModel.runLaboratoryCalculation()
-                    },
-                    label = { Text("Potencia a suministrar (kW)") },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 4.dp)
-                        .testTag("lab_input_power"),
-                    singleLine = true
-                )
-
-                OutlinedTextField(
-                    value = viewModel.labLengthM,
-                    onValueChange = {
-                        viewModel.labLengthM = it
-                        viewModel.runLaboratoryCalculation()
-                    },
-                    label = { Text("Longitud total de acometida (m)") },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 4.dp)
-                        .testTag("lab_input_length"),
-                    singleLine = true
-                )
-
-                OutlinedTextField(
-                    value = viewModel.labMaxDropPct,
-                    onValueChange = {
-                        viewModel.labMaxDropPct = it
-                        viewModel.runLaboratoryCalculation()
-                    },
-                    label = { Text("Caída de tensión máxima admitida (%)") },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 4.dp),
-                    singleLine = true
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Button(
-                    onClick = { viewModel.runLaboratoryCalculation() },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .testTag("lab_calculate_button")
-                ) {
-                    Text("FORZAR RECALCULO REBT", fontWeight = FontWeight.Bold)
-                }
-            }
+            Tab(
+                selected = viewModel.labActiveSubTab == 0,
+                onClick = { viewModel.labActiveSubTab = 0 },
+                text = { Text("⚡ Conductores", fontSize = 11.sp, fontWeight = FontWeight.Bold) }
+            )
+            Tab(
+                selected = viewModel.labActiveSubTab == 1,
+                onClick = { viewModel.labActiveSubTab = 1 },
+                text = { Text("🏢 Edificios", fontSize = 11.sp, fontWeight = FontWeight.Bold) }
+            )
+            Tab(
+                selected = viewModel.labActiveSubTab == 2,
+                onClick = { viewModel.labActiveSubTab = 2 },
+                text = { Text("📺 Tubos", fontSize = 11.sp, fontWeight = FontWeight.Bold) }
+            )
+            Tab(
+                selected = viewModel.labActiveSubTab == 3,
+                onClick = { viewModel.labActiveSubTab = 3 },
+                text = { Text("🌱 P. Tierra", fontSize = 11.sp, fontWeight = FontWeight.Bold) }
+            )
         }
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        // Calculated results panel
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(containerColor = Color(0xFF1b222c)), // darker cyan/slate card
-            border = BorderStroke(1.dp, Color(0xFF38444d))
-        ) {
-            Column(modifier = Modifier.padding(18.dp)) {
-                Text(
-                    text = "CONFORMIDAD TÉCNICA OBTENIDA:",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 11.sp,
-                    color = Color(0xFF58a6ff)
-                )
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                Row(
+        when (viewModel.labActiveSubTab) {
+            0 -> {
+                // Sizing Conductors sub-tab
+                Card(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
+                    colors = CardDefaults.cardColors(containerColor = Color(0xFF161b22)),
+                    border = BorderStroke(1.dp, Color(0xFF30363d))
                 ) {
-                    Column {
+                    Column(modifier = Modifier.padding(16.dp)) {
                         Text(
-                            text = "${viewModel.labCalculatedSection} mm²",
-                            fontSize = 36.sp,
-                            fontWeight = FontWeight.Black,
-                            color = Color.White
+                            text = "Ajustes de la Carga y Acometida (Sección):",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 13.sp,
+                            color = MaterialTheme.colorScheme.primary
                         )
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        // Phase switch
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text("Sistema de Alimentación:", fontSize = 13.sp)
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Text("Monofásico (230V)", fontSize = 11.sp, color = if (!viewModel.labIsThreePhase) Color.White else Color.Gray)
+                                Switch(
+                                    checked = viewModel.labIsThreePhase,
+                                    onCheckedChange = {
+                                        viewModel.labIsThreePhase = it
+                                        viewModel.runLaboratoryCalculation()
+                                    },
+                                    modifier = Modifier
+                                        .padding(horizontal = 8.dp)
+                                        .testTag("lab_phase_switch")
+                                )
+                                Text("Trifásico (400V)", fontSize = 11.sp, color = if (viewModel.labIsThreePhase) Color.White else Color.Gray)
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        // Material selector
+                        Text("Metal del Conductor del Cable:", fontSize = 13.sp)
+                        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                            FilterChip(
+                                selected = viewModel.labCableMaterial == "cobre",
+                                onClick = {
+                                    viewModel.labCableMaterial = "cobre"
+                                    viewModel.runLaboratoryCalculation()
+                                },
+                                label = { Text("Cobre (Cu)", fontSize = 12.sp) },
+                                modifier = Modifier.testTag("lab_chip_cobre")
+                            )
+                            FilterChip(
+                                selected = viewModel.labCableMaterial == "aluminio",
+                                onClick = {
+                                    viewModel.labCableMaterial = "aluminio"
+                                    viewModel.runLaboratoryCalculation()
+                                },
+                                label = { Text("Aluminio (Al)", fontSize = 12.sp) },
+                                modifier = Modifier.testTag("lab_chip_aluminio")
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        // Installation mode selector
+                        Text("Método de canalización física:", fontSize = 13.sp)
+                        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                            FilterChip(
+                                selected = viewModel.labInstallMethod == "tubo",
+                                onClick = {
+                                    viewModel.labInstallMethod = "tubo"
+                                    viewModel.runLaboratoryCalculation()
+                                },
+                                label = { Text("Bajo tubo empotrado", fontSize = 12.sp) }
+                            )
+                            FilterChip(
+                                selected = viewModel.labInstallMethod == "aire",
+                                onClick = {
+                                    viewModel.labInstallMethod = "aire"
+                                    viewModel.runLaboratoryCalculation()
+                                },
+                                label = { Text("Al aire o bandeja", fontSize = 12.sp) }
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(16.dp))
+                        HorizontalDivider(color = Color(0xFF21262d))
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        // Numerical inputs (Power, Length, Max tension Drop)
+                        OutlinedTextField(
+                            value = viewModel.labPowerKw,
+                            onValueChange = {
+                                viewModel.labPowerKw = it
+                                viewModel.runLaboratoryCalculation()
+                            },
+                            label = { Text("Potencia a suministrar (kW)") },
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 4.dp)
+                                .testTag("lab_input_power"),
+                            singleLine = true
+                        )
+
+                        OutlinedTextField(
+                            value = viewModel.labLengthM,
+                            onValueChange = {
+                                viewModel.labLengthM = it
+                                viewModel.runLaboratoryCalculation()
+                            },
+                            label = { Text("Longitud total de acometida (m)") },
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 4.dp)
+                                .testTag("lab_input_length"),
+                            singleLine = true
+                        )
+
+                        OutlinedTextField(
+                            value = viewModel.labMaxDropPct,
+                            onValueChange = {
+                                viewModel.labMaxDropPct = it
+                                viewModel.runLaboratoryCalculation()
+                            },
+                            label = { Text("Caída de tensión máxima admitida (%)") },
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 4.dp),
+                            singleLine = true
+                        )
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        Button(
+                            onClick = { viewModel.runLaboratoryCalculation() },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .testTag("lab_calculate_button")
+                        ) {
+                            Text("FORZAR RECALCULO REBT", fontWeight = FontWeight.Bold)
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(20.dp))
+
+                // Calculated results panel
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(containerColor = Color(0xFF1b222c)), // darker cyan/slate card
+                    border = BorderStroke(1.dp, Color(0xFF38444d))
+                ) {
+                    Column(modifier = Modifier.padding(18.dp)) {
                         Text(
-                            text = "Sección comercial reglamentaria",
+                            text = "CONFORMIDAD TÉCNICA OBTENIDA:",
+                            fontWeight = FontWeight.Bold,
                             fontSize = 11.sp,
-                            color = Color.Gray
+                            color = Color(0xFF58a6ff)
+                        )
+
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Column {
+                                Text(
+                                    text = "${viewModel.labCalculatedSection} mm²",
+                                    fontSize = 36.sp,
+                                    fontWeight = FontWeight.Black,
+                                    color = Color.White
+                                )
+                                Text(
+                                    text = "Sección comercial reglamentaria",
+                                    fontSize = 11.sp,
+                                    color = Color.Gray
+                                )
+                            }
+
+                            Box(
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(6.dp))
+                                    .background(Color(0xFF3fb950).copy(alpha = 0.2f))
+                                    .padding(horizontal = 10.dp, vertical = 6.dp)
+                            ) {
+                                Text(
+                                    text = "APTO Iz=${viewModel.labIzCapacity} A",
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color(0xFF3fb950),
+                                    fontSize = 12.sp
+                                )
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.height(14.dp))
+                        HorizontalDivider(color = Color(0xFF30363d))
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        Text(
+                            text = viewModel.labStatusMessage,
+                            fontSize = 12.sp,
+                            color = Color.White,
+                            lineHeight = 18.sp
                         )
                     }
+                }
+            }
 
-                    Box(
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(6.dp))
-                            .background(Color(0xFF3fb950).copy(alpha = 0.2f))
-                            .padding(horizontal = 10.dp, vertical = 6.dp)
-                    ) {
+            1 -> {
+                // Building load forecasting
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(containerColor = Color(0xFF161b22)),
+                    border = BorderStroke(1.dp, Color(0xFF30363d))
+                ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
                         Text(
-                            text = "APTO Iz=${viewModel.labIzCapacity} A",
+                            text = "Previsión de Cargas de Edificios (ITC-BT-10):",
                             fontWeight = FontWeight.Bold,
-                            color = Color(0xFF3fb950),
-                            fontSize = 12.sp
+                            fontSize = 13.sp,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        OutlinedTextField(
+                            value = viewModel.foreDwellingsBasic,
+                            onValueChange = {
+                                viewModel.foreDwellingsBasic = it
+                                viewModel.runBuildingForecastingCalculation()
+                            },
+                            label = { Text("Viviendas Electrificación Básica (5.75kW)") },
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                            modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+                            singleLine = true
+                        )
+
+                        OutlinedTextField(
+                            value = viewModel.foreDwellingsElevated,
+                            onValueChange = {
+                                viewModel.foreDwellingsElevated = it
+                                viewModel.runBuildingForecastingCalculation()
+                            },
+                            label = { Text("Viviendas Electrificación Elevada (9.2kW)") },
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                            modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+                            singleLine = true
+                        )
+
+                        OutlinedTextField(
+                            value = viewModel.foreCommercialSqm,
+                            onValueChange = {
+                                viewModel.foreCommercialSqm = it
+                                viewModel.runBuildingForecastingCalculation()
+                            },
+                            label = { Text("Locales Comerciales (m²)") },
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                            modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+                            singleLine = true
+                        )
+
+                        OutlinedTextField(
+                            value = viewModel.foreGarageSqm,
+                            onValueChange = {
+                                viewModel.foreGarageSqm = it
+                                viewModel.runBuildingForecastingCalculation()
+                            },
+                            label = { Text("Aparcamiento con ventilación mecánica (m²)") },
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                            modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+                            singleLine = true
+                        )
+
+                        OutlinedTextField(
+                            value = viewModel.foreGeneralServicesKw,
+                            onValueChange = {
+                                viewModel.foreGeneralServicesKw = it
+                                viewModel.runBuildingForecastingCalculation()
+                            },
+                            label = { Text("Servicios Generales (Ascensor, Escaleras...) (kW)") },
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                            modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+                            singleLine = true
                         )
                     }
                 }
 
-                Spacer(modifier = Modifier.height(14.dp))
-                HorizontalDivider(color = Color(0xFF30363d))
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(20.dp))
 
-                Text(
-                    text = viewModel.labStatusMessage,
-                    fontSize = 12.sp,
-                    color = Color.White,
-                    lineHeight = 18.sp
-                )
+                // Power forecasting results
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(containerColor = Color(0xFF1b222c)),
+                    border = BorderStroke(1.dp, Color(0xFF38444d))
+                ) {
+                    Column(modifier = Modifier.padding(18.dp)) {
+                        Text(
+                            text = "PREVISIÓN CARGA GLOBAL EDIFICIO:",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 11.sp,
+                            color = Color(0xFF58a6ff)
+                        )
+
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Column {
+                                Text(
+                                    text = "${String.format("%.2f", viewModel.foreCalculatedPowerKw)} kW",
+                                    fontSize = 32.sp,
+                                    fontWeight = FontWeight.Black,
+                                    color = Color.White
+                                )
+                                Text(
+                                    text = "Potencia simultánea del enlace",
+                                    fontSize = 11.sp,
+                                    color = Color.Gray
+                                )
+                            }
+
+                            Box(
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(6.dp))
+                                    .background(Color(0xFF58a6ff).copy(alpha = 0.2f))
+                                    .padding(horizontal = 10.dp, vertical = 6.dp)
+                            ) {
+                                Text(
+                                    text = "${String.format("%.1f", viewModel.foreRecommendedIgaAmps)} A",
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color(0xFF58a6ff),
+                                    fontSize = 12.sp
+                                )
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.height(14.dp))
+                        HorizontalDivider(color = Color(0xFF30363d))
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        Text(
+                            text = viewModel.foreStatusMessage,
+                            fontSize = 12.sp,
+                            color = Color.White,
+                            lineHeight = 18.sp
+                        )
+                    }
+                }
+            }
+
+            2 -> {
+                // Sizing tubes sub-tab
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(containerColor = Color(0xFF161b22)),
+                    border = BorderStroke(1.dp, Color(0xFF30363d))
+                ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        Text(
+                            text = "Diámetro de Tubos Protectores (ITC-BT-21):",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 13.sp,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        Text("Sección de Conductores (mm²):", fontSize = 12.sp)
+                        Row(
+                            modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+                            horizontalArrangement = Arrangement.spacedBy(6.dp)
+                        ) {
+                            val sections = listOf("1.5", "2.5", "4.0", "6.0", "10.0", "16.0")
+                            sections.forEach { sec ->
+                                FilterChip(
+                                    selected = viewModel.tubesConductorSec == sec,
+                                    onClick = {
+                                        viewModel.tubesConductorSec = sec
+                                        viewModel.runTubeDiameterCalculation()
+                                    },
+                                    label = { Text(sec, fontSize = 11.sp) }
+                                )
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        Text("Número de Conductores Activos:", fontSize = 12.sp)
+                        Row(
+                            modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+                            horizontalArrangement = Arrangement.spacedBy(10.dp)
+                        ) {
+                            val counts = listOf("2", "3", "4", "5")
+                            counts.forEach { count ->
+                                FilterChip(
+                                    selected = viewModel.tubesConductorsCount == count,
+                                    onClick = {
+                                        viewModel.tubesConductorsCount = count
+                                        viewModel.runTubeDiameterCalculation()
+                                    },
+                                    label = { Text(count, fontSize = 11.sp) }
+                                )
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        Text("Tipo de Montaje Físico:", fontSize = 12.sp)
+                        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                            FilterChip(
+                                selected = viewModel.tubesInstallMethod == "empotrado",
+                                onClick = {
+                                    viewModel.tubesInstallMethod = "empotrado"
+                                    viewModel.runTubeDiameterCalculation()
+                                },
+                                label = { Text("Empotrado bajo obra", fontSize = 11.sp) }
+                            )
+                            FilterChip(
+                                selected = viewModel.tubesInstallMethod == "superficial",
+                                onClick = {
+                                    viewModel.tubesInstallMethod = "superficial"
+                                    viewModel.runTubeDiameterCalculation()
+                                },
+                                label = { Text("Superficial", fontSize = 11.sp) }
+                            )
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(20.dp))
+
+                // Tube diameter calculation feedback
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(containerColor = Color(0xFF1b222c)),
+                    border = BorderStroke(1.dp, Color(0xFF38444d))
+                ) {
+                    Column(modifier = Modifier.padding(18.dp)) {
+                        Text(
+                            text = "DIÁMETRO DE TUBO EXIGIDO:",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 11.sp,
+                            color = Color(0xFF58a6ff)
+                        )
+
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Column {
+                                Text(
+                                    text = "Ø ${viewModel.tubesCalculatedDiameterMm} mm",
+                                    fontSize = 34.sp,
+                                    fontWeight = FontWeight.Black,
+                                    color = Color.White
+                                )
+                                Text(
+                                    text = "Diámetro nominal exterior mínimo",
+                                    fontSize = 11.sp,
+                                    color = Color.Gray
+                                )
+                            }
+
+                            Box(
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(6.dp))
+                                    .background(Color(0xFF58a6ff).copy(alpha = 0.2f))
+                                    .padding(horizontal = 10.dp, vertical = 6.dp)
+                            ) {
+                                Text(
+                                    text = "ITC-BT-21",
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color(0xFF58a6ff),
+                                    fontSize = 12.sp
+                                )
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.height(14.dp))
+                        HorizontalDivider(color = Color(0xFF30363d))
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        Text(
+                            text = viewModel.tubesStatusMessage,
+                            fontSize = 12.sp,
+                            color = Color.White,
+                            lineHeight = 18.sp
+                        )
+                    }
+                }
+            }
+
+            3 -> {
+                // Grounding sub-tab
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(containerColor = Color(0xFF161b22)),
+                    border = BorderStroke(1.dp, Color(0xFF30363d))
+                ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        Text(
+                            text = "Resistencia de Toma a Tierra:",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 13.sp,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        Text("Resistividad estimada del terreno (Ω·m):", fontSize = 12.sp)
+                        Row(
+                            modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+                            horizontalArrangement = Arrangement.spacedBy(6.dp)
+                        ) {
+                            val items = listOf(
+                                "100" to "Arcillas",
+                                "200" to "T. Humoso",
+                                "500" to "Arenas",
+                                "1500" to "Terreno Rocoso"
+                            )
+                            items.forEach { (valStr, label) ->
+                                FilterChip(
+                                    selected = viewModel.earthSoilResistivity == valStr,
+                                    onClick = {
+                                        viewModel.earthSoilResistivity = valStr
+                                        viewModel.runGroundingCalculation()
+                                    },
+                                    label = { Text("$valStr ($label)", fontSize = 10.sp) }
+                                )
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        Text("Tipo de electrodo disipador:", fontSize = 12.sp)
+                        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                            FilterChip(
+                                selected = viewModel.earthElectrodeType == "pica",
+                                onClick = {
+                                    viewModel.earthElectrodeType = "pica"
+                                    viewModel.runGroundingCalculation()
+                                },
+                                label = { Text("Pica de cobre vertical", fontSize = 11.sp) }
+                            )
+                            FilterChip(
+                                selected = viewModel.earthElectrodeType == "conductor",
+                                onClick = {
+                                    viewModel.earthElectrodeType = "conductor"
+                                    viewModel.runGroundingCalculation()
+                                },
+                                label = { Text("Cable horizontal desnudo", fontSize = 11.sp) }
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        OutlinedTextField(
+                            value = viewModel.earthElectrodeLength,
+                            onValueChange = {
+                                viewModel.earthElectrodeLength = it
+                                viewModel.runGroundingCalculation()
+                            },
+                            label = { Text("Longitud active del electrodo (m)") },
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                            modifier = Modifier.fillMaxWidth(),
+                            singleLine = true
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(20.dp))
+
+                // Grounding resistance calculated result card
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(containerColor = Color(0xFF1b222c)),
+                    border = BorderStroke(1.dp, Color(0xFF38444d))
+                ) {
+                    Column(modifier = Modifier.padding(18.dp)) {
+                        Text(
+                            text = "RESISTENCIA RESIDUAL CALCULADA:",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 11.sp,
+                            color = Color(0xFF58a6ff)
+                        )
+
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Column {
+                                Text(
+                                    text = "${String.format("%.2f", viewModel.earthCalculatedResistanceOhms)} Ω",
+                                    fontSize = 34.sp,
+                                    fontWeight = FontWeight.Black,
+                                    color = Color.White
+                                )
+                                Text(
+                                    text = "Valor ohmico calculado",
+                                    fontSize = 11.sp,
+                                    color = Color.Gray
+                                )
+                            }
+
+                            Box(
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(6.dp))
+                                    .background(
+                                        if (viewModel.earthCalculatedResistanceOhms < 37.0) Color(0xFF3fb950).copy(alpha = 0.2f)
+                                        else Color(0xFFd29922).copy(alpha = 0.2f)
+                                    )
+                                    .padding(horizontal = 10.dp, vertical = 6.dp)
+                            ) {
+                                Text(
+                                    text = if (viewModel.earthCalculatedResistanceOhms < 37.0) "APTO" else "REVISABLE",
+                                    fontWeight = FontWeight.Bold,
+                                    color = if (viewModel.earthCalculatedResistanceOhms < 37.0) Color(0xFF3fb950) else Color(0xFFd29922),
+                                    fontSize = 12.sp
+                                )
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.height(14.dp))
+                        HorizontalDivider(color = Color(0xFF30363d))
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        Text(
+                            text = viewModel.earthStatusMessage,
+                            fontSize = 12.sp,
+                            color = Color.White,
+                            lineHeight = 18.sp
+                        )
+                    }
+                }
             }
         }
     }
@@ -2277,9 +2954,10 @@ fun DocumentsCenterTabContent(viewModel: MainViewModel, isPremium: Boolean) {
     var activeProgressDownloadItem by remember { mutableStateOf<String?>(null) }
     var itemDownloadPercentage by remember { mutableStateOf(0f) }
     var downloadedItemIds by remember { mutableStateOf(setOf<String>()) }
-    var openPreViewItem by remember { mutableStateOf<SharedDocument?>(null) }
+    var openPreViewItem by remember { mutableStateOf<CustomDocumentEntity?>(null) }
 
     val scope = rememberCoroutineScope()
+    val customDocs by viewModel.customDocumentsFlow.collectAsState()
 
     Column(
         modifier = Modifier
@@ -2358,17 +3036,25 @@ fun DocumentsCenterTabContent(viewModel: MainViewModel, isPremium: Boolean) {
                                 fontSize = 12.sp,
                                 color = Color.Gray
                             )
-                            Text(
-                                text = "Completado conforme al Real Decreto 842/2002",
-                                fontSize = 10.sp,
-                                color = Color(0xFF3fb950)
-                            )
+                            if (openPreViewItem!!.uriString != null) {
+                                Text(
+                                    text = "Origen: PDF Cargado por Administrador",
+                                    fontSize = 10.sp,
+                                    color = Color(0xFFE2FCD4)
+                                )
+                            } else {
+                                Text(
+                                    text = "Completado conforme al Real Decreto 842/2002",
+                                    fontSize = 10.sp,
+                                    color = Color(0xFF3fb950)
+                                )
+                            }
                         }
                     }
 
                     Spacer(modifier = Modifier.height(12.dp))
                     Text(
-                        text = "Descripción técnica: El archivo detalla las limitaciones constructivas y resistividades reglamentarias de este elemento bajo inspección OCA decenal.",
+                        text = "Descripción técnica: ${openPreViewItem!!.description}",
                         fontSize = 11.sp,
                         color = Color.Gray
                     )
@@ -2382,9 +3068,9 @@ fun DocumentsCenterTabContent(viewModel: MainViewModel, isPremium: Boolean) {
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            items(Content.DOCUMENTS) { doc ->
-                val isDownloading = activeProgressDownloadItem == doc.id
-                val isDownloaded = downloadedItemIds.contains(doc.id)
+            items(customDocs) { doc ->
+                val isDownloading = activeProgressDownloadItem == doc.docId
+                val isDownloaded = downloadedItemIds.contains(doc.docId)
 
                 Card(
                     modifier = Modifier.fillMaxWidth(),
@@ -2398,12 +3084,20 @@ fun DocumentsCenterTabContent(viewModel: MainViewModel, isPremium: Boolean) {
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Column(modifier = Modifier.weight(1f)) {
-                                Text(
-                                    text = doc.title,
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 14.sp,
-                                    color = Color.White
-                                )
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Text(
+                                        text = doc.title,
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 14.sp,
+                                        color = Color.White
+                                    )
+                                    if (doc.isCustom) {
+                                        Spacer(modifier = Modifier.width(6.dp))
+                                        Badge(containerColor = Color(0xFFE67E22)) {
+                                            Text("AÑADIDO", fontSize = 8.sp, color = Color.White)
+                                        }
+                                    }
+                                }
                                 Text(
                                     text = "${doc.type} • ${doc.fileSize}",
                                     fontSize = 11.sp,
@@ -2418,38 +3112,47 @@ fun DocumentsCenterTabContent(viewModel: MainViewModel, isPremium: Boolean) {
                                 }
                             } else {
                                 // Premium actions
-                                if (isDownloaded) {
-                                    IconButton(
-                                        onClick = { openPreViewItem = doc },
-                                        modifier = Modifier.testTag("doc_view_button_${doc.id}")
-                                    ) {
-                                        Icon(Icons.Default.Visibility, contentDescription = "Preview", tint = Color(0xFF3fb950))
-                                    }
-                                } else if (isDownloading) {
-                                    CircularProgressIndicator(
-                                        progress = { itemDownloadPercentage },
-                                        modifier = Modifier.size(24.dp),
-                                        color = MaterialTheme.colorScheme.primary,
-                                        strokeWidth = 3.dp
-                                    )
-                                } else {
-                                    IconButton(
-                                        onClick = {
-                                            scope.launch {
-                                                activeProgressDownloadItem = doc.id
-                                                itemDownloadPercentage = 0f
-                                                // Simulating download over time
-                                                for (i in 1..10) {
-                                                    kotlinx.coroutines.delay(120)
-                                                    itemDownloadPercentage = i.toFloat() / 10f
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    if (isDownloaded) {
+                                        IconButton(
+                                            onClick = { openPreViewItem = doc },
+                                            modifier = Modifier.testTag("doc_view_button_${doc.docId}")
+                                        ) {
+                                            Icon(Icons.Default.Visibility, contentDescription = "Preview", tint = Color(0xFF3fb950))
+                                        }
+                                    } else if (isDownloading) {
+                                        CircularProgressIndicator(
+                                            progress = { itemDownloadPercentage },
+                                            modifier = Modifier.size(24.dp),
+                                            color = MaterialTheme.colorScheme.primary,
+                                            strokeWidth = 3.dp
+                                        )
+                                    } else {
+                                        IconButton(
+                                            onClick = {
+                                                scope.launch {
+                                                    activeProgressDownloadItem = doc.docId
+                                                    itemDownloadPercentage = 0f
+                                                    // Simulating download over time
+                                                    for (i in 1..10) {
+                                                        kotlinx.coroutines.delay(120)
+                                                        itemDownloadPercentage = i.toFloat() / 10f
+                                                    }
+                                                    downloadedItemIds = downloadedItemIds + doc.docId
+                                                    activeProgressDownloadItem = null
                                                 }
-                                                downloadedItemIds = downloadedItemIds + doc.id
-                                                activeProgressDownloadItem = null
-                                            }
-                                        },
-                                        modifier = Modifier.testTag("doc_download_button_${doc.id}")
-                                    ) {
-                                        Icon(Icons.Default.Download, contentDescription = "Download", tint = Color.White)
+                                            },
+                                            modifier = Modifier.testTag("doc_download_button_${doc.docId}")
+                                        ) {
+                                            Icon(Icons.Default.Download, contentDescription = "Download", tint = Color.White)
+                                        }
+                                    }
+
+                                    // Allow deleting custom admin uploads
+                                    if (doc.isCustom) {
+                                        IconButton(onClick = { viewModel.deleteCustomDocument(doc.docId) }) {
+                                            Icon(Icons.Default.Delete, contentDescription = "Eliminar", tint = Color.Red)
+                                        }
                                     }
                                 }
                             }
@@ -2471,6 +3174,8 @@ fun DocumentsCenterTabContent(viewModel: MainViewModel, isPremium: Boolean) {
 // 7. News Tab Content
 @Composable
 fun NewsCenterTabContent(viewModel: MainViewModel) {
+    val customNews by viewModel.customNewsFlow.collectAsState()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -2489,7 +3194,7 @@ fun NewsCenterTabContent(viewModel: MainViewModel) {
                     color = Color.White
                 )
                 Text(
-                    text = "Avisos de industria, legislación y normativas complementarias.",
+                    text = "Avisos de industria, legislación y normativas complementarias en TIEMPO REAL.",
                     fontSize = 12.sp,
                     color = Color.Gray
                 )
@@ -2505,7 +3210,7 @@ fun NewsCenterTabContent(viewModel: MainViewModel) {
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
-            items(Content.NEWS) { item ->
+            items(customNews) { item ->
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     colors = CardDefaults.cardColors(containerColor = Color(0xFF161b22)),
@@ -2517,24 +3222,49 @@ fun NewsCenterTabContent(viewModel: MainViewModel) {
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Badge(containerColor = Color(0xFF21262d)) {
-                                Text(
-                                    item.categoryLabel,
-                                    fontSize = 10.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = Color.White,
-                                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
-                                )
-                            }
-                            if (item.hot) {
-                                Badge(containerColor = Color(0xFFFF5722)) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Badge(containerColor = Color(0xFF21262d)) {
                                     Text(
-                                        text = "NUEVO",
+                                        item.categoryLabel,
+                                        fontSize = 10.sp,
                                         fontWeight = FontWeight.Bold,
-                                        fontSize = 9.sp,
                                         color = Color.White,
-                                        modifier = Modifier.padding(horizontal = 4.dp)
+                                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
                                     )
+                                }
+                                if (item.isCustom) {
+                                    Spacer(modifier = Modifier.width(6.dp))
+                                    Badge(containerColor = Color(0x33F39C12)) {
+                                        Text(
+                                            "ALERTA ADMIN",
+                                            fontSize = 9.sp,
+                                            fontWeight = FontWeight.ExtraBold,
+                                            color = Color(0xFFF39C12),
+                                            modifier = Modifier.padding(horizontal = 4.dp)
+                                        )
+                                    }
+                                }
+                            }
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                if (item.hot) {
+                                    Badge(containerColor = Color(0xFFFF5722)) {
+                                        Text(
+                                            text = "NUEVO",
+                                            fontWeight = FontWeight.Bold,
+                                            fontSize = 9.sp,
+                                            color = Color.White,
+                                            modifier = Modifier.padding(horizontal = 4.dp)
+                                        )
+                                    }
+                                }
+                                if (item.isCustom) {
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    IconButton(
+                                        onClick = { viewModel.deleteCustomNews(item.newsId) },
+                                        modifier = Modifier.size(24.dp)
+                                    ) {
+                                        Icon(Icons.Default.Delete, contentDescription = "Eliminar", tint = Color.Red, modifier = Modifier.size(16.dp))
+                                    }
                                 }
                             }
                         }
@@ -2594,8 +3324,8 @@ fun NewsCenterTabContent(viewModel: MainViewModel) {
 @Composable
 fun SupportCenterTabContent(viewModel: MainViewModel) {
     var subject by remember { mutableStateOf("") }
-    var email by remember { mutableStateOf("jj.terapias@gmail.com") }
-    var name by remember { mutableStateOf("JJ Terapias") }
+    var email by remember(viewModel.currentUserEmail) { mutableStateOf(viewModel.currentUserEmail) }
+    var name by remember { mutableStateOf("Técnico REBT") }
     var body by remember { mutableStateOf("") }
     
     var ticketSentState by remember { mutableStateOf(false) }
@@ -2645,7 +3375,7 @@ fun SupportCenterTabContent(viewModel: MainViewModel) {
                     Spacer(modifier = Modifier.height(10.dp))
                     Text("¡Ticket Enviado Exitosamente!", fontWeight = FontWeight.Bold, color = Color.White)
                     Text(
-                        "Su solicitud se ha grabado de forma segura y un asesor técnico responderá a jj.terapias@gmail.com en menos de 24 horas laborables.",
+                        "Su solicitud se ha grabado de forma segura y un asesor técnico responderá a $email en menos de 24 horas laborables.",
                         fontSize = 12.sp,
                         color = Color.Gray,
                         textAlign = TextAlign.Center
@@ -2967,7 +3697,7 @@ fun GooglePlayCheckoutSheet(viewModel: MainViewModel) {
                         )
                     }
                     Text(
-                        text = "jj.terapias@gmail.com",
+                        text = viewModel.currentUserEmail,
                         fontSize = 12.sp,
                         color = Color.Gray
                     )
@@ -3071,6 +3801,1227 @@ fun GooglePlayCheckoutSheet(viewModel: MainViewModel) {
                     )
                 }
                 Spacer(modifier = Modifier.height(12.dp))
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AdminPanelTabContent(viewModel: MainViewModel) {
+    val context = LocalContext.current
+    val contentResolver = context.contentResolver
+    val customDocs by viewModel.customDocumentsFlow.collectAsState()
+    val customNews by viewModel.customNewsFlow.collectAsState()
+    val leads by viewModel.userLeadsFlow.collectAsState()
+
+    var activeAdminSection by remember { mutableStateOf("pdf") } // "pdf", "news", "ads", "leads"
+
+    // Create lead form states
+    var showAddLeadDialog by remember { mutableStateOf(false) }
+    var newLeadName by remember { mutableStateOf("") }
+    var newLeadEmail by remember { mutableStateOf("") }
+    var newLeadPhone by remember { mutableStateOf("") }
+    var newLeadCompany by remember { mutableStateOf("") }
+    var newLeadProvince by remember { mutableStateOf("") }
+    var newLeadPlan by remember { mutableStateOf("gratuito") }
+    var newLeadPrice by remember { mutableStateOf("35.00") }
+
+    // Search and filters
+    var leadSearchQuery by remember { mutableStateOf("") }
+    var leadFilterPlan by remember { mutableStateOf("todos") } // "todos", "gratuito", "pro", "premium"
+    var leadFilterStatus by remember { mutableStateOf("todos") } // "todos", "disponible", "vendido"
+
+    // Edit lead state
+    var editingLead by remember { mutableStateOf<UserLeadEntity?>(null) }
+    var showEditLeadDialog by remember { mutableStateOf(false) }
+    var editLeadName by remember { mutableStateOf("") }
+    var editLeadEmail by remember { mutableStateOf("") }
+    var editLeadPhone by remember { mutableStateOf("") }
+    var editLeadCompany by remember { mutableStateOf("") }
+    var editLeadProvince by remember { mutableStateOf("") }
+    var editLeadPlan by remember { mutableStateOf("gratuito") }
+    var editLeadPrice by remember { mutableStateOf("35.00") }
+    var editLeadIsSold by remember { mutableStateOf(false) }
+
+    // PDF variables
+    var pdfTitle by remember { mutableStateOf("") }
+    var pdfDesc by remember { mutableStateOf("") }
+    var pdfFileName by remember { mutableStateOf("") }
+    var pdfFileSize by remember { mutableStateOf("1.2 MB") }
+    var pdfType by remember { mutableStateOf("BOE") } // "BOE", "Esquema", "Calculadora"
+    var selectedUriString by remember { mutableStateOf<String?>(null) }
+    var docUploadSuccess by remember { mutableStateOf(false) }
+
+    // News variables
+    var newsTitle by remember { mutableStateOf("") }
+    var newsSummary by remember { mutableStateOf("") }
+    var newsContent by remember { mutableStateOf("") }
+    var newsCategory by remember { mutableStateOf("borrador") } // "borrador", "ev", "autoconsumo", "inspecciones"
+    var newsCategoryLabel by remember { mutableStateOf("Borrador REBT 2026") }
+    var newsIsHot by remember { mutableStateOf(false) }
+    var newsPublishSuccess by remember { mutableStateOf(false) }
+
+    val docPickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        if (uri != null) {
+            selectedUriString = uri.toString()
+            var name = "convenio_tecnico.pdf"
+            var sizeBytes = 0L
+            try {
+                contentResolver.query(uri, null, null, null, null)?.use { cursor ->
+                    val nameIdx = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+                    val sizeIdx = cursor.getColumnIndex(OpenableColumns.SIZE)
+                    if (cursor.moveToFirst()) {
+                        if (nameIdx != -1) name = cursor.getString(nameIdx)
+                        if (sizeIdx != -1) sizeBytes = cursor.getLong(sizeIdx)
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+            pdfFileName = name
+            pdfTitle = name.substringBeforeLast(".").replace("_", " ").replace("-", " ")
+                .replaceFirstChar { if (it.isLowerCase()) it.titlecase(java.util.Locale.getDefault()) else it.toString() }
+            pdfFileSize = if (sizeBytes > 0) {
+                val kb = sizeBytes / 1024
+                if (kb > 1024) String.format("%.2f MB", kb.toFloat() / 1024f) else "$kb KB"
+            } else "1.4 MB"
+            docUploadSuccess = false
+        }
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+            .verticalScroll(rememberScrollState())
+    ) {
+        // Tab Header
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(
+                    imageVector = Icons.Default.AdminPanelSettings,
+                    contentDescription = "Admin icon",
+                    tint = Color(0xFFF39C12),
+                    modifier = Modifier.size(28.dp)
+                )
+                Spacer(modifier = Modifier.width(10.dp))
+                Column {
+                    Text(
+                        text = "Panel de Control Administrativo",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = Color.White
+                    )
+                    Text(
+                        text = "Base de datos infinita de reglamentos y noticias",
+                        fontSize = 12.sp,
+                        color = Color.Gray
+                    )
+                }
+            }
+            IconButton(onClick = { viewModel.activeTab = "support" }) {
+                Icon(Icons.Default.Close, contentDescription = "Back", tint = Color.Gray)
+            }
+        }
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        // Sector choice Row
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(6.dp)
+        ) {
+            Button(
+                onClick = { activeAdminSection = "pdf" },
+                modifier = Modifier.weight(1f),
+                contentPadding = PaddingValues(horizontal = 4.dp, vertical = 2.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = if (activeAdminSection == "pdf") Color(0xFFF39C12) else Color(0xFF161b22)
+                )
+            ) {
+                Icon(Icons.Default.InsertDriveFile, contentDescription = null, modifier = Modifier.size(14.dp))
+                Spacer(modifier = Modifier.width(4.dp))
+                Text("PDFs", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = Color.White)
+            }
+
+            Button(
+                onClick = { activeAdminSection = "news" },
+                modifier = Modifier.weight(1f),
+                contentPadding = PaddingValues(horizontal = 4.dp, vertical = 2.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = if (activeAdminSection == "news") Color(0xFFF39C12) else Color(0xFF161b22)
+                )
+            ) {
+                Icon(Icons.Default.Announcement, contentDescription = null, modifier = Modifier.size(14.dp))
+                Spacer(modifier = Modifier.width(4.dp))
+                Text("Noticias", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = Color.White)
+            }
+
+            Button(
+                onClick = { activeAdminSection = "ads" },
+                modifier = Modifier.weight(1f),
+                contentPadding = PaddingValues(horizontal = 4.dp, vertical = 2.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = if (activeAdminSection == "ads") Color(0xFFF39C12) else Color(0xFF161b22)
+                )
+            ) {
+                Icon(Icons.Default.Campaign, contentDescription = null, modifier = Modifier.size(14.dp))
+                Spacer(modifier = Modifier.width(4.dp))
+                Text("Anuncios", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = Color.White)
+            }
+
+            Button(
+                onClick = { activeAdminSection = "leads" },
+                modifier = Modifier.weight(1.1f),
+                contentPadding = PaddingValues(horizontal = 2.dp, vertical = 2.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = if (activeAdminSection == "leads") Color(0xFFF39C12) else Color(0xFF161b22)
+                )
+            ) {
+                Icon(Icons.Default.People, contentDescription = null, modifier = Modifier.size(14.dp))
+                Spacer(modifier = Modifier.width(3.dp))
+                Text("Leads REBT", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = Color.White)
+            }
+        }
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        if (activeAdminSection == "pdf") {
+            // PDF Management Section
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = Color(0xFF161b22)),
+                border = BorderStroke(1.dp, Color(0xFF30363d))
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Text(
+                        text = "Cargar Nuevo Contenido PDF",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 15.sp,
+                        color = Color.White
+                    )
+                    Text(
+                        text = "Seleccione un archivo de su celular o rellene el formulario para ofrecer guías técnicas a los abonados.",
+                        fontSize = 11.sp,
+                        color = Color.Gray,
+                        modifier = Modifier.padding(bottom = 14.dp)
+                    )
+
+                    Button(
+                        onClick = { docPickerLauncher.launch("application/pdf") },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
+                    ) {
+                        Icon(Icons.Default.Upload, contentDescription = "Choose PDF")
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text("SELECCIONAR PDF DISPOSITIVO", fontWeight = FontWeight.Bold)
+                    }
+
+                    Spacer(modifier = Modifier.height(14.dp))
+
+                    if (selectedUriString != null) {
+                        Card(
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = CardDefaults.cardColors(containerColor = Color(0x333fb950)),
+                            border = BorderStroke(1.dp, Color(0x553fb950))
+                        ) {
+                            Row(
+                                modifier = Modifier.padding(12.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(Icons.Default.CheckCircle, contentDescription = "Uri Match", tint = Color(0xFF3fb950))
+                                Spacer(modifier = Modifier.width(10.dp))
+                                Column(modifier = Modifier.weight(1f)) {
+                                    Text("¡Archivo PDF Enlazado Exitosamente!", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = Color.White)
+                                    Text("Ruta: $selectedUriString", fontSize = 10.sp, color = Color.LightGray)
+                                }
+                            }
+                        }
+                        Spacer(modifier = Modifier.height(14.dp))
+                    }
+
+                    OutlinedTextField(
+                        value = pdfTitle,
+                        onValueChange = { pdfTitle = it },
+                        label = { Text("Título del Documento") },
+                        modifier = Modifier.fillMaxWidth().padding(vertical = 5.dp).testTag("admin_pdf_title"),
+                        singleLine = true
+                    )
+
+                    OutlinedTextField(
+                        value = pdfDesc,
+                        onValueChange = { pdfDesc = it },
+                        label = { Text("Descripción Corta / Instrucciones") },
+                        modifier = Modifier.fillMaxWidth().padding(vertical = 5.dp).testTag("admin_pdf_desc")
+                    )
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        OutlinedTextField(
+                            value = pdfFileName,
+                            onValueChange = { pdfFileName = it },
+                            label = { Text("Nombre del Archivo") },
+                            modifier = Modifier.weight(1f).padding(vertical = 5.dp).testTag("admin_pdf_file_name"),
+                            singleLine = true
+                        )
+
+                        OutlinedTextField(
+                            value = pdfFileSize,
+                            onValueChange = { pdfFileSize = it },
+                            label = { Text("Tamaño") },
+                            modifier = Modifier.weight(0.5f).padding(vertical = 5.dp),
+                            singleLine = true
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Text("Tipo de Recurso:", fontSize = 12.sp, color = Color.Gray)
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        listOf("BOE","Esquema","Calculadora").forEach { type ->
+                            val isSelected = pdfType == type
+                            FilterChip(
+                                selected = isSelected,
+                                onClick = { pdfType = type },
+                                label = { Text(type, fontSize = 11.sp, color = if (isSelected) Color.Black else Color.White) },
+                                colors = FilterChipDefaults.filterChipColors(
+                                    selectedContainerColor = Color(0xFFF39C12)
+                                )
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(18.dp))
+
+                    if (docUploadSuccess) {
+                        Text(
+                            text = "✓ ¡Documento PDF subido al servidor correctamente!",
+                            color = Color(0xFF3fb950),
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(bottom = 10.dp)
+                        )
+                    }
+
+                    Button(
+                        onClick = {
+                            viewModel.addCustomDocument(
+                                title = pdfTitle,
+                                description = pdfDesc,
+                                fileName = pdfFileName,
+                                fileSize = pdfFileSize,
+                                type = pdfType,
+                                uriString = selectedUriString
+                            )
+                            docUploadSuccess = true
+                            pdfTitle = ""
+                            pdfDesc = ""
+                            pdfFileName = ""
+                            pdfFileSize = "1.2 MB"
+                            selectedUriString = null
+                        },
+                        modifier = Modifier.fillMaxWidth().height(48.dp).testTag("admin_pdf_submit_btn"),
+                        enabled = pdfTitle.isNotEmpty() && pdfDesc.isNotEmpty() && pdfFileName.isNotEmpty(),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFF39C12))
+                    ) {
+                        Icon(Icons.Default.Upload, contentDescription = "Publish doc")
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text("COMPARTIR PDF CON SUSCRIPTORES", fontWeight = FontWeight.Bold)
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Uploaded list
+            val customDocList = customDocs.filter { it.isCustom }
+            if (customDocList.isNotEmpty()) {
+                Text("Documentos Añadidos por el Admin (${customDocList.size}):", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                Spacer(modifier = Modifier.height(8.dp))
+                customDocList.forEach { doc ->
+                    Card(
+                        modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+                        colors = CardDefaults.cardColors(containerColor = Color(0xFF21262d))
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(12.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Column(modifier = Modifier.weight(1f)) {
+                                Text(doc.title, color = Color.White, fontWeight = FontWeight.Bold, fontSize = 13.sp)
+                                Text("${doc.type} • ${doc.fileName} (${doc.fileSize})", color = Color.Gray, fontSize = 11.sp)
+                            }
+                            IconButton(onClick = { viewModel.deleteCustomDocument(doc.docId) }) {
+                                Icon(Icons.Default.Delete, contentDescription = "Delete", tint = Color.Red)
+                            }
+                        }
+                    }
+                }
+            }
+        } else if (activeAdminSection == "news") {
+            // News Management Section
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = Color(0xFF161b22)),
+                border = BorderStroke(1.dp, Color(0xFF30363d))
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Text(
+                        text = "Crear Alerta / Noticia REBT 2026",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 15.sp,
+                        color = Color.White
+                    )
+                    Text(
+                        text = "Toda noticia debe estar estrictamente centrada y redactada conforme a los borradores o especificaciones del reglamento REBT 2026.",
+                        fontSize = 11.sp,
+                        color = Color.Gray,
+                        modifier = Modifier.padding(bottom = 12.dp)
+                    )
+
+                    OutlinedTextField(
+                        value = newsTitle,
+                        onValueChange = { newsTitle = it },
+                        label = { Text("Título de Noticia REBT 2026") },
+                        modifier = Modifier.fillMaxWidth().padding(vertical = 5.dp).testTag("admin_news_title"),
+                        singleLine = true
+                    )
+
+                    OutlinedTextField(
+                        value = newsSummary,
+                        onValueChange = { newsSummary = it },
+                        label = { Text("Resumen Rápido (Línea de Enlace / ITC)") },
+                        modifier = Modifier.fillMaxWidth().padding(vertical = 5.dp).testTag("admin_news_summary"),
+                        singleLine = true
+                    )
+
+                    OutlinedTextField(
+                        value = newsContent,
+                        onValueChange = { newsContent = it },
+                        label = { Text("Desarrollo Técnico Oficial y Previsión") },
+                        modifier = Modifier.fillMaxWidth().height(120.dp).padding(vertical = 5.dp).testTag("admin_news_content")
+                    )
+
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Text("Categoría REBT 2026:", fontSize = 12.sp, color = Color.Gray)
+                    Row(
+                        modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        val categories = listOf(
+                            Triple("borrador", "Borrador REBT 2026", "Borrador"),
+                            Triple("ev", "Vehículo Eléctrico (ITC-52)", "Coche Eléctrico"),
+                            Triple("autoconsumo", "Autoconsumo ITC-BT-40", "Autoconsumo"),
+                            Triple("inspecciones", "Inspección OCA 2026", "Inspecciones")
+                        )
+                        categories.forEach { (cat, label, chipName) ->
+                            val isSelected = newsCategory == cat
+                            FilterChip(
+                                selected = isSelected,
+                                onClick = {
+                                    newsCategory = cat
+                                    newsCategoryLabel = label
+                                },
+                                label = { Text(chipName, fontSize = 11.sp, color = if (isSelected) Color.Black else Color.White) },
+                                colors = FilterChipDefaults.filterChipColors(
+                                    selectedContainerColor = Color(0xFFF39C12)
+                                )
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(10.dp))
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Checkbox(
+                            checked = newsIsHot,
+                            onCheckedChange = { newsIsHot = it },
+                            colors = CheckboxDefaults.colors(checkedColor = Color(0xFFFF5722))
+                        )
+                        Text("Noticia Destacada de Impacto (Sello NUEVO / HOT)", fontSize = 12.sp, color = Color.White)
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    if (newsPublishSuccess) {
+                        Text(
+                            text = "✓ ¡Noticia REBT 2026 compartida en tiempo real!",
+                            color = Color(0xFF3fb950),
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(bottom = 10.dp)
+                        )
+                    }
+
+                    Button(
+                        onClick = {
+                            viewModel.addCustomNews(
+                                title = newsTitle,
+                                summary = newsSummary,
+                                content = newsContent,
+                                category = newsCategory,
+                                categoryLabel = newsCategoryLabel,
+                                hot = newsIsHot
+                            )
+                            newsPublishSuccess = true
+                            newsTitle = ""
+                            newsSummary = ""
+                            newsContent = ""
+                            newsIsHot = false
+                        },
+                        modifier = Modifier.fillMaxWidth().height(48.dp).testTag("admin_news_submit_btn"),
+                        enabled = newsTitle.isNotEmpty() && newsSummary.isNotEmpty() && newsContent.isNotEmpty(),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFF39C12))
+                    ) {
+                        Icon(Icons.Default.Announcement, contentDescription = "Publish news")
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text("PUBLICAR EN TIEMPO REAL REBT 2026", fontWeight = FontWeight.Bold)
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Custom news list
+            val customNewsList = customNews.filter { it.isCustom }
+            if (customNewsList.isNotEmpty()) {
+                Text("Noticias Añadidas por el Admin (${customNewsList.size}):", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                Spacer(modifier = Modifier.height(8.dp))
+                customNewsList.forEach { news ->
+                    Card(
+                        modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+                        colors = CardDefaults.cardColors(containerColor = Color(0xFF21262d))
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(12.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Column(modifier = Modifier.weight(1f)) {
+                                Text(news.title, color = Color.White, fontWeight = FontWeight.Bold, fontSize = 13.sp)
+                                Text("${news.categoryLabel} • ${news.date}", color = Color.Gray, fontSize = 11.sp)
+                            }
+                            IconButton(onClick = { viewModel.deleteCustomNews(news.newsId) }) {
+                                Icon(Icons.Default.Delete, contentDescription = "Delete", tint = Color.Red)
+                            }
+                        }
+                    }
+                }
+            }
+        } else if (activeAdminSection == "ads") {
+            // Advertising Administration section
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = Color(0xFF161b22)),
+                border = BorderStroke(1.dp, Color(0xFF30363d))
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Text(
+                        text = "Controlador de Anuncios y Patrocinadores",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 15.sp,
+                        color = Color.White
+                    )
+                    Text(
+                        text = "Monetice la aplicación de manera inteligente. Altere los anunciantes del REBT que se despliegan para usuarios de la versión gratuita.",
+                        fontSize = 11.sp,
+                        color = Color.Gray,
+                        modifier = Modifier.padding(bottom = 14.dp)
+                    )
+
+                    // Switch row
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 10.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text("Rotación Dinámica Activa", color = Color.White, fontSize = 13.sp, fontWeight = FontWeight.Bold)
+                            Text("Si está activo, el banner rotará automáticamente cada 5 segundos de patrocinador.", color = Color.Gray, fontSize = 11.sp)
+                        }
+                        Switch(
+                            checked = viewModel.adsIsDynamic,
+                            onCheckedChange = { viewModel.adsIsDynamic = it },
+                            colors = SwitchDefaults.colors(
+                                checkedThumbColor = Color(0xFFF39C12),
+                                checkedTrackColor = Color(0x66F39C12)
+                            )
+                        )
+                    }
+
+                    if (!viewModel.adsIsDynamic) {
+                        Spacer(modifier = Modifier.height(10.dp))
+                        Text("Anuncio Estático Fijado:", color = Color.White, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .horizontalScroll(rememberScrollState())
+                                .padding(vertical = 8.dp),
+                            horizontalArrangement = Arrangement.spacedBy(6.dp)
+                        ) {
+                            viewModel.adminAds.forEachIndexed { idx, ad ->
+                                val isSelected = viewModel.currentAdIndex == idx
+                                FilterChip(
+                                    selected = isSelected,
+                                    onClick = {
+                                        viewModel.selectedStaticAdIndex = idx
+                                        viewModel.currentAdIndex = idx
+                                    },
+                                    label = { Text(ad.sponsor, fontSize = 10.sp, color = if (isSelected) Color.Black else Color.White) },
+                                    colors = FilterChipDefaults.filterChipColors(
+                                        selectedContainerColor = Color(0xFFF39C12)
+                                    )
+                                )
+                            }
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(14.dp))
+                    HorizontalDivider(color = Color(0xFF30363d))
+                    Spacer(modifier = Modifier.height(14.dp))
+
+                    Text("Editar Patrocinadores Activos (Real-Time):", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 13.sp)
+                    Spacer(modifier = Modifier.height(10.dp))
+
+                    viewModel.adminAds.forEach { ad ->
+                        var showDetails by remember { mutableStateOf(false) }
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 6.dp),
+                            colors = CardDefaults.cardColors(containerColor = Color(0xFF21262d)),
+                            border = BorderStroke(1.dp, Color(0xFF30363d))
+                        ) {
+                            Column(modifier = Modifier.padding(12.dp)) {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                        val adColor = try { Color(android.graphics.Color.parseColor(ad.tintColor)) } catch(e: Exception) { Color(0xFFF39C12) }
+                                        Box(modifier = Modifier.size(10.dp).background(adColor, CircleShape))
+                                        Spacer(modifier = Modifier.width(8.dp))
+                                        Text(ad.sponsor, color = Color.White, fontWeight = FontWeight.Bold, fontSize = 13.sp)
+                                    }
+                                    IconButton(
+                                        onClick = { showDetails = !showDetails },
+                                        modifier = Modifier.size(24.dp)
+                                    ) {
+                                        Icon(
+                                            imageVector = if (showDetails) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
+                                            contentDescription = "Expand",
+                                            tint = Color.Gray
+                                        )
+                                    }
+                                }
+
+                                if (showDetails) {
+                                    Spacer(modifier = Modifier.height(10.dp))
+                                    OutlinedTextField(
+                                        value = ad.sponsor,
+                                        onValueChange = { ad.sponsor = it },
+                                        label = { Text("Nombre Patrocinador", fontSize = 11.sp) },
+                                        modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+                                        singleLine = true
+                                    )
+                                    OutlinedTextField(
+                                        value = ad.message,
+                                        onValueChange = { ad.message = it },
+                                        label = { Text("Mensaje Publicitario", fontSize = 11.sp) },
+                                        modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+                                        maxLines = 3
+                                    )
+                                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                        OutlinedTextField(
+                                            value = ad.ctaText,
+                                            onValueChange = { ad.ctaText = it },
+                                            label = { Text("Botón (CTA)", fontSize = 11.sp) },
+                                            modifier = Modifier.weight(1f).padding(vertical = 4.dp),
+                                            singleLine = true
+                                        )
+                                        OutlinedTextField(
+                                            value = ad.tintColor,
+                                            onValueChange = { ad.tintColor = it },
+                                            label = { Text("Color Hex", fontSize = 11.sp) },
+                                            modifier = Modifier.weight(1f).padding(vertical = 4.dp),
+                                            singleLine = true
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } else if (activeAdminSection == "leads") {
+            // Leads Management Block
+            val filteredLeads = leads.filter { lead ->
+                val matchesSearch = lead.name.contains(leadSearchQuery, ignoreCase = true) ||
+                        lead.email.contains(leadSearchQuery, ignoreCase = true) ||
+                        lead.companyName.contains(leadSearchQuery, ignoreCase = true) ||
+                        lead.province.contains(leadSearchQuery, ignoreCase = true) ||
+                        lead.phoneNumber.contains(leadSearchQuery, ignoreCase = true)
+                
+                val matchesPlan = leadFilterPlan == "todos" || lead.subscriptionPlan == leadFilterPlan
+                val matchesStatus = leadFilterStatus == "todos" || 
+                        (leadFilterStatus == "disponible" && !lead.isSold) || 
+                        (leadFilterStatus == "vendido" && lead.isSold)
+
+                matchesSearch && matchesPlan && matchesStatus
+            }
+
+            // Calculations
+            val totalCount = leads.size
+            val totalRevenue = leads.filter { it.isSold }.sumOf { it.leadPrice }
+            val potentialRevenue = leads.filter { !it.isSold }.sumOf { it.leadPrice }
+
+            Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                
+                // Indicators Row
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Card(
+                        modifier = Modifier.weight(1f),
+                        colors = CardDefaults.cardColors(containerColor = Color(0xFF21262d)),
+                        border = BorderStroke(1.dp, Color(0xFF30363d))
+                    ) {
+                        Column(modifier = Modifier.padding(10.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+                            Text("Total Base", fontSize = 10.sp, color = Color.Gray, fontWeight = FontWeight.Bold)
+                            Text("$totalCount Leads", fontSize = 14.sp, color = Color.White, fontWeight = FontWeight.Bold)
+                        }
+                    }
+
+                    Card(
+                        modifier = Modifier.weight(1.2f),
+                        colors = CardDefaults.cardColors(containerColor = Color(0x333fb950)),
+                        border = BorderStroke(1.dp, Color(0xFF3fb950).copy(alpha = 0.5f))
+                    ) {
+                        Column(modifier = Modifier.padding(10.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+                            Text("Vendido (Leads)", fontSize = 10.sp, color = Color(0xFF3fb950), fontWeight = FontWeight.Bold)
+                            Text(String.format("%.2f€", totalRevenue), fontSize = 14.sp, color = Color(0xFF3fb950), fontWeight = FontWeight.Bold)
+                        }
+                    }
+
+                    Card(
+                        modifier = Modifier.weight(1.2f),
+                        colors = CardDefaults.cardColors(containerColor = Color(0x22f39c12)),
+                        border = BorderStroke(1.dp, Color(0xFFf39c12).copy(alpha = 0.5f))
+                    ) {
+                        Column(modifier = Modifier.padding(10.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+                            Text("Disponibles", fontSize = 10.sp, color = Color(0xFFf39c12), fontWeight = FontWeight.Bold)
+                            Text(String.format("%.2f€", potentialRevenue), fontSize = 14.sp, color = Color(0xFFf39c12), fontWeight = FontWeight.Bold)
+                        }
+                    }
+                }
+
+                // Control panel
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(containerColor = Color(0xFF161b22)),
+                    border = BorderStroke(1.dp, Color(0xFF30363d))
+                ) {
+                    Column(modifier = Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text("Base de Datos Comercial", fontWeight = FontWeight.Bold, color = Color.White, fontSize = 14.sp)
+                            Button(
+                                onClick = {
+                                    newLeadName = ""
+                                    newLeadEmail = ""
+                                    newLeadPhone = ""
+                                    newLeadCompany = ""
+                                    newLeadProvince = ""
+                                    newLeadPlan = "gratuito"
+                                    newLeadPrice = "35.00"
+                                    showAddLeadDialog = true
+                                },
+                                contentPadding = PaddingValues(horizontal = 10.dp, vertical = 2.dp),
+                                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFF39C12))
+                            ) {
+                                Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(14.dp))
+                                Spacer(modifier = Modifier.width(4.dp))
+                                Text("AÑADIR LEAD", fontSize = 10.sp, fontWeight = FontWeight.Bold, color = Color.White)
+                            }
+                        }
+
+                        Text(
+                            text = "Gestione las suscripciones, correos certificados de Google, y vende la información de instaladores como leads profesionales para empresas de suministros REBT 2026.",
+                            fontSize = 11.sp,
+                            color = Color.Gray
+                        )
+
+                        // Search Field
+                        OutlinedTextField(
+                            value = leadSearchQuery,
+                            onValueChange = { leadSearchQuery = it },
+                            placeholder = { Text("Buscar por email, nombre, provincia...", fontSize = 12.sp) },
+                            modifier = Modifier.fillMaxWidth(),
+                            singleLine = true,
+                            leadingIcon = { Icon(Icons.Default.Search, contentDescription = null, tint = Color.Gray) }
+                        )
+
+                        // Plan filter
+                        Column {
+                            Text("Filtrar por Suscripción:", fontSize = 11.sp, color = Color.Gray, fontWeight = FontWeight.Bold)
+                            Row(
+                                modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
+                                horizontalArrangement = Arrangement.spacedBy(6.dp)
+                            ) {
+                                listOf("todos", "gratuito", "pro", "premium").forEach { plan ->
+                                    val isSelected = leadFilterPlan == plan
+                                    FilterChip(
+                                        selected = isSelected,
+                                        onClick = { leadFilterPlan = plan },
+                                        label = { Text(plan.uppercase(), fontSize = 10.sp) },
+                                        colors = FilterChipDefaults.filterChipColors(
+                                            selectedContainerColor = Color(0xFF58a6ff),
+                                            selectedLabelColor = Color.Black
+                                        )
+                                    )
+                                }
+                            }
+                        }
+
+                        // Status filter
+                        Column {
+                            Text("Filtrar por Disponibilidad Comercial:", fontSize = 11.sp, color = Color.Gray, fontWeight = FontWeight.Bold)
+                            Row(
+                                modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
+                                horizontalArrangement = Arrangement.spacedBy(6.dp)
+                            ) {
+                                listOf("todos", "disponible", "vendido").forEach { status ->
+                                    val isSelected = leadFilterStatus == status
+                                    FilterChip(
+                                        selected = isSelected,
+                                        onClick = { leadFilterStatus = status },
+                                        label = { Text(status.uppercase(), fontSize = 10.sp) },
+                                        colors = FilterChipDefaults.filterChipColors(
+                                            selectedContainerColor = if (status == "vendido") Color(0xFFF39C12) else Color(0xFF3fb950),
+                                            selectedLabelColor = Color.Black
+                                        )
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // Leads list view
+                if (filteredLeads.isEmpty()) {
+                    Box(
+                        modifier = Modifier.fillMaxWidth().padding(30.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text("No se encontraron leads con los filtros activos.", fontSize = 12.sp, color = Color.Gray)
+                    }
+                } else {
+                    filteredLeads.forEach { lead ->
+                        Card(
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = CardDefaults.cardColors(containerColor = Color(0xFF21262d)),
+                            border = BorderStroke(1.dp, if (lead.isSold) Color(0xFFF39C12).copy(alpha = 0.4f) else Color(0xFF30363d))
+                        ) {
+                            Column(modifier = Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                                // Title row: Name & Province
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Column {
+                                        Text(lead.name, color = Color.White, fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                                        Text(
+                                            text = if (lead.companyName.isNotEmpty()) "${lead.companyName} (${lead.province})" else "Instalador Autónomo (${lead.province})",
+                                            fontSize = 11.sp,
+                                            color = Color.LightGray
+                                        )
+                                    }
+
+                                    // Price / Value tag
+                                    Box(
+                                        modifier = Modifier
+                                            .background(
+                                                color = if (lead.isSold) Color(0xFFF39C12).copy(alpha = 0.15f) else Color(0xFF3fb950).copy(alpha = 0.15f),
+                                                shape = RoundedCornerShape(4.dp)
+                                            )
+                                            .padding(horizontal = 6.dp, vertical = 3.dp)
+                                    ) {
+                                        Text(
+                                            text = String.format("%.2f€", lead.leadPrice),
+                                            color = if (lead.isSold) Color(0xFFF39C12) else Color(0xFF3fb950),
+                                            fontSize = 12.sp,
+                                            fontWeight = FontWeight.ExtraBold
+                                        )
+                                    }
+                                }
+
+                                HorizontalDivider(color = Color(0xFF30363d))
+
+                                // Contact info details (Email & Phone)
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween
+                                ) {
+                                    Column {
+                                        Row(verticalAlignment = Alignment.CenterVertically) {
+                                            Icon(Icons.Default.Email, contentDescription = null, tint = Color.Gray, modifier = Modifier.size(12.dp))
+                                            Spacer(modifier = Modifier.width(6.dp))
+                                            Text(lead.email, fontSize = 11.sp, color = Color.LightGray)
+                                        }
+                                        Spacer(modifier = Modifier.height(4.dp))
+                                        Row(verticalAlignment = Alignment.CenterVertically) {
+                                            Icon(Icons.Default.Phone, contentDescription = null, tint = Color.Gray, modifier = Modifier.size(12.dp))
+                                            Spacer(modifier = Modifier.width(6.dp))
+                                            Text(lead.phoneNumber, fontSize = 11.sp, color = Color(0xFF58a6ff), fontWeight = FontWeight.Bold)
+                                        }
+                                    }
+
+                                    // Badges
+                                    Row(
+                                        horizontalArrangement = Arrangement.spacedBy(4.dp),
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        // Plan badge
+                                        val planColor = when (lead.subscriptionPlan.lowercase()) {
+                                            "premium" -> Color(0xFFF1C40F)
+                                            "pro" -> Color(0xFF3498DB)
+                                            else -> Color.Gray
+                                        }
+                                        Box(
+                                            modifier = Modifier
+                                                .background(planColor.copy(alpha = 0.2f), RoundedCornerShape(4.dp))
+                                                .border(1.dp, planColor.copy(alpha = 0.5f), RoundedCornerShape(4.dp))
+                                                .padding(horizontal = 6.dp, vertical = 2.dp)
+                                        ) {
+                                            Text(lead.subscriptionPlan.uppercase(), fontSize = 8.sp, color = planColor, fontWeight = FontWeight.Bold)
+                                        }
+
+                                        // Status badge
+                                        Box(
+                                            modifier = Modifier
+                                                .background(
+                                                    color = if (lead.isSold) Color(0x33F39C12) else Color(0x333fb950),
+                                                    shape = RoundedCornerShape(4.dp)
+                                                )
+                                                .border(
+                                                    width = 1.dp,
+                                                    color = if (lead.isSold) Color(0x66F39C12) else Color(0x663fb950),
+                                                    shape = RoundedCornerShape(4.dp)
+                                                )
+                                                .padding(horizontal = 6.dp, vertical = 2.dp)
+                                        ) {
+                                            Text(
+                                                text = if (lead.isSold) "VENDIDO" else "DISPONIBLE",
+                                                fontSize = 8.sp,
+                                                color = if (lead.isSold) Color(0xFFF39C12) else Color(0xFF3fb950),
+                                                fontWeight = FontWeight.Bold
+                                            )
+                                        }
+                                    }
+                                }
+
+                                // Actions Row
+                                Row(
+                                    modifier = Modifier.fillMaxWidth().padding(top = 4.dp),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                        Button(
+                                            onClick = {
+                                                editingLead = lead
+                                                editLeadName = lead.name
+                                                editLeadEmail = lead.email
+                                                editLeadPhone = lead.phoneNumber
+                                                editLeadCompany = lead.companyName
+                                                editLeadProvince = lead.province
+                                                editLeadPlan = lead.subscriptionPlan
+                                                editLeadPrice = lead.leadPrice.toString()
+                                                editLeadIsSold = lead.isSold
+                                                showEditLeadDialog = true
+                                            },
+                                            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 1.dp),
+                                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF30363d)),
+                                            modifier = Modifier.height(28.dp)
+                                        ) {
+                                            Icon(Icons.Default.Edit, contentDescription = null, tint = Color.LightGray, modifier = Modifier.size(12.dp))
+                                            Spacer(modifier = Modifier.width(4.dp))
+                                            Text("EDITAR", fontSize = 10.sp, color = Color.White)
+                                        }
+
+                                        IconButton(
+                                            onClick = {
+                                                viewModel.deleteUserLead(lead.id)
+                                                FeedbackManager.playClick(context)
+                                            },
+                                            modifier = Modifier.size(28.dp)
+                                        ) {
+                                            Icon(Icons.Default.Delete, contentDescription = "Eliminar", tint = Color.Red.copy(alpha = 0.8f), modifier = Modifier.size(16.dp))
+                                        }
+                                    }
+
+                                    if (!lead.isSold) {
+                                        Button(
+                                            onClick = {
+                                                viewModel.updateUserLead(lead.copy(isSold = true))
+                                                FeedbackManager.playClick(context)
+                                            },
+                                            contentPadding = PaddingValues(horizontal = 12.dp, vertical = 2.dp),
+                                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3fb950)),
+                                            modifier = Modifier.height(28.dp)
+                                        ) {
+                                            Icon(Icons.Default.Paid, contentDescription = null, tint = Color.White, modifier = Modifier.size(14.dp))
+                                            Spacer(modifier = Modifier.width(4.dp))
+                                            Text("VENDER LEAD", fontSize = 10.sp, fontWeight = FontWeight.Bold, color = Color.White)
+                                        }
+                                    } else {
+                                        Text(
+                                            text = "Ingreso cobrado",
+                                            fontSize = 11.sp,
+                                            fontStyle = androidx.compose.ui.text.font.FontStyle.Italic,
+                                            color = Color.Gray
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Dialog definitions
+            if (showAddLeadDialog) {
+                AlertDialog(
+                    onDismissRequest = { showAddLeadDialog = false },
+                    title = { Text("Añadir Nuevo Lead de Usuario", color = Color.White, fontWeight = FontWeight.Bold) },
+                    text = {
+                        Column(
+                            verticalArrangement = Arrangement.spacedBy(10.dp),
+                            modifier = Modifier.verticalScroll(rememberScrollState())
+                        ) {
+                            OutlinedTextField(
+                                value = newLeadName,
+                                onValueChange = { newLeadName = it },
+                                label = { Text("Nombre Completo") },
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                            OutlinedTextField(
+                                value = newLeadEmail,
+                                onValueChange = { newLeadEmail = it },
+                                label = { Text("Email (Certificado Google)") },
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                            OutlinedTextField(
+                                value = newLeadPhone,
+                                onValueChange = { newLeadPhone = it },
+                                label = { Text("Teléfono de Contacto") },
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                            OutlinedTextField(
+                                value = newLeadCompany,
+                                onValueChange = { newLeadCompany = it },
+                                label = { Text("Empresa Suministros") },
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                            OutlinedTextField(
+                                value = newLeadProvince,
+                                onValueChange = { newLeadProvince = it },
+                                label = { Text("Provincia / Zona") },
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                            OutlinedTextField(
+                                value = newLeadPrice,
+                                onValueChange = { newLeadPrice = it },
+                                label = { Text("Precio de Venta (€)") },
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                            Column {
+                                Text("Nivel de Suscripción:", fontSize = 11.sp, color = Color.Gray, fontWeight = FontWeight.Bold)
+                                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                    listOf("gratuito", "pro", "premium").forEach { plan ->
+                                        val isSel = newLeadPlan == plan
+                                        FilterChip(
+                                            selected = isSel,
+                                            onClick = { newLeadPlan = plan },
+                                            label = { Text(plan.uppercase(), fontSize = 10.sp) },
+                                            colors = FilterChipDefaults.filterChipColors(
+                                                selectedContainerColor = Color(0xFFF39C12)
+                                            )
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    confirmButton = {
+                        Button(
+                            onClick = {
+                                if (newLeadName.isNotEmpty() && newLeadEmail.isNotEmpty()) {
+                                    val price = newLeadPrice.toDoubleOrNull() ?: 35.00
+                                    viewModel.insertUserLead(
+                                        email = newLeadEmail.trim().lowercase(),
+                                        name = newLeadName.trim(),
+                                        plan = newLeadPlan,
+                                        phone = newLeadPhone.trim(),
+                                        company = newLeadCompany.trim(),
+                                        province = newLeadProvince.trim().ifEmpty { "Madrid" },
+                                        isSold = false,
+                                        price = price
+                                    )
+                                    showAddLeadDialog = false
+                                }
+                            },
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFF39C12))
+                        ) {
+                            Text("Guardar Lead Upgrade", color = Color.White)
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = { showAddLeadDialog = false }) {
+                            Text("Cancelar", color = Color.Gray)
+                        }
+                    },
+                    containerColor = Color(0xFF161b22),
+                    titleContentColor = Color.White,
+                    textContentColor = Color.White
+                )
+            }
+
+            if (showEditLeadDialog && editingLead != null) {
+                AlertDialog(
+                    onDismissRequest = { showEditLeadDialog = false },
+                    title = { Text("Modificar Lead / Suscripción", color = Color.White, fontWeight = FontWeight.Bold) },
+                    text = {
+                        Column(
+                            verticalArrangement = Arrangement.spacedBy(10.dp),
+                            modifier = Modifier.verticalScroll(rememberScrollState())
+                        ) {
+                            OutlinedTextField(
+                                value = editLeadName,
+                                onValueChange = { editLeadName = it },
+                                label = { Text("Nombre Completo") },
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                            OutlinedTextField(
+                                value = editLeadEmail,
+                                onValueChange = { editLeadEmail = it },
+                                label = { Text("Email google") },
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                            OutlinedTextField(
+                                value = editLeadPhone,
+                                onValueChange = { editLeadPhone = it },
+                                label = { Text("Teléfono") },
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                            OutlinedTextField(
+                                value = editLeadCompany,
+                                onValueChange = { editLeadCompany = it },
+                                label = { Text("Empresa") },
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                            OutlinedTextField(
+                                value = editLeadProvince,
+                                onValueChange = { editLeadProvince = it },
+                                label = { Text("Provincia") },
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                            OutlinedTextField(
+                                value = editLeadPrice,
+                                onValueChange = { editLeadPrice = it },
+                                label = { Text("Valor Comercial (€)") },
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text("Lead Vendido (Lead Cerrado)", color = Color.White, fontSize = 12.sp)
+                                Switch(
+                                    checked = editLeadIsSold,
+                                    onCheckedChange = { editLeadIsSold = it },
+                                    colors = SwitchDefaults.colors(checkedThumbColor = Color(0xFFF39C12))
+                                )
+                            }
+                            Column {
+                                Text("Plan de Suscripción:", fontSize = 11.sp, color = Color.Gray, fontWeight = FontWeight.Bold)
+                                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                    listOf("gratuito", "pro", "premium").forEach { plan ->
+                                        val isSel = editLeadPlan == plan
+                                        FilterChip(
+                                            selected = isSel,
+                                            onClick = { editLeadPlan = plan },
+                                            label = { Text(plan.uppercase(), fontSize = 10.sp) },
+                                            colors = FilterChipDefaults.filterChipColors(
+                                                selectedContainerColor = Color(0xFFF39C12)
+                                            )
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    confirmButton = {
+                        Button(
+                            onClick = {
+                                val currentEditing = editingLead
+                                if (currentEditing != null && editLeadName.isNotEmpty()) {
+                                    val price = editLeadPrice.toDoubleOrNull() ?: currentEditing.leadPrice
+                                    viewModel.updateUserLead(
+                                        currentEditing.copy(
+                                            name = editLeadName.trim(),
+                                            email = editLeadEmail.trim().lowercase(),
+                                            phoneNumber = editLeadPhone.trim(),
+                                            companyName = editLeadCompany.trim(),
+                                            province = editLeadProvince.trim(),
+                                            subscriptionPlan = editLeadPlan,
+                                            leadPrice = price,
+                                            isSold = editLeadIsSold
+                                        )
+                                    )
+                                    showEditLeadDialog = false
+                                }
+                            },
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFF39C12))
+                        ) {
+                            Text("Guardar Cambios", color = Color.White)
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = { showEditLeadDialog = false }) {
+                            Text("Cancelar", color = Color.Gray)
+                        }
+                    },
+                    containerColor = Color(0xFF161b22),
+                    titleContentColor = Color.White,
+                    textContentColor = Color.White
+                )
             }
         }
     }
