@@ -52,6 +52,10 @@ class EnigmaRepository(private val context: Context) {
         dao.clearExamHistory()
     }
 
+    suspend fun clearModuleProgress() {
+        dao.clearModuleProgress()
+    }
+
     suspend fun createSupportRequest(name: String, email: String, subject: String, message: String) {
         dao.insertSupportRequest(
             SupportRequestEntity(

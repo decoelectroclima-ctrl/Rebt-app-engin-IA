@@ -12,6 +12,9 @@ interface EnigmaDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertModuleProgress(progress: ModuleProgressEntity)
 
+    @Query("DELETE FROM module_progress")
+    suspend fun clearModuleProgress()
+
     // Exams
     @Query("SELECT * FROM exam_record ORDER BY createdAt DESC")
     fun getExamRecords(): Flow<List<ExamRecordEntity>>

@@ -3460,6 +3460,172 @@ fun SupportCenterTabContent(viewModel: MainViewModel) {
                 }
             }
         }
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        var showPrivacyDialog by remember { mutableStateOf(false) }
+        var showDeletionDialog by remember { mutableStateOf(false) }
+        var showDeletionSuccessDialog by remember { mutableStateOf(false) }
+
+        if (showPrivacyDialog) {
+            AlertDialog(
+                onDismissRequest = { showPrivacyDialog = false },
+                title = {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(Icons.Default.PrivacyTip, contentDescription = "Privacidad", tint = Color(0xFF58a6ff), modifier = Modifier.size(24.dp))
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text("Política de Privacidad", fontWeight = FontWeight.Bold)
+                    }
+                },
+                text = {
+                    Column(
+                        modifier = Modifier
+                            .height(350.dp)
+                            .verticalScroll(rememberScrollState())
+                    ) {
+                        Text(
+                            text = "POLÍTICA DE PRIVACIDAD Y SEGURIDAD - ENGINIA REBT\n" +
+                                    "Última actualización: Junio de 2026\n\n" +
+                                    "1. RESPONSABLIDAD Y CONTACTO\n" +
+                                    "EnginIA REBT es una aplicación de estudio técnico comprometida con la protección de datos personales. Para cualquier duda o solicitud de derechos ARCO, puede contactar al correo: jj.terapias@gmail.com.\n\n" +
+                                    "2. DATOS QUE RECOPILAMOS Y FINALIDAD\n" +
+                                    "- Cuenta de Correo Google (Gmail): Utilizada de manera única para autenticar formalmente al usuario en la app, verificar las compras integradas o suscripciones Premium en la Google Play Store, y posibilitar la sincronización de su progreso educativo (historial de exámenes, simuladores y datos de laboratorios).\n" +
+                                    "- Sin Datos de Rastreo Externos: No recopilamos contactos, ubicación por GPS, archivos personales, identificación publicitaria ni información de hardware.\n\n" +
+                                    "3. PAGOS Y FACTURACIÓN SEGURA\n" +
+                                    "Todas las pasarelas de pago y compra de la suscripción se delegan directamente en la API oficial de Google Play Billing Services. Nosotros no capturamos, almacenamos ni procesamos información de tarjetas, bancos o cuentas bancarias, asegurando el estándar militar certificado de Google Play.\n\n" +
+                                    "4. COMPARTICIÓN DE DATOS\n" +
+                                    "EnginIA REBT jamás vende, alquila, distribuye o comparte sus datos con terceros bajo ninguna circunstancia. La información permanece alojada de forma privada en el almacenamiento seguro de la aplicación y réplicas cifradas en la nube del usuario en Google Drive / Google Play.\n\n" +
+                                    "5. DERECHO A LA ELIMINACIÓN TOTAL DE DATOS\n" +
+                                    "Cumpliendo de forma estricta con las exigencias del Reglamento General de Protección de Datos (RGPD) de la Unión Europea y las Directivas de Google Play para Desarrolladores, usted dispone de total autonomía para borrar su cuenta y datos de inmediato. Puede presionar el botón 'Solicitar Borrado' en esta sección para limpiar todo rastro de forma instantánea de nuestros registros, o enviar un correo a jj.terapias@gmail.com solicitándolo.",
+                            fontSize = 12.sp,
+                            lineHeight = 18.sp,
+                            color = if (viewModel.isDarkTheme) Color(0xFFC9D1D9) else Color(0xFF24292F)
+                        )
+                    }
+                },
+                confirmButton = {
+                    Button(
+                        onClick = { showPrivacyDialog = false },
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF58a6ff))
+                    ) {
+                        Text("He leído y acepto", color = Color.White)
+                    }
+                },
+                containerColor = if (viewModel.isDarkTheme) Color(0xFF161b22) else Color.White,
+                titleContentColor = if (viewModel.isDarkTheme) Color.White else Color.Black
+            )
+        }
+
+        if (showDeletionDialog) {
+            AlertDialog(
+                onDismissRequest = { showDeletionDialog = false },
+                title = {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(Icons.Default.DeleteForever, contentDescription = "Eliminar", tint = Color(0xFFEE5F5F), modifier = Modifier.size(24.dp))
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text("Eliminar Cuenta y Datos", fontWeight = FontWeight.Bold, color = Color(0xFFEE5F5F))
+                    }
+                },
+                text = {
+                    Text(
+                        "¿Está completamente seguro de que desea eliminar todos sus datos, progreso técnico de exámenes, laboratorios, simulaciones y desvincular su correo electrónico de la base de datos?\n\nEsta acción es irreversible y perderá acceso a su progreso actual de estudio.",
+                        fontSize = 13.sp,
+                        color = if (viewModel.isDarkTheme) Color(0xFFC9D1D9) else Color(0xFF24292F)
+                    )
+                },
+                confirmButton = {
+                    Button(
+                        onClick = {
+                            viewModel.clearAllUserData {
+                                showDeletionDialog = false
+                                showDeletionSuccessDialog = true
+                            }
+                        },
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFEE5F5F))
+                    ) {
+                        Text("Sí, Borrar Todo", color = Color.White, fontWeight = FontWeight.Bold)
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { showDeletionDialog = false }) {
+                        Text("Cancelar", color = Color.Gray)
+                    }
+                },
+                containerColor = if (viewModel.isDarkTheme) Color(0xFF161b22) else Color.White
+            )
+        }
+
+        if (showDeletionSuccessDialog) {
+            AlertDialog(
+                onDismissRequest = { showDeletionSuccessDialog = false },
+                title = { Text("Datos Eliminados", fontWeight = FontWeight.Bold, color = Color(0xFF3FB950)) },
+                text = { Text("Su cuenta ha sido desvinculada perfectamente y todos los registros locales de su progreso han sido borrados de raíz de la aplicación en cumplimiento con el RGPD.", fontSize = 13.sp) },
+                confirmButton = {
+                    Button(onClick = { showDeletionSuccessDialog = false }) {
+                        Text("Cerrar")
+                    }
+                },
+                containerColor = if (viewModel.isDarkTheme) Color(0xFF161b22) else Color.White
+            )
+        }
+
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 12.dp)
+                .testTag("privacy_card"),
+            colors = CardDefaults.cardColors(containerColor = Color(0xFF161b22)),
+            border = BorderStroke(1.dp, Color(0xFF30363d))
+        ) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        imageVector = Icons.Default.Security,
+                        contentDescription = "Seguridad",
+                        tint = Color(0xFF3fb950),
+                        modifier = Modifier.size(24.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = "Privacidad y Seguridad GDPR/Play",
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Text(
+                    text = "En cumplimiento estricto con las directivas de seguridad de Google Play y el RGPD, protegemos su privacidad de forma transparente:",
+                    fontSize = 12.sp,
+                    color = Color.Gray
+                )
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    OutlinedButton(
+                        onClick = { showPrivacyDialog = true },
+                        modifier = Modifier.weight(1f).testTag("view_privacy_policy_button"),
+                        border = BorderStroke(1.dp, Color(0xFF30363d))
+                    ) {
+                        Text("Ver Políticas", fontSize = 11.sp, color = Color(0xFF58a6ff))
+                    }
+
+                    Button(
+                        onClick = { showDeletionDialog = true },
+                        modifier = Modifier.weight(1f).testTag("delete_user_data_button"),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0x33EE5F5F))
+                    ) {
+                        Text("Eliminar Datos", fontSize = 11.sp, color = Color(0xFFEE5F5F), fontWeight = FontWeight.Bold)
+                    }
+                }
+            }
+        }
     }
 }
 

@@ -704,6 +704,19 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             repository.clearUserLeads()
         }
     }
+
+    fun clearAllUserData(onComplete: () -> Unit) {
+        viewModelScope.launch {
+            repository.clearModuleProgress()
+            repository.clearExamHistory()
+            repository.clearUserLeads()
+            repository.clearCustomDocuments()
+            repository.clearCustomNews()
+            currentUserEmail = ""
+            adminModeEnabled = false
+            onComplete()
+        }
+    }
 }
 
 // Random helper extension for Double ranges
