@@ -16,6 +16,10 @@ class BillingManager(
     var isClientConnected = false
         private set
 
+    // Dynamic providers set by ViewModel
+    var priceProProvider: () -> Double = { 14.99 }
+    var pricePremiumProvider: () -> Double = { 29.99 }
+
     // Official Google Play Product IDs for your developer Console
     val PRO_MONTHLY_PRODUCT_ID = "pro_monthly"
     val PREMIUM_LIFETIME_PRODUCT_ID = "premium_lifetime"
@@ -86,7 +90,7 @@ class BillingManager(
                 
                 if (activePro) {
                     coroutineScope.launch {
-                        repository.activatePremiumSubscription("pro", 4.99)
+                        repository.activatePremiumSubscription("pro", priceProProvider())
                     }
                     purchases.forEach { purchase ->
                         if (!purchase.isAcknowledged) {
@@ -115,7 +119,7 @@ class BillingManager(
                 
                 if (activePremium) {
                     coroutineScope.launch {
-                        repository.activatePremiumSubscription("premium", 14.99)
+                        repository.activatePremiumSubscription("premium", pricePremiumProvider())
                     }
                     purchases.forEach { purchase ->
                         if (!purchase.isAcknowledged) {
@@ -178,7 +182,7 @@ class BillingManager(
                 // Safeguard activation for emulator/sandbox testing if product isn't configured in Play Store Console yet.
                 coroutineScope.launch {
                     val plan = if (productId == PRO_MONTHLY_PRODUCT_ID) "pro" else "premium"
-                    val price = if (productId == PRO_MONTHLY_PRODUCT_ID) 4.99 else 14.99
+                    val price = if (productId == PRO_MONTHLY_PRODUCT_ID) priceProProvider() else pricePremiumProvider()
                     repository.activatePremiumSubscription(plan, price)
                 }
             }
@@ -193,7 +197,7 @@ class BillingManager(
             if (isPro || isPremium) {
                 coroutineScope.launch {
                     val plan = if (isPro) "pro" else "premium"
-                    val price = if (isPro) 4.99 else 14.99
+                    val price = if (isPro) priceProProvider() else pricePremiumProvider()
                     repository.activatePremiumSubscription(plan, price)
                 }
             }

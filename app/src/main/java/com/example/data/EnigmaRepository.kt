@@ -196,4 +196,18 @@ class EnigmaRepository(private val context: Context) {
     suspend fun clearUserLeads() {
         dao.clearUserLeads()
     }
+
+    suspend fun resetDailyActivity() {
+        dao.insertDailyActivity(
+            DailyActivityEntity(
+                id = 1,
+                questionsAnswered = 0,
+                calculatorsUsed = 0,
+                schemasExplored = 0,
+                streakDays = 0,
+                lastActiveDate = null,
+                unlockedAchievements = ""
+            )
+        )
+    }
 }

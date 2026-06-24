@@ -15,11 +15,13 @@ import kotlinx.coroutines.launch
 
 import androidx.compose.runtime.mutableStateListOf
 
-class AdminAd(val id: Int, sponsor: String, message: String, ctaText: String, tintColor: String) {
+class AdminAd(val id: Int, sponsor: String, message: String, ctaText: String, tintColor: String, targetUrl: String = "", imageUrl: String = "") {
     var sponsor by mutableStateOf(sponsor)
     var message by mutableStateOf(message)
     var ctaText by mutableStateOf(ctaText)
     var tintColor by mutableStateOf(tintColor)
+    var targetUrl by mutableStateOf(targetUrl)
+    var imageUrl by mutableStateOf(imageUrl)
 }
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
@@ -28,11 +30,11 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     // --- ADMINISTRATIVE ADVERTISING CONTROLS ---
     val adminAds = mutableStateListOf(
-        AdminAd(0, "Prysmian Group España", "Cables Afumex de alta seguridad libre de halógenos para CTE", "Saber Más", "#FF3FB950"),
-        AdminAd(1, "Fluke España", "Comprobadores multifunción de RCD Serie 1660 Pro", "Catálogo", "#FFF1C40F"),
-        AdminAd(2, "Schneider Electric", "Protecciones diferenciales superinmunizadas Tipo A e inteligentes", "Comprar", "#FF58A6FF"),
-        AdminAd(3, "Circutor Soluciones", "Analizadores de red y recarga inteligente integrada EV", "Detalles", "#FFBC8CFF"),
-        AdminAd(4, "Solera Envolventes", "Envolventes plásticas listas para ICT y REBT-2026 oficial", "Ver Línea", "#FFEE5F5F")
+        AdminAd(0, "Prysmian Group España", "Cables Afumex de alta seguridad libre de halógenos para CTE", "Saber Más", "#FF3FB950", "https://www.prysmiangroup.com/es", "https://images.unsplash.com/photo-1558346490-a72e53ae2d4f?w=300&q=80"),
+        AdminAd(1, "Fluke España", "Comprobadores multifunción de RCD Serie 1660 Pro", "Catálogo", "#FFF1C40F", "https://www.fluke.com/es-es", "https://images.unsplash.com/photo-1517430816045-df4b7de11d1d?w=300&q=80"),
+        AdminAd(2, "Schneider Electric", "Protecciones diferenciales superinmunizadas Tipo A e inteligentes", "Comprar", "#FF58A6FF", "https://www.se.com/es/es/", "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=300&q=80"),
+        AdminAd(3, "Circutor Soluciones", "Analizadores de red y recarga inteligente integrada EV", "Detalles", "#FFBC8CFF", "https://circutor.com/es/", ""),
+        AdminAd(4, "Solera Envolventes", "Envolventes plásticas listas para ICT y REBT-2026 oficial", "Ver Línea", "#FFEE5F5F", "https://www.solera.es/", "")
     )
 
     var adsIsDynamic by mutableStateOf(true)
@@ -42,6 +44,56 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     var currentUserEmail by mutableStateOf("jj.terapias@gmail.com")
     var showUserEmailDialog by mutableStateOf(false)
     var inputEmailString by mutableStateOf("jj.terapias@gmail.com")
+
+    // --- DYNAMIC SUBSCRIPTION PLAN CONTROLS ---
+    // Costs (defaults: Pro 14.99€, Premium 29.99€)
+    var pricePro by mutableStateOf(14.99)
+    var pricePremium by mutableStateOf(29.99)
+
+    // Sections Enabled for DEMO
+    var demoDashboardEnabled by mutableStateOf(true)
+    var demoBookEnabled by mutableStateOf(true)
+    var demoExamsEnabled by mutableStateOf(true)
+    var demoSimulatorEnabled by mutableStateOf(false) // Marketing strategy: lock advanced simulation
+    var demoLaboratoryEnabled by mutableStateOf(false) // Marketing strategy: lock advanced calculators
+    var demoDocumentsEnabled by mutableStateOf(false)
+    var demoNewsEnabled by mutableStateOf(true)
+    var demoSupportEnabled by mutableStateOf(false)
+
+    // Sections Enabled for PRO
+    var proDashboardEnabled by mutableStateOf(true)
+    var proBookEnabled by mutableStateOf(true)
+    var proExamsEnabled by mutableStateOf(true)
+    var proSimulatorEnabled by mutableStateOf(true)
+    var proLaboratoryEnabled by mutableStateOf(true)
+    var proDocumentsEnabled by mutableStateOf(true)
+    var proNewsEnabled by mutableStateOf(true)
+    var proSupportEnabled by mutableStateOf(false) // Marketing Strategy: Gemini REBT AI Companion is Premium (or limited)
+
+    // Sections Enabled for PREMIUM (Unhinged VIP)
+    var premiumDashboardEnabled by mutableStateOf(true)
+    var premiumBookEnabled by mutableStateOf(true)
+    var premiumExamsEnabled by mutableStateOf(true)
+    var premiumSimulatorEnabled by mutableStateOf(true)
+    var premiumLaboratoryEnabled by mutableStateOf(true)
+    var premiumDocumentsEnabled by mutableStateOf(true)
+    var premiumNewsEnabled by mutableStateOf(true)
+    var premiumSupportEnabled by mutableStateOf(true)
+
+    // Limits
+    var limitDemoExamsPerDay by mutableStateOf(1)
+    var limitDemoItcPerDay by mutableStateOf(2)
+    var limitProGeminiPerDay by mutableStateOf(2)
+
+    // Trackers for the active session (saved during runtime)
+    val dailyItcOpenedList = mutableStateListOf<String>()
+    val dailyExamsCompletedList = mutableStateListOf<String>()
+    var dailyGeminiQuestionsCount by mutableStateOf(0)
+
+    init {
+        billingManager.priceProProvider = { pricePro }
+        billingManager.pricePremiumProvider = { pricePremium }
+    }
 
 
     // Data streams from model
@@ -89,6 +141,12 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     var isAnswerCorrect by mutableStateOf<Boolean?>(null)
     var examCorrectCount by mutableStateOf(0)
     var examCompleted by mutableStateOf(false)
+
+    // Express Exam state parameters
+    var isExpressMode by mutableStateOf(false)
+    var secondsRemaining by mutableStateOf(20)
+    var timerDurationPerQuestion by mutableStateOf(20) // 15, 20, or 30 seconds
+    var globalExpressModePref by mutableStateOf(false) // Toggle at the top of the tab
 
     // Sizing electrical lab states
     var labActiveSubTab by mutableStateOf(0) // 0: Conductores, 1: Previsión Cargas, 2: Tubos, 3: Tierra
@@ -299,7 +357,34 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         isAnswerCorrect = null
         examCorrectCount = 0
         examCompleted = false
+        
+        // Respect settings or customized launch
+        isExpressMode = globalExpressModePref
+        if (isExpressMode) {
+            secondsRemaining = timerDurationPerQuestion
+        }
+        
         activeTab = "exams" // navigate to exams screen
+    }
+
+    // Starts a randomized offline exam from the expanded pool of questions
+    fun startRandomizedOfflineExam(title: String, size: Int, express: Boolean) {
+        // Collect all questions from Content.QUESTIONS map
+        val allQuestions = Content.QUESTIONS.values.flatMap { it.questions }
+        val shuffled = allQuestions.sortedBy { (0..1000).random() } // Robust offline shuffle
+        val selectedQuestions = shuffled.take(minOf(size, shuffled.size))
+
+        val module = ModuleDefinition(
+            id = "randomized_${System.currentTimeMillis()}",
+            label = title,
+            icon = if (express) "⏱️" else "📋",
+            color = if (express) "#E74C3C" else "#3498DB",
+            questions = selectedQuestions
+        )
+
+        // Reset global preference if we explicitly requested express for Express Exam card
+        globalExpressModePref = express
+        startExam(module)
     }
 
     // Dynamic AI-Generated Exams (Infinite Database) states and functions
@@ -335,17 +420,20 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     // Answers active question
-    fun submitAnswer() {
+    fun submitAnswer(timedOut: Boolean = false) {
         val module = activeExamModule ?: return
         val currentQuestionList = module.questions
         val question = currentQuestionList.getOrNull(currentQuestionIndex) ?: return
-        val selected = selectedOptionIndex ?: return
 
         currentQuestionAnswered = true
-        val correct = selected == question.a
-        isAnswerCorrect = correct
-        if (correct) {
-            examCorrectCount++
+        if (timedOut || selectedOptionIndex == null) {
+            isAnswerCorrect = false
+        } else {
+            val correct = selectedOptionIndex == question.a
+            isAnswerCorrect = correct
+            if (correct) {
+                examCorrectCount++
+            }
         }
     }
 
@@ -358,6 +446,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             selectedOptionIndex = null
             currentQuestionAnswered = false
             isAnswerCorrect = null
+            if (isExpressMode) {
+                secondsRemaining = timerDurationPerQuestion
+            }
         } else {
             // Complete exam
             examCompleted = true
@@ -712,9 +803,78 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             repository.clearUserLeads()
             repository.clearCustomDocuments()
             repository.clearCustomNews()
+            repository.resetDailyActivity()
             currentUserEmail = ""
             adminModeEnabled = false
             onComplete()
+        }
+    }
+
+    fun changeSubscriberEmail(newEmail: String) {
+        val oldEmail = currentUserEmail.trim().lowercase()
+        val parsed = newEmail.trim().lowercase()
+        if (oldEmail != parsed) {
+            currentUserEmail = parsed
+            viewModelScope.launch {
+                // Set gamification metrics, exam records, and progress to zero to track the new subscriber's progress realistically
+                repository.resetDailyActivity()
+                repository.clearExamHistory()
+                repository.clearModuleProgress()
+            }
+        }
+    }
+
+    fun resetGamificationOnly() {
+        viewModelScope.launch {
+            repository.resetDailyActivity()
+            repository.clearExamHistory()
+            repository.clearModuleProgress()
+        }
+    }
+
+    fun isSectionEnabled(tab: String, plan: String): Boolean {
+        val cleanPlan = plan.lowercase().trim()
+        return when {
+            cleanPlan == "gratuito" || cleanPlan == "demo" -> {
+                when (tab) {
+                    "dashboard" -> demoDashboardEnabled
+                    "book" -> demoBookEnabled
+                    "exams" -> demoExamsEnabled
+                    "simulator" -> demoSimulatorEnabled
+                    "laboratory" -> demoLaboratoryEnabled
+                    "documents" -> demoDocumentsEnabled
+                    "news" -> demoNewsEnabled
+                    "support" -> demoSupportEnabled
+                    else -> true
+                }
+            }
+            cleanPlan == "pro" -> {
+                when (tab) {
+                    "dashboard" -> proDashboardEnabled
+                    "book" -> proBookEnabled
+                    "exams" -> proExamsEnabled
+                    "simulator" -> proSimulatorEnabled
+                    "laboratory" -> proLaboratoryEnabled
+                    "documents" -> proDocumentsEnabled
+                    "news" -> proNewsEnabled
+                    "support" -> proSupportEnabled
+                    else -> true
+                }
+            }
+            cleanPlan == "premium" -> {
+                when (tab) {
+                    "dashboard" -> premiumDashboardEnabled
+                    "book" -> premiumBookEnabled
+                    "exams" -> premiumExamsEnabled
+                    "simulator" -> premiumSimulatorEnabled
+                    "laboratory" -> premiumLaboratoryEnabled
+                    "documents" -> premiumDocumentsEnabled
+                    "news" -> premiumNewsEnabled
+                    "support" -> premiumSupportEnabled
+                    else -> true
+                }
+            }
+            else -> true
         }
     }
 }

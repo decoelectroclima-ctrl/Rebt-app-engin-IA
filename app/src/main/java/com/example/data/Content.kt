@@ -516,6 +516,42 @@ object Content {
                     a = 2,
                     exp = "En el Art. 24, las solicitudes de excepción que no tengan respuesta en el plazo reglamentario se consideran desestimadas (silencio administrativo negativo).",
                     ref = "Art. 24 REBT"
+                ),
+                Question(
+                    q = "¿Quién resolverá en caso de discrepancia sobre la aplicación del REBT entre una OCA y la empresa instaladora?",
+                    opts = listOf(
+                        "El Ministerio de Industria directamente.",
+                        "El órgano competente de la Comunidad Autónoma.",
+                        "El fabricante de los elementos eléctricos.",
+                        "La empresa distribuidora de energía de la zona."
+                    ),
+                    a = 1,
+                    exp = "El Art. 24 del REBT establece que las discrepancias que se susciten entre el instalador y la inspección técnica (OCA) serán resueltas por el órgano territorial competente de la Comunidad Autónoma.",
+                    ref = "Art. 24 REBT"
+                ),
+                Question(
+                    q = "¿Cuál es la frecuencia nominal autorizada para las redes de baja tensión en España y su tolerancia máxima?",
+                    opts = listOf(
+                        "50 Hz con tolerancia de ±1%.",
+                        "50 Hz con tolerancia de ±2%.",
+                        "60 Hz con tolerancia de ±0.5%.",
+                        "50 Hz con tolerancia de ±5%."
+                    ),
+                    a = 0,
+                    exp = "Según los artículos generales, la frecuencia nominal autorizada es de 50 Hz, establecida bajo los márgenes específicos de regulación y calidad de suministro del sector eléctrico, con una tolerancia habitual de ±1%.",
+                    ref = "Art. 4 REBT"
+                ),
+                Question(
+                    q = "Según el Art. 12, ¿cuál de los siguientes sistemas se considera un medio de seguridad equivalente?",
+                    opts = listOf(
+                        "Cualquier sistema patentado en la Unión Europea.",
+                        "Aquel que, aun difiriendo del Reglamento, ofrezca al menos el mismo nivel de seguridad física.",
+                        "Un seguro de responsabilidad civil especial superior a 1 millón de euros.",
+                        "No se admiten alternativas en ningún caso, el REBT es de obligatorio cumplimiento literal."
+                    ),
+                    a = 1,
+                    exp = "El Art. 12 permite utilizar sistemas o técnicas alternativas si se demuestra documentalmente que ofrecen un nivel de seguridad y eficacia equivalente a las prescripciones técnicas del reglamento.",
+                    ref = "Art. 12 REBT"
                 )
             )
         ),
@@ -620,6 +656,42 @@ object Content {
                     a = 2,
                     exp = "Las instalaciones comunes de edificios de viviendas cuya potencia total instalada sea superior a 100 kW deben someterse a inspección periódica cada 10 años.",
                     ref = "ITC-BT-05 §4.2"
+                ),
+                Question(
+                    q = "¿Cada cuántos años debe someterse a inspección periódica por una OCA un local de pública concurrencia (como un cine o un bar amplio)?",
+                    opts = listOf(
+                        "Cada 3 años.",
+                        "Cada 5 años.",
+                        "Cada 10 años.",
+                        "No requiere inspección periódica si tiene MTD."
+                    ),
+                    a = 1,
+                    exp = "La ITC-BT-05 indica que los locales de pública concurrencia requieren realizar una inspección técnica por Organismo de Control Autorizado (OCA) cada 5 años.",
+                    ref = "ITC-BT-05 §4.2"
+                ),
+                Question(
+                    q = "¿Y en el caso de un quirófano, sala de intervención médica u hospital, cada cuánto tiempo pasa OCA?",
+                    opts = listOf(
+                        "Al ser local de alta seguridad médica, rige cada 5 años.",
+                        "Cada año de forma permanente.",
+                        "Cada 2 años.",
+                        "Únicamente al momento de su puesta en marcha inicial."
+                    ),
+                    a = 0,
+                    exp = "Al igual que otros emplazamientos especiales de alta criticidad, la ITC-BT-05 los agrupa junto con locales con riesgo de incendio/explosión, estipulando inspección OCA obligatoria cada 5 años.",
+                    ref = "ITC-BT-05 §4.2"
+                ),
+                Question(
+                    q = "Para realizar el mantenimiento de un quirófano o sala de intervención, ¿qué calificación debe tener la empresa según la ITC-BT-03?",
+                    opts = listOf(
+                        "Básica (IBTB).",
+                        "Especialista (IBTE) en la modalidad de locales de pública concurrencia y salas médicas.",
+                        "Cualquier electricista de mantenimiento con FP.",
+                        "Solo ingenieros industriales colegiados."
+                    ),
+                    a = 1,
+                    exp = "Los quirófanos y salas de intervención son exclusivas de la categoría Especialista (IBTE) por la complejidad e importancia de los sistemas de aislamiento y alimentación de seguridad redundante.",
+                    ref = "ITC-BT-03 par. 3"
                 )
             )
         ),
@@ -700,6 +772,54 @@ object Content {
                     a = 1,
                     exp = "Se instalará por prescripción un interruptor diferencial como mínimo por cada cinco circuitos o fracción instalados para evitar fugas acumuladas.",
                     ref = "ITC-BT-25 §2.3.2"
+                ),
+                Question(
+                    q = "El circuito C13 de la ITC-BT-52 para punto de recarga de vehículo eléctrico doméstico se calcula con una potencia prevista de:",
+                    opts = listOf(
+                        "2.300 W (10 A).",
+                        "3.680 W (16 A).",
+                        "5.750 W (25 A).",
+                        "7.360 W (32 A)."
+                    ),
+                    a = 1,
+                    exp = "La ITC-BT-52 / ITC-BT-25 establece que para el circuito individual destinado a la recarga de vehículo eléctrico (C13), la potencia de cálculo mínima de previsión será de 3.680 W (1,5 veces la intensidad nominal, es decir, 16 A, o superior si se diseña para recarga rápida).",
+                    ref = "ITC-BT-52 §3.1"
+                ),
+                Question(
+                    q = "¿Cuál es el calibre estándar mínimo que debe tener el Interruptor de Control de Potencia (ICP) en electrificación básica?",
+                    opts = listOf(
+                        "16 A.",
+                        "20 A.",
+                        "25 A.",
+                        "40 A."
+                    ),
+                    a = 2,
+                    exp = "El suministro monofásico básico estipula 5.750 W correspondientes a un ICP y un IGA mínimo de 25 A.",
+                    ref = "ITC-BT-10 / ITC-BT-25"
+                ),
+                Question(
+                    q = "¿Qué sensibilidad diferencial se exige por defecto en la toma de recarga de vehículos eléctricos (Circuito C13)?",
+                    opts = listOf(
+                        "300 mA estándar.",
+                        "30 mA con protección diferencial Clase A o superior.",
+                        "10 mA para evitar microshocks de corriente.",
+                        "No requiere diferencial si el cargador dispone de aislamiento galvánico completo."
+                    ),
+                    a = 1,
+                    exp = "La ITC-BT-52 exige obligatoriamente un dispositivo diferencial clase A con una sensibilidad máxima de 30 mA para salvaguardar fugas especiales de corriente continua generadas por las baterías de los vehículos.",
+                    ref = "ITC-BT-52 §5"
+                ),
+                Question(
+                    q = "¿Cuál es la caída de tensión máxima admisible para el circuito interior C13 destinado a vehículo eléctrico?",
+                    opts = listOf(
+                        "1.5% máximo.",
+                        "3% para alumbrado y 5% para otros usos.",
+                        "5% como valor genérico de tomacorrientes.",
+                        "No hay límite prescrito siempre que el conductor no supere 70ºC."
+                    ),
+                    a = 2,
+                    exp = "De acuerdo con el anexo específico, para los circuitos interiores de alimentación de vehículos eléctricos (como el C13), la caída de tensión admisible es del 5%, en línea con los usos de fuerza.",
+                    ref = "ITC-BT-52"
                 )
             )
         ),
@@ -768,6 +888,54 @@ object Content {
                     a = 1,
                     exp = "De acuerdo con la Tabla 2 de la ITC-18, para fases de S > 35 mm², la sección del PE será la mitad del valor de la fase (S/2). 50 mm² / 2 = 25 mm².",
                     ref = "ITC-BT-18 Tabla 2"
+                ),
+                Question(
+                    q = "¿Qué sección mínima debe tener un conductor de cobre desnudo enterrado para puesta a tierra sin protección mecánica contra corrosión?",
+                    opts = listOf(
+                        "16 mm².",
+                        "25 mm².",
+                        "35 mm².",
+                        "50 mm²."
+                    ),
+                    a = 1,
+                    exp = "La ITC-BT-18 tabla 1 indica que los conductores enterrados desnudos de cobre deben tener una sección mínima de 25 mm² para garantizar suficiente resistencia mecánica frente a la erosión química del subsuelo.",
+                    ref = "ITC-BT-18 Tabla 1"
+                ),
+                Question(
+                    q = "Si el conductor de tierra desnudo enterrado es de acero galvanizado, ¿cuál es la sección mínima legal?",
+                    opts = listOf(
+                        "25 mm².",
+                        "35 mm².",
+                        "50 mm².",
+                        "100 mm²."
+                    ),
+                    a = 2,
+                    exp = "Según la ITC-BT-18 Tabla 1, la sección mínima requerida para conductores de acero galvanizado para puesta a tierra es de 50 mm².",
+                    ref = "ITC-BT-18 Tabla 1"
+                ),
+                Question(
+                    q = "¿Cuál es la periodicidad mínima con la que el propietario de la finca debe revisar mecánicamente la instalación de toma de tierra?",
+                    opts = listOf(
+                        "No hay obligación de registrar revisiones una vez sepultada.",
+                        "Al menos una vez al año, coincidiendo con la estación seca.",
+                        "Cada 5 años por la Comunidad de Propietarios.",
+                        "Únicamente cada vez que salte el diferencial principal."
+                    ),
+                    a = 1,
+                    exp = "La ITC-BT-18 §11 dictamina que el inspector o propietario verificará formalmente las tomas de tierra al menos una vez al año en época seca, midiendo los valores de resistencia e integridad del anillo.",
+                    ref = "ITC-BT-18 §11"
+                ),
+                Question(
+                    q = "¿Qué valor máximo de resistencia de tierra se considera aconsejable de forma reglamentaria en edificios de viviendas de nueva planta sin pararrayos?",
+                    opts = listOf(
+                        "R < 15 Ω.",
+                        "R < 80 Ω (u otro compatible con tensiones de seguridad y calibres).",
+                        "R < 800 Ω.",
+                        "R = 0 Ω exactos."
+                    ),
+                    a = 1,
+                    exp = "Aunque depende de la coordinación con los diferenciales, las guías del REBT recomiendan que para edificios sin pararrayos no se superen los 80 Ω (u otros valores coordinados) para asegurar un disparo cómodo e inmediato de las protecciones frente a fugas directas.",
+                    ref = "Guía Técnica ITC-BT-18"
                 )
             )
         ),
@@ -812,6 +980,66 @@ object Content {
                     a = 2,
                     exp = "La ITC-BT-15 par.2 establece un límite estricto de seguridad: el diámetro mínimo de los tubos para derivaciones individuales será siempre de 32 mm.",
                     ref = "ITC-BT-15 §2"
+                ),
+                Question(
+                    q = "Para 5 conductores de sección 1.5 mm² en un tubo empotrado, ¿cuál es el diámetro exterior mínimo del tubo rígido o curvable?",
+                    opts = listOf(
+                        "16 mm.",
+                        "20 mm.",
+                        "25 mm.",
+                        "32 mm."
+                    ),
+                    a = 1,
+                    exp = "Según la Tabla 5 de la ITC-BT-21, para 5 conductores aislados de 1.5 mm² pasados por un tubo empotrado en obra ordinaria, se requiere un diámetro exterior de tubo mínimo de 20 mm.",
+                    ref = "ITC-BT-21 Tabla 5"
+                ),
+                Question(
+                    q = "Y para 5 conductores de sección 2.5 mm² bajo tubo empotrado, el diámetro mínimo baja o sube a:",
+                    opts = listOf(
+                        "16 mm.",
+                        "20 mm.",
+                        "25 mm.",
+                        "32 mm."
+                    ),
+                    a = 1,
+                    exp = "De igual modo, según la Tabla 5 de la ITC-BT-21, 5 conductores de 2.5 mm² empotrados requieren por seguridad de arrastre un diámetro exterior de tubo mínimo de 20 mm.",
+                    ref = "ITC-BT-21 Tabla 5"
+                ),
+                Question(
+                    q = "¿Qué porcentaje máximo de la sección transversal interna del tubo puede estar ocupada por los cables conductores para permitir su fácil instalación o sustitución?",
+                    opts = listOf(
+                        "Del 10% al 15%.",
+                        "Alrededor del 30% al 40% (coordinado con la tabla de diámetros).",
+                        "Hasta el 75% si se usa gel deslizante especial.",
+                        "El 100% de la sección física si los cables no se cruzan."
+                    ),
+                    a = 1,
+                    exp = "Las tablas de la ITC-BT-21 están calculadas siguiendo un coeficiente de ocupación volumétrica estricta de aproximadamente el 30% al 40% del espacio interno útil para garantizar que los cables puedan ser retirados, reposicionados o enfriados de manera óptima por aireación.",
+                    ref = "ITC-BT-21 §2"
+                ),
+                Question(
+                    q = "Para canalizaciones empotradas en paredes, ¿cuál es la distancia mínima a la que deben trazarse los tubos con respecto a los techos o rincones?",
+                    opts = listOf(
+                        "No se especifica, se puede trazar en diagonal libre.",
+                        "Mínimo 5 cm.",
+                        "Mínimo 20 cm del techo o suelo, trazando siguiendo líneas horizontales o verticales fijas.",
+                        "Mínimo 50 cm."
+                    ),
+                    a = 2,
+                    exp = "La ITC-BT-21 recomienda trazar los tubos de forma estrictamente ortogonal (horizontal o vertical) respetando unos márgenes mínimos de 20 cm con respecto a esquinas, techos y marcos para evitar roturas accidentales por claveteo posterior.",
+                    ref = "ITC-BT-21 / Guía REBT"
+                ),
+                Question(
+                    q = "¿Es lícito empalmar conductores dentro de tubos protectores?",
+                    opts = listOf(
+                        "Sí, si se aíslan adecuadamente con cinta de vulcanizar.",
+                        "No, jamás. Los empalmes y conexiones se realizarán exclusivamente dentro de cajas de derivación habilitadas.",
+                        "Solo si el tubo tiene un diámetro de al menos 40 mm.",
+                        "Sí, utilizando clemas automáticas de empalme rápido certificadas."
+                    ),
+                    a = 1,
+                    exp = "La ITC-BT-21 prohíbe taxativamente efectuar uniones o empalmes de cables en el recorrido interior de los tubos protectores para prevenir sobrecalentamientos ocultos e incendios indetectables.",
+                    ref = "ITC-BT-21 §2"
                 )
             )
         )

@@ -141,7 +141,7 @@ fun MainAppLayout(viewModel: MainViewModel) {
                 Button(
                     onClick = {
                         val parsedEmail = viewModel.inputEmailString.trim().lowercase()
-                        viewModel.currentUserEmail = parsedEmail
+                        viewModel.changeSubscriberEmail(parsedEmail)
                         if (parsedEmail == "decoelectroclima@gmail.com") {
                             viewModel.adminModeEnabled = true
                             viewModel.activeTab = "admin"
@@ -345,22 +345,104 @@ fun MainAppLayout(viewModel: MainViewModel) {
                     .weight(1f)
                     .fillMaxWidth()
             ) {
-                when (viewModel.activeTab) {
-                    "dashboard" -> DashboardTabContent(viewModel, isPremium)
-                    "book" -> StudyBookTabContent(viewModel)
-                    "exams" -> ExamCenterTabContent(viewModel, isPremium)
-                    "simulator" -> SimulatorTabContent(viewModel)
-                    "laboratory" -> LaboratorioCalculosTabContent(viewModel)
-                    "documents" -> DocumentsCenterTabContent(viewModel, isPremium)
-                    "news" -> NewsCenterTabContent(viewModel)
-                    "admin" -> AdminPanelTabContent(viewModel)
-                    "support" -> SupportCenterTabContent(viewModel)
-                    "billing" -> SubscriptionPlansPortalContent(viewModel, isPremium, currentPlan)
+                // Feature Gating: Intercept restricted tabs for Demo/Pro/Premium, except billing & admin
+                val isTabAllowed = viewModel.isSectionEnabled(viewModel.activeTab, currentPlan)
+                if (isTabAllowed || viewModel.activeTab == "billing" || viewModel.activeTab == "admin") {
+                    when (viewModel.activeTab) {
+                        "dashboard" -> DashboardTabContent(viewModel, isPremium)
+                        "book" -> StudyBookTabContent(viewModel)
+                        "exams" -> ExamCenterTabContent(viewModel, isPremium)
+                        "simulator" -> SimulatorTabContent(viewModel)
+                        "laboratory" -> LaboratorioCalculosTabContent(viewModel)
+                        "documents" -> DocumentsCenterTabContent(viewModel, isPremium)
+                        "news" -> NewsCenterTabContent(viewModel)
+                        "admin" -> AdminPanelTabContent(viewModel)
+                        "support" -> SupportCenterTabContent(viewModel)
+                        "billing" -> SubscriptionPlansPortalContent(viewModel, isPremium, currentPlan)
+                    }
+                } else {
+                    // Feature Gated / Lock screen
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(24.dp)
+                            .verticalScroll(rememberScrollState()),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Lock,
+                            contentDescription = "🔒 Sección Bloqueada",
+                            tint = Color(0xFFF39C12),
+                            modifier = Modifier.size(68.dp)
+                        )
+                        Spacer(modifier = Modifier.height(18.dp))
+                        Text(
+                            text = "Sección Bloqueada",
+                            fontWeight = FontWeight.ExtraBold,
+                            fontSize = 20.sp,
+                            color = Color.White,
+                            textAlign = TextAlign.Center
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = "La sección '${viewModel.activeTab.uppercase()}' no está incluida en tu plan actual (${currentPlan.uppercase()}). El administrador ha configurado accesos selectivos.",
+                            fontSize = 13.sp,
+                            color = Color.LightGray,
+                            textAlign = TextAlign.Center
+                        )
+                        Spacer(modifier = Modifier.height(20.dp))
+                        Card(
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = CardDefaults.cardColors(containerColor = Color(0xFF161b22)),
+                            border = BorderStroke(1.dp, Color(0xFF30363d))
+                        ) {
+                            Column(
+                                modifier = Modifier.padding(16.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Text(
+                                    text = "⚡ ADQUIRIR LICENCIA ÚNICA ⚡",
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 14.sp,
+                                    color = Color(0xFFF39C12),
+                                    textAlign = TextAlign.Center
+                                )
+                                Spacer(modifier = Modifier.height(6.dp))
+                                Text(
+                                    text = "Consigue acceso instantáneo de por vida escribiendo un único pago. Olvídate de cuotas mensuales eternas.",
+                                    fontSize = 12.sp,
+                                    color = Color.Gray,
+                                    textAlign = TextAlign.Center
+                                )
+                                Spacer(modifier = Modifier.height(14.dp))
+                                Button(
+                                    onClick = { viewModel.activeTab = "billing" },
+                                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF238636)),
+                                    shape = RoundedCornerShape(8.dp),
+                                    modifier = Modifier.fillMaxWidth().testTag("unlock_from_gated_section")
+                                ) {
+                                    Text("Ver Planes Libres (PRO/PREMIUM)", fontWeight = FontWeight.Bold, color = Color.White)
+                                }
+                            }
+                        }
+                    }
                 }
             }
 
             // Interactive rotating Advertisement frame matching the exact web functionality
             if (!isPremium) {
+                val context = LocalContext.current
+                LaunchedEffect(isPremium) {
+                    while (true) {
+                        kotlinx.coroutines.delay(120_000)
+                        android.widget.Toast.makeText(
+                            context,
+                            "⚡ Recomendación: Te recordamos dar el salto al PLAN SUPERIOR para desbloquear herramientas de cálculo avanzadas, exámenes ilimitados sin cortes comerciales.",
+                            android.widget.Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
                 val adIndex = viewModel.currentAdIndex.coerceIn(0, viewModel.adminAds.size.coerceAtLeast(1) - 1)
                 val activeAd = if (viewModel.adminAds.isNotEmpty()) viewModel.adminAds[adIndex] else null
                 val adTintColor = if (activeAd != null) {
@@ -377,6 +459,18 @@ fun MainAppLayout(viewModel: MainViewModel) {
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(8.dp)
+                        .clickable {
+                            if (activeAd != null && activeAd.targetUrl.isNotBlank()) {
+                                try {
+                                    val intent = android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse(activeAd.targetUrl))
+                                    context.startActivity(intent)
+                                } catch (e: Exception) {
+                                    android.widget.Toast.makeText(context, "Visitando: ${activeAd.targetUrl}", android.widget.Toast.LENGTH_SHORT).show()
+                                }
+                            } else {
+                                viewModel.activeTab = "billing"
+                            }
+                        }
                         .testTag("advertisement_banner_frame"),
                     shape = RoundedCornerShape(8.dp),
                     colors = CardDefaults.cardColors(containerColor = adTintColor.copy(alpha = 0.15f)),
@@ -388,13 +482,26 @@ fun MainAppLayout(viewModel: MainViewModel) {
                             .padding(10.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.Campaign,
-                            contentDescription = "Patrocinado",
-                            tint = adTintColor,
-                            modifier = Modifier.size(24.dp)
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
+                        if (activeAd != null && activeAd.imageUrl.isNotBlank()) {
+                            coil.compose.AsyncImage(
+                                model = activeAd.imageUrl,
+                                contentDescription = "Sponsor Logo",
+                                modifier = Modifier
+                                    .size(44.dp)
+                                    .clip(RoundedCornerShape(6.dp))
+                                    .border(1.dp, adTintColor.copy(alpha = 0.5f), RoundedCornerShape(6.dp)),
+                                contentScale = androidx.compose.ui.layout.ContentScale.Crop,
+                                error = androidx.compose.ui.res.painterResource(android.R.drawable.ic_menu_report_image)
+                            )
+                        } else {
+                            Icon(
+                                imageVector = Icons.Default.Campaign,
+                                contentDescription = "Patrocinado",
+                                tint = adTintColor,
+                                modifier = Modifier.size(24.dp)
+                             )
+                        }
+                        Spacer(modifier = Modifier.width(10.dp))
                         Column(modifier = Modifier.weight(1f)) {
                             Text(
                                 text = "ANUNCIO REBT: " + (activeAd?.sponsor ?: "Certificadora Oficial"),
@@ -414,12 +521,23 @@ fun MainAppLayout(viewModel: MainViewModel) {
                         }
                         Spacer(modifier = Modifier.width(8.dp))
                         Button(
-                            onClick = { viewModel.activeTab = "billing" },
+                            onClick = {
+                                if (activeAd != null && activeAd.targetUrl.isNotBlank()) {
+                                    try {
+                                        val intent = android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse(activeAd.targetUrl))
+                                        context.startActivity(intent)
+                                    } catch (e: Exception) {
+                                        android.widget.Toast.makeText(context, "Visitando: ${activeAd.targetUrl}", android.widget.Toast.LENGTH_SHORT).show()
+                                    }
+                                } else {
+                                    viewModel.activeTab = "billing"
+                                }
+                            },
                             contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp),
                             modifier = Modifier.height(30.dp),
                             colors = ButtonDefaults.buttonColors(containerColor = adTintColor)
                         ) {
-                            Text(activeAd?.ctaText ?: "Quitar", fontSize = 10.sp, fontWeight = FontWeight.Bold, color = Color.Black)
+                            Text(activeAd?.ctaText ?: "Visitar", fontSize = 10.sp, fontWeight = FontWeight.Bold, color = Color.Black)
                         }
                     }
                 }
@@ -778,7 +896,7 @@ fun DashboardTabContent(viewModel: MainViewModel, isPremium: Boolean) {
                         Triple("Bucle Inspector", "Simula una prueba de RCD o resistencia de bucle", totalSchemas >= 1),
                         Triple("Arco de Racha", "Consigue una racha activa de estudio diario (3+ días)", activeStreak >= 3),
                         Triple("Ingeniero Maestro", "Contesta más de 20 preguntas del temario oficial", totalAnswered >= 20),
-                        Triple("Socio de Servicio", "Hazte socio con el Plan Pro / Premium Completo", isPremium)
+                        Triple("Licencia Premium", "Desbloquea el Plan Pro o Premium de por vida", isPremium)
                     )
 
                     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -838,6 +956,29 @@ fun DashboardTabContent(viewModel: MainViewModel, isPremium: Boolean) {
                                 }
                             }
                         }
+                    }
+
+                    Spacer(modifier = Modifier.height(14.dp))
+
+                    OutlinedButton(
+                        onClick = {
+                            viewModel.resetGamificationOnly()
+                        },
+                        modifier = Modifier.fillMaxWidth().height(36.dp),
+                        shape = RoundedCornerShape(8.dp),
+                        colors = ButtonDefaults.outlinedButtonColors(
+                            contentColor = if (viewModel.isDarkTheme) Color(0xFFFF8B8B) else Color(0xFFD32F2F)
+                        ),
+                        border = BorderStroke(1.dp, (if (viewModel.isDarkTheme) Color(0xFFEE5F5F) else Color(0xFFD32F2F)).copy(alpha = 0.5f)),
+                        contentPadding = PaddingValues(0.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Refresh,
+                            contentDescription = "Poner a cero",
+                            modifier = Modifier.size(14.dp)
+                        )
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Text("Reiniciar Gimnasio a Cero", fontSize = 11.sp, fontWeight = FontWeight.Bold)
                     }
                 }
             }
@@ -1277,6 +1418,9 @@ fun NewPostItDialog(onDismiss: () -> Unit, onSave: (String, String, String) -> U
 // 2. Study Book (Syllabus/Libro) Tab
 @Composable
 fun StudyBookTabContent(viewModel: MainViewModel) {
+    val context = LocalContext.current
+    val subscription by viewModel.subscriptionFlow.collectAsState()
+    val currentPlan = subscription?.plan ?: "gratuito"
     var expandedItemIndex by remember { mutableStateOf<String?>(null) }
     
     val categoryList = listOf("Todos", "Articulado", "Administrativas", "Redes", "Enlace", "Interiores")
@@ -1365,7 +1509,27 @@ fun StudyBookTabContent(viewModel: MainViewModel) {
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clickable { expandedItemIndex = if (isExpanded) null else item.id }
+                            .clickable {
+                                if (isExpanded) {
+                                    expandedItemIndex = null
+                                } else {
+                                    if (currentPlan == "gratuito" || currentPlan == "demo") {
+                                        if (!viewModel.dailyItcOpenedList.contains(item.id)) {
+                                            if (viewModel.dailyItcOpenedList.size >= viewModel.limitDemoItcPerDay) {
+                                                android.widget.Toast.makeText(context, "Límite Demo: Has superado el límite diario de ${viewModel.limitDemoItcPerDay} ITCs estudiadas en plan Gratuito.", android.widget.Toast.LENGTH_LONG).show()
+                                                viewModel.activeTab = "billing"
+                                            } else {
+                                                viewModel.dailyItcOpenedList.add(item.id)
+                                                expandedItemIndex = item.id
+                                            }
+                                        } else {
+                                            expandedItemIndex = item.id
+                                        }
+                                    } else {
+                                        expandedItemIndex = item.id
+                                    }
+                                }
+                            }
                             .testTag("syllabus_card_${item.id}"),
                         colors = CardDefaults.cardColors(containerColor = Color(0xFF161b22)),
                         border = BorderStroke(1.dp, Color(0xFF30363d))
@@ -1532,6 +1696,8 @@ fun StudyBookTabContent(viewModel: MainViewModel) {
 @Composable
 fun ExamCenterTabContent(viewModel: MainViewModel, isPremium: Boolean) {
     val context = LocalContext.current
+    val subscription by viewModel.subscriptionFlow.collectAsState()
+    val currentPlan = subscription?.plan ?: "gratuito"
     val activeExam = viewModel.activeExamModule
 
     if (activeExam == null) {
@@ -1545,22 +1711,242 @@ fun ExamCenterTabContent(viewModel: MainViewModel, isPremium: Boolean) {
             item {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.cardColors(containerColor = Color(0xFF3b1d1d)) // maroon warning card
+                    colors = CardDefaults.cardColors(containerColor = Color(0xFF3B1D1D)) // maroon warning card
                 ) {
                     Column(modifier = Modifier.padding(14.dp)) {
                         Text(
                             text = "Simulador Oficial de Exámenes",
-                            fontSize = 16.sp,
+                            fontSize = 15.sp,
                             fontWeight = FontWeight.Bold,
                             color = Color.White
                         )
                         Text(
                             text = "En la versión gratuita puede iniciar cualquier test, pero únicamente completará hasta 3 exámenes totales para registrar historial. Adquiera Licencia Pro/Premium para exámenes infinitos sin límite reglamentario.",
                             fontSize = 11.sp,
-                            color = Color(0xFFfbcfe8)
+                            color = Color(0xFFFBCFE8)
                         )
                     }
                 }
+            }
+
+            // EXAM CONFIGURATOR BOARD
+            item {
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(containerColor = Color(0xFF161B22)),
+                    border = BorderStroke(1.dp, Color(0xFF38444D))
+                ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(
+                                text = "⚙️ Configurar Modalidad de Examen",
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 14.sp,
+                                color = Color.White
+                            )
+                        }
+                        
+                        Text(
+                            text = "Ajusta la modalidad para todos los exámenes de la lista (incluidos los autogenerados por Inteligencia Artificial):",
+                            fontSize = 11.sp,
+                            color = Color.Gray,
+                            modifier = Modifier.padding(top = 4.dp, bottom = 12.dp)
+                        )
+
+                        // Mode selectors
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(10.dp)
+                        ) {
+                            // Classic Mode selector chip
+                            Box(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .clip(RoundedCornerShape(8.dp))
+                                    .background(if (!viewModel.globalExpressModePref) Color(0xFF2C3E50) else Color(0xFF21262D))
+                                    .border(BorderStroke(1.5.dp, if (!viewModel.globalExpressModePref) Color(0xFF3498DB) else Color.Transparent), RoundedCornerShape(8.dp))
+                                    .clickable { 
+                                        viewModel.globalExpressModePref = false 
+                                        FeedbackManager.playClick(context)
+                                    }
+                                    .padding(12.dp)
+                            ) {
+                                Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
+                                    Text("🛋️ CLÁSICO", fontWeight = FontWeight.Bold, fontSize = 12.sp, color = Color.White)
+                                    Text("Estudia sin prisas", fontSize = 9.sp, color = Color.Gray)
+                                }
+                            }
+
+                            // Express Mode selector chip
+                            Box(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .clip(RoundedCornerShape(8.dp))
+                                    .background(if (viewModel.globalExpressModePref) Color(0xFF3B1D1D) else Color(0xFF21262D))
+                                    .border(BorderStroke(1.5.dp, if (viewModel.globalExpressModePref) Color(0xFFF85149) else Color.Transparent), RoundedCornerShape(8.dp))
+                                    .clickable { 
+                                        viewModel.globalExpressModePref = true 
+                                        FeedbackManager.playClick(context)
+                                    }
+                                    .padding(12.dp)
+                            ) {
+                                Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()) {
+                                    Text("⏱️ EXPRÉS", fontWeight = FontWeight.Bold, fontSize = 12.sp, color = Color.White)
+                                    Text("Cronometrado por pregunta", fontSize = 9.sp, color = Color.Gray)
+                                }
+                            }
+                        }
+
+                        if (viewModel.globalExpressModePref) {
+                            Spacer(modifier = Modifier.height(14.dp))
+                            Text(
+                                "Duración límite por pregunta:",
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                color = Color.White
+                            )
+                            Spacer(modifier = Modifier.height(6.dp))
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                val secondsOptions = listOf(15, 20, 30)
+                                secondsOptions.forEach { seconds ->
+                                    val isSelected = viewModel.timerDurationPerQuestion == seconds
+                                    Box(
+                                        modifier = Modifier
+                                            .clip(RoundedCornerShape(12.dp))
+                                            .background(if (isSelected) Color(0xFFF85149) else Color(0xFF21262D))
+                                            .clickable { 
+                                                viewModel.timerDurationPerQuestion = seconds 
+                                                FeedbackManager.playClick(context)
+                                            }
+                                            .padding(horizontal = 14.dp, vertical = 6.dp)
+                                    ) {
+                                        Text("${seconds}s", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = if (isSelected) Color.Black else Color.White)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // PROMINENT QUICK-RUN EXAMS HEADER
+            item {
+                Text(
+                    text = "Pruebas Rápidas y Oficiales:",
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White,
+                    fontSize = 15.sp,
+                    modifier = Modifier.padding(top = 4.dp)
+                )
+            }
+
+            // Examen Exprés Rápido Card
+            item {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            FeedbackManager.playClick(context)
+                            viewModel.startRandomizedOfflineExam("Examen Exprés REBT (10 Preguntas)", 10, true)
+                        }
+                        .testTag("start_quick_express_exam_card"),
+                    colors = CardDefaults.cardColors(containerColor = Color(0xFF2B1616)), // distinct crimson dark card
+                    border = BorderStroke(1.dp, Color(0xFFF85149))
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
+                            Text(text = "🔥", fontSize = 28.sp)
+                            Spacer(modifier = Modifier.width(14.dp))
+                            Column {
+                                Text(
+                                    text = "EXAMEN EXPRÉS (RÁPIDO)",
+                                    fontWeight = FontWeight.Black,
+                                    fontSize = 14.sp,
+                                    color = Color(0xFFff7b72)
+                                )
+                                Text(
+                                    text = "10 Preguntas rápidas aleatorias de toda la base de datos • Cronómetro de tiempo activo por pregunta • ¡Prueba de agilidad!",
+                                    fontSize = 11.sp,
+                                    color = Color(0xFFffb4a2)
+                                )
+                            }
+                        }
+                        Icon(
+                            imageVector = Icons.Default.ChevronRight,
+                            contentDescription = "Iniciar Examen Exprés",
+                            tint = Color(0xFFF85149)
+                        )
+                    }
+                }
+            }
+
+            // Examen Oficial General Card
+            item {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            FeedbackManager.playClick(context)
+                            viewModel.startRandomizedOfflineExam("Examen Oficial Completo REBT (30 Preguntas)", 30, false)
+                        }
+                        .testTag("start_quick_official_exam_card"),
+                    colors = CardDefaults.cardColors(containerColor = Color(0xFF16253B)), // distinct deep navy card
+                    border = BorderStroke(1.dp, Color(0xFF58a6ff))
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
+                            Text(text = "🎓", fontSize = 28.sp)
+                            Spacer(modifier = Modifier.width(14.dp))
+                            Column {
+                                Text(
+                                    text = "SIMULADOR EXAMEN OFICIAL",
+                                    fontWeight = FontWeight.Black,
+                                    fontSize = 14.sp,
+                                    color = Color(0xFF79c0ff)
+                                )
+                                Text(
+                                    text = "30 Preguntas mixtas del REBT • Diseñado exactamente según las convocatorias y criterios de los Ministerios de Industria",
+                                    fontSize = 11.sp,
+                                    color = Color(0xFFa1dbff)
+                                )
+                            }
+                        }
+                        Icon(
+                            imageVector = Icons.Default.ChevronRight,
+                            contentDescription = "Iniciar Examen Oficial",
+                            tint = Color(0xFF58a6ff)
+                        )
+                    }
+                }
+            }
+
+            item {
+                Text(
+                    text = "Módulos de Estudio Específico:",
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White,
+                    fontSize = 15.sp,
+                    modifier = Modifier.padding(top = 4.dp)
+                )
             }
 
             item {
@@ -1640,7 +2026,19 @@ fun ExamCenterTabContent(viewModel: MainViewModel, isPremium: Boolean) {
                             }
                         } else {
                             Button(
-                                onClick = { viewModel.startAiDynamicExam(aiKeyword) },
+                                onClick = {
+                                    if (currentPlan == "gratuito" || currentPlan == "demo") {
+                                        if (viewModel.dailyExamsCompletedList.size >= viewModel.limitDemoExamsPerDay) {
+                                            android.widget.Toast.makeText(context, "Límite Demo: Has superado el límite de ${viewModel.limitDemoExamsPerDay} exámenes diarios hoy.", android.widget.Toast.LENGTH_LONG).show()
+                                            viewModel.activeTab = "billing"
+                                        } else {
+                                            viewModel.dailyExamsCompletedList.add("AI_EXAM_" + System.currentTimeMillis())
+                                            viewModel.startAiDynamicExam(aiKeyword)
+                                        }
+                                    } else {
+                                        viewModel.startAiDynamicExam(aiKeyword)
+                                    }
+                                },
                                 modifier = Modifier.fillMaxWidth().testTag("ai_generate_button"),
                                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFffa000), contentColor = Color.Black)
                             ) {
@@ -1669,7 +2067,21 @@ fun ExamCenterTabContent(viewModel: MainViewModel, isPremium: Boolean) {
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clickable { viewModel.startExam(module) }
+                        .clickable {
+                            if (currentPlan == "gratuito" || currentPlan == "demo") {
+                                if (!viewModel.dailyExamsCompletedList.contains(module.id) && viewModel.dailyExamsCompletedList.size >= viewModel.limitDemoExamsPerDay) {
+                                    android.widget.Toast.makeText(context, "Límite Demo: Has alcanzado el máximo de ${viewModel.limitDemoExamsPerDay} exámenes diarios en versión gratuita. ¡Consigue licencia PRO!", android.widget.Toast.LENGTH_LONG).show()
+                                    viewModel.activeTab = "billing"
+                                } else {
+                                    if (!viewModel.dailyExamsCompletedList.contains(module.id)) {
+                                        viewModel.dailyExamsCompletedList.add(module.id)
+                                    }
+                                    viewModel.startExam(module)
+                                }
+                            } else {
+                                viewModel.startExam(module)
+                            }
+                        }
                         .testTag("exam_module_card_${module.id}"),
                     colors = CardDefaults.cardColors(containerColor = Color(0xFF161b22)),
                     border = BorderStroke(1.dp, Color(0xFF30363d))
@@ -1711,6 +2123,27 @@ fun ExamCenterTabContent(viewModel: MainViewModel, isPremium: Boolean) {
         // EXAM WIZARD ACTIVE STATE
         val currentQuestionList = activeExam.questions
         val currentQuestion = currentQuestionList.getOrNull(viewModel.currentQuestionIndex)
+
+        // LaunchedEffect for Express Exam countdown timer!
+        LaunchedEffect(key1 = viewModel.currentQuestionIndex, key2 = viewModel.currentQuestionAnswered, key3 = viewModel.isExpressMode) {
+            if (viewModel.isExpressMode && !viewModel.currentQuestionAnswered && !viewModel.examCompleted && currentQuestion != null) {
+                // reset with custom preferred duration
+                viewModel.secondsRemaining = viewModel.timerDurationPerQuestion
+                while (viewModel.secondsRemaining > 0 && !viewModel.currentQuestionAnswered) {
+                    kotlinx.coroutines.delay(1000L)
+                    if (!viewModel.currentQuestionAnswered) {
+                        viewModel.secondsRemaining--
+                        if (viewModel.secondsRemaining <= 5 && viewModel.secondsRemaining > 0) {
+                            FeedbackManager.playClick(context)
+                        }
+                    }
+                }
+                if (viewModel.secondsRemaining == 0 && !viewModel.currentQuestionAnswered) {
+                    viewModel.submitAnswer(timedOut = true)
+                    FeedbackManager.playIncorrect(context)
+                }
+            }
+        }
 
         if (viewModel.examCompleted || currentQuestion == null) {
             // Exam Report screen
@@ -1837,7 +2270,84 @@ fun ExamCenterTabContent(viewModel: MainViewModel, isPremium: Boolean) {
                     trackColor = Color(0xFF21262d)
                 )
 
-                Spacer(modifier = Modifier.height(20.dp))
+                // Visual Countdown Timer Card for Express Mode
+                if (viewModel.isExpressMode) {
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = CardDefaults.cardColors(
+                            containerColor = when {
+                                viewModel.secondsRemaining <= 5 -> Color(0xFF3B1D1D) // critical flashing maroon
+                                viewModel.secondsRemaining <= 10 -> Color(0xFF2E2413) // alert dark orange
+                                else -> Color(0xFF161B22) // calm dark slate
+                            }
+                        ),
+                        border = BorderStroke(
+                            1.dp,
+                            when {
+                                viewModel.secondsRemaining <= 5 -> Color(0xFFF85149) // critical red
+                                viewModel.secondsRemaining <= 10 -> Color(0xFFF39C12) // warning orange
+                                else -> Color(0xFF38444D)
+                            }
+                        )
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(12.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
+                                Text(
+                                    text = if (viewModel.secondsRemaining <= 5) "🚨" else "⏱️",
+                                    fontSize = 18.sp,
+                                    modifier = Modifier.padding(end = 8.dp)
+                                )
+                                Column {
+                                    Text(
+                                        text = "TIEMPO EXPRESO RESTANTE",
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 10.sp,
+                                        color = Color.Gray
+                                    )
+                                    Text(
+                                        text = if (viewModel.currentQuestionAnswered) {
+                                            "Tiempo congelado"
+                                        } else if (viewModel.secondsRemaining == 0) {
+                                            "¡Tiempo agotado!"
+                                        } else {
+                                            "${viewModel.secondsRemaining} segundos"
+                                        },
+                                        fontWeight = FontWeight.ExtraBold,
+                                        fontSize = 13.sp,
+                                        color = when {
+                                            viewModel.secondsRemaining <= 5 -> Color(0xFFF85149)
+                                            viewModel.secondsRemaining <= 10 -> Color(0xFFF39C12)
+                                            else -> Color.White
+                                        }
+                                    )
+                                }
+                            }
+                            // Visual circular ticking progress
+                            val fractionalTime = viewModel.secondsRemaining.toFloat() / viewModel.timerDurationPerQuestion.toFloat()
+                            val progressColor = when {
+                                viewModel.secondsRemaining <= 5 -> Color(0xFFF85149)
+                                viewModel.secondsRemaining <= 10 -> Color(0xFFF39C12)
+                                else -> Color(0xFF58A6FF)
+                            }
+                            CircularProgressIndicator(
+                                progress = { if (viewModel.currentQuestionAnswered) 1f else fractionalTime },
+                                color = progressColor,
+                                trackColor = Color(0xFF21262D),
+                                modifier = Modifier.size(24.dp),
+                                strokeWidth = 2.5.dp
+                            )
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
 
                 // Question Statement card
                 Card(
@@ -3726,37 +4236,39 @@ fun SubscriptionPlansPortalContent(viewModel: MainViewModel, isPremium: Boolean,
 
         // License Plan Cards
         LicensePlanCard(
-            title = "Licencia Pro Mensual",
-            price = "€4.99 / mensual",
+            title = "Licencia PRO (Acceso Profesional)",
+            price = "€${viewModel.pricePro} Pago Único (Para Siempre)",
             features = listOf(
                 "Remoción total de anuncios y banners",
-                "Simulador de exámenes sin límites",
-                "Acceso completo a calculadoras eléctricas",
-                "Soporte directo prioritario en menos de 12 horas"
+                "Completa las simulaciones sin límites comerciales",
+                "Temario oficial REBT y libro de consulta permanente",
+                "Exámenes infinitos con registro completo de progreso",
+                "Consultas Gemini AI hasta ${viewModel.limitProGeminiPerDay} preguntas diarias"
             ),
-            buttonLabel = if (currentPlan == "pro") "Plan Actual Activo" else "Comprar Licencia Pro",
+            buttonLabel = if (currentPlan == "pro") "Plan PRO Activo" else "Comprar Licencia PRO (Pago Único)",
             buttonEnabled = !isPremium,
-            badgeLabel = "Suscripción",
+            badgeLabel = "Recomendado",
             badgeColor = Color(0xFF58a6ff),
-            onClick = { viewModel.loadCheckoutSheet("pro", 4.99) }
+            onClick = { viewModel.loadCheckoutSheet("pro", viewModel.pricePro) }
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
         LicensePlanCard(
-            title = "Licencia Premium Completa",
-            price = "€14.99 pago único",
+            title = "Licencia PREMIUM (Acceso Libre y Fundador)",
+            price = "€${viewModel.pricePremium} Pago Único (Para Siempre)",
             features = listOf(
-                "Todo lo incluido en el Plan Pro",
-                "Descargas ilimitadas de planos unifilares y BOE",
-                "Habilitación de simulador de resistividad por capas",
-                "Actualizaciones legislativas del boletín de por vida"
+                "Todas las capacidades integradas del Plan PRO",
+                "Consultas ilimitadas de Inteligencia Artificial Gemini sin topes",
+                "Descargas ilimitadas libres de planos unifilares y PDF del BOE",
+                "Soporte directo prioritario por asesores técnicos en 12h",
+                "Actualizaciones legislativas del REBT de por vida gratis"
             ),
-            buttonLabel = if (currentPlan == "premium") "Plan Premium Activo" else "Comprar Licencia Completa",
+            buttonLabel = if (currentPlan == "premium") "Plan PREMIUM Activo" else "Comprar Licencia PREMIUM (Pago Único)",
             buttonEnabled = !isPremium,
-            badgeLabel = "Mejor Valor",
+            badgeLabel = "Completo / Libre",
             badgeColor = Color(0xFFbc8cff),
-            onClick = { viewModel.loadCheckoutSheet("premium", 14.99) }
+            onClick = { viewModel.loadCheckoutSheet("premium", viewModel.pricePremium) }
         )
     }
 }
@@ -4101,13 +4613,12 @@ fun AdminPanelTabContent(viewModel: MainViewModel) {
 
         // Sector choice Row
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
             horizontalArrangement = Arrangement.spacedBy(6.dp)
         ) {
             Button(
                 onClick = { activeAdminSection = "pdf" },
-                modifier = Modifier.weight(1f),
-                contentPadding = PaddingValues(horizontal = 4.dp, vertical = 2.dp),
+                contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = if (activeAdminSection == "pdf") Color(0xFFF39C12) else Color(0xFF161b22)
                 )
@@ -4119,8 +4630,7 @@ fun AdminPanelTabContent(viewModel: MainViewModel) {
 
             Button(
                 onClick = { activeAdminSection = "news" },
-                modifier = Modifier.weight(1f),
-                contentPadding = PaddingValues(horizontal = 4.dp, vertical = 2.dp),
+                contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = if (activeAdminSection == "news") Color(0xFFF39C12) else Color(0xFF161b22)
                 )
@@ -4132,8 +4642,7 @@ fun AdminPanelTabContent(viewModel: MainViewModel) {
 
             Button(
                 onClick = { activeAdminSection = "ads" },
-                modifier = Modifier.weight(1f),
-                contentPadding = PaddingValues(horizontal = 4.dp, vertical = 2.dp),
+                contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = if (activeAdminSection == "ads") Color(0xFFF39C12) else Color(0xFF161b22)
                 )
@@ -4145,15 +4654,26 @@ fun AdminPanelTabContent(viewModel: MainViewModel) {
 
             Button(
                 onClick = { activeAdminSection = "leads" },
-                modifier = Modifier.weight(1.1f),
-                contentPadding = PaddingValues(horizontal = 2.dp, vertical = 2.dp),
+                contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = if (activeAdminSection == "leads") Color(0xFFF39C12) else Color(0xFF161b22)
                 )
             ) {
                 Icon(Icons.Default.People, contentDescription = null, modifier = Modifier.size(14.dp))
-                Spacer(modifier = Modifier.width(3.dp))
+                Spacer(modifier = Modifier.width(4.dp))
                 Text("Leads REBT", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = Color.White)
+            }
+
+            Button(
+                onClick = { activeAdminSection = "plans" },
+                contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = if (activeAdminSection == "plans") Color(0xFFF39C12) else Color(0xFF161b22)
+                )
+            ) {
+                Icon(Icons.Default.Settings, contentDescription = null, modifier = Modifier.size(14.dp))
+                Spacer(modifier = Modifier.width(4.dp))
+                Text("Precios y Planes", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = Color.White)
             }
         }
 
@@ -4616,6 +5136,20 @@ fun AdminPanelTabContent(viewModel: MainViewModel) {
                                         label = { Text("Mensaje Publicitario", fontSize = 11.sp) },
                                         modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
                                         maxLines = 3
+                                    )
+                                    OutlinedTextField(
+                                        value = ad.targetUrl,
+                                        onValueChange = { ad.targetUrl = it },
+                                        label = { Text("Enlace Web del Anunciante (URL)", fontSize = 11.sp) },
+                                        modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+                                        singleLine = true
+                                    )
+                                    OutlinedTextField(
+                                        value = ad.imageUrl,
+                                        onValueChange = { ad.imageUrl = it },
+                                        label = { Text("Imagen del Anunciante (URL)", fontSize = 11.sp) },
+                                        modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+                                        singleLine = true
                                     )
                                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                                         OutlinedTextField(
@@ -5189,7 +5723,233 @@ fun AdminPanelTabContent(viewModel: MainViewModel) {
                     textContentColor = Color.White
                 )
             }
+        } else if (activeAdminSection == "plans") {
+            // Plans management sub-section
+            Card(
+                modifier = Modifier.fillMaxWidth().testTag("admin_plans_card"),
+                colors = CardDefaults.cardColors(containerColor = Color(0xFF161b22)),
+                border = BorderStroke(1.dp, Color(0xFF30363d))
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Text(
+                        text = "Configuración de Precios de Licencia Única",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 15.sp,
+                        color = Color(0xFFF39C12)
+                    )
+                    Text(
+                        text = "Ajusta las tarifas para los planes Pro y Premium de venta de un solo pago.",
+                        fontSize = 11.sp,
+                        color = Color.LightGray
+                    )
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text("Precio Plan PRO o Demo Plus (€)", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = Color.White)
+                            OutlinedTextField(
+                                value = viewModel.pricePro.toString(),
+                                onValueChange = { val clean = it.toDoubleOrNull(); if (clean != null) viewModel.pricePro = clean },
+                                textStyle = androidx.compose.ui.text.TextStyle(color = Color.White, fontSize = 14.sp),
+                                colors = OutlinedTextFieldDefaults.colors(
+                                    focusedBorderColor = Color(0xFFF39C12),
+                                    unfocusedBorderColor = Color(0xFF30363d)
+                                ),
+                                modifier = Modifier.fillMaxWidth().testTag("input_admin_price_pro")
+                            )
+                        }
+
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text("Precio PREMIUM (Licencia Libre €)", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = Color.White)
+                            OutlinedTextField(
+                                value = viewModel.pricePremium.toString(),
+                                onValueChange = { val clean = it.toDoubleOrNull(); if (clean != null) viewModel.pricePremium = clean },
+                                textStyle = androidx.compose.ui.text.TextStyle(color = Color.White, fontSize = 14.sp),
+                                colors = OutlinedTextFieldDefaults.colors(
+                                    focusedBorderColor = Color(0xFFF39C12),
+                                    unfocusedBorderColor = Color(0xFF30363d)
+                                ),
+                                modifier = Modifier.fillMaxWidth().testTag("input_admin_price_premium")
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(20.dp))
+                    HorizontalDivider(color = Color(0xFF30363d))
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    // Sections configuration title
+                    Text(
+                        text = "Secciones Habilitadas por Plan de Suscripción",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 15.sp,
+                        color = Color(0xFFF39C12)
+                    )
+                    Text(
+                        text = "Activa o desactiva qué pestañas específicas puede visualizar/utilizar el usuario en cada plan.",
+                        fontSize = 11.sp,
+                        color = Color.LightGray
+                    )
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    // Row for the 3 plans column layout
+                    Row(
+                        modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        // 1. Column for DEMO / GRATUITO
+                        Card(
+                            modifier = Modifier.width(220.dp),
+                            colors = CardDefaults.cardColors(containerColor = Color(0xFF0d1117)),
+                            border = BorderStroke(1.dp, Color(0xFF30363d).copy(alpha = 0.5f))
+                        ) {
+                            Column(modifier = Modifier.padding(10.dp)) {
+                                Text("PLAN DEMO (Gratuito)", fontWeight = FontWeight.Bold, fontSize = 12.sp, color = Color(0xFF8250df))
+                                Spacer(modifier = Modifier.height(8.dp))
+                                
+                                AdminCheckboxSectionToggle("Dashboard / Métricas", viewModel.demoDashboardEnabled) { viewModel.demoDashboardEnabled = it }
+                                AdminCheckboxSectionToggle("Temario / Libro", viewModel.demoBookEnabled) { viewModel.demoBookEnabled = it }
+                                AdminCheckboxSectionToggle("Exámenes de Prueba", viewModel.demoExamsEnabled) { viewModel.demoExamsEnabled = it }
+                                AdminCheckboxSectionToggle("Simulador EV/IA", viewModel.demoSimulatorEnabled) { viewModel.demoSimulatorEnabled = it }
+                                AdminCheckboxSectionToggle("Laboratorio REBT", viewModel.demoLaboratoryEnabled) { viewModel.demoLaboratoryEnabled = it }
+                                AdminCheckboxSectionToggle("Documentos BOE", viewModel.demoDocumentsEnabled) { viewModel.demoDocumentsEnabled = it }
+                                AdminCheckboxSectionToggle("Noticias Críticas", viewModel.demoNewsEnabled) { viewModel.demoNewsEnabled = it }
+                                AdminCheckboxSectionToggle("Asistente AI Gemini", viewModel.demoSupportEnabled) { viewModel.demoSupportEnabled = it }
+                            }
+                        }
+
+                        // 2. Column for PRO
+                        Card(
+                            modifier = Modifier.width(220.dp),
+                            colors = CardDefaults.cardColors(containerColor = Color(0xFF0d1117)),
+                            border = BorderStroke(1.dp, Color(0xFF30363d).copy(alpha = 0.5f))
+                        ) {
+                            Column(modifier = Modifier.padding(10.dp)) {
+                                Text("PLAN PRO (${viewModel.pricePro}€)", fontWeight = FontWeight.Bold, fontSize = 12.sp, color = Color(0xFF58a6ff))
+                                Spacer(modifier = Modifier.height(8.dp))
+                                
+                                AdminCheckboxSectionToggle("Dashboard / Métricas", viewModel.proDashboardEnabled) { viewModel.proDashboardEnabled = it }
+                                AdminCheckboxSectionToggle("Temario / Libro", viewModel.proBookEnabled) { viewModel.proBookEnabled = it }
+                                AdminCheckboxSectionToggle("Exámenes de Prueba", viewModel.proExamsEnabled) { viewModel.proExamsEnabled = it }
+                                AdminCheckboxSectionToggle("Simulador EV/IA", viewModel.proSimulatorEnabled) { viewModel.proSimulatorEnabled = it }
+                                AdminCheckboxSectionToggle("Laboratorio REBT", viewModel.proLaboratoryEnabled) { viewModel.proLaboratoryEnabled = it }
+                                AdminCheckboxSectionToggle("Documentos BOE", viewModel.proDocumentsEnabled) { viewModel.proDocumentsEnabled = it }
+                                AdminCheckboxSectionToggle("Noticias Críticas", viewModel.proNewsEnabled) { viewModel.proNewsEnabled = it }
+                                AdminCheckboxSectionToggle("Asistente AI Gemini", viewModel.proSupportEnabled) { viewModel.proSupportEnabled = it }
+                            }
+                        }
+
+                        // 3. Column for PREMIUM (Founder/Partner)
+                        Card(
+                            modifier = Modifier.width(220.dp),
+                            colors = CardDefaults.cardColors(containerColor = Color(0xFF0d1117)),
+                            border = BorderStroke(1.dp, Color(0xFF30363d).copy(alpha = 0.5f))
+                        ) {
+                            Column(modifier = Modifier.padding(10.dp)) {
+                                Text("PLAN PREMIUM (${viewModel.pricePremium}€)", fontWeight = FontWeight.Bold, fontSize = 12.sp, color = Color(0xFFF39C12))
+                                Spacer(modifier = Modifier.height(8.dp))
+                                
+                                AdminCheckboxSectionToggle("Dashboard / Métricas", viewModel.premiumDashboardEnabled) { viewModel.premiumDashboardEnabled = it }
+                                AdminCheckboxSectionToggle("Temario / Libro", viewModel.premiumBookEnabled) { viewModel.premiumBookEnabled = it }
+                                AdminCheckboxSectionToggle("Exámenes de Prueba", viewModel.premiumExamsEnabled) { viewModel.premiumExamsEnabled = it }
+                                AdminCheckboxSectionToggle("Simulador EV/IA", viewModel.premiumSimulatorEnabled) { viewModel.premiumSimulatorEnabled = it }
+                                AdminCheckboxSectionToggle("Laboratorio REBT", viewModel.premiumLaboratoryEnabled) { viewModel.premiumLaboratoryEnabled = it }
+                                AdminCheckboxSectionToggle("Documentos BOE", viewModel.premiumDocumentsEnabled) { viewModel.premiumDocumentsEnabled = it }
+                                AdminCheckboxSectionToggle("Noticias Críticas", viewModel.premiumNewsEnabled) { viewModel.premiumNewsEnabled = it }
+                                AdminCheckboxSectionToggle("Asistente AI Gemini", viewModel.premiumSupportEnabled) { viewModel.premiumSupportEnabled = it }
+                            }
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(20.dp))
+                    HorizontalDivider(color = Color(0xFF30363d))
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    // Limits and quotas
+                    Text(
+                        text = "Límites Diarios de Uso por Plan",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 15.sp,
+                        color = Color(0xFFF39C12)
+                    )
+                    Text(
+                        text = "Fuerza la conversión obligando a los usuarios con plan demo a pagar para desbloquear la licencia comercial.",
+                        fontSize = 11.sp,
+                        color = Color.LightGray
+                    )
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text("Exámenes Diarios (Demo)", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = Color.White)
+                            OutlinedTextField(
+                                value = viewModel.limitDemoExamsPerDay.toString(),
+                                onValueChange = { val clean = it.toIntOrNull(); if (clean != null) viewModel.limitDemoExamsPerDay = clean },
+                                textStyle = androidx.compose.ui.text.TextStyle(color = Color.White, fontSize = 14.sp),
+                                colors = OutlinedTextFieldDefaults.colors(
+                                    focusedBorderColor = Color(0xFFF39C12),
+                                    unfocusedBorderColor = Color(0xFF30363d)
+                                ),
+                                modifier = Modifier.fillMaxWidth().testTag("input_limit_demo_exams")
+                            )
+                        }
+
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text("Arrt./ITCs Diarios (Demo)", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = Color.White)
+                            OutlinedTextField(
+                                value = viewModel.limitDemoItcPerDay.toString(),
+                                onValueChange = { val clean = it.toIntOrNull(); if (clean != null) viewModel.limitDemoItcPerDay = clean },
+                                textStyle = androidx.compose.ui.text.TextStyle(color = Color.White, fontSize = 14.sp),
+                                colors = OutlinedTextFieldDefaults.colors(
+                                    focusedBorderColor = Color(0xFFF39C12),
+                                    unfocusedBorderColor = Color(0xFF30363d)
+                                ),
+                                modifier = Modifier.fillMaxWidth().testTag("input_limit_demo_itc")
+                            )
+                        }
+
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text("Consultas AI/Gimini (Pro)", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = Color.White)
+                            OutlinedTextField(
+                                value = viewModel.limitProGeminiPerDay.toString(),
+                                onValueChange = { val clean = it.toIntOrNull(); if (clean != null) viewModel.limitProGeminiPerDay = clean },
+                                textStyle = androidx.compose.ui.text.TextStyle(color = Color.White, fontSize = 14.sp),
+                                colors = OutlinedTextFieldDefaults.colors(
+                                    focusedBorderColor = Color(0xFFF39C12),
+                                    unfocusedBorderColor = Color(0xFF30363d)
+                                ),
+                                modifier = Modifier.fillMaxWidth().testTag("input_limit_pro_gemini")
+                            )
+                        }
+                    }
+                }
+            }
         }
+    }
+}
+
+@Composable
+fun AdminCheckboxSectionToggle(label: String, checked: Boolean, onCheckedChange: (Boolean) -> Unit) {
+    Row(
+        modifier = Modifier.fillMaxWidth().padding(vertical = 2.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Checkbox(
+            checked = checked,
+            onCheckedChange = onCheckedChange,
+            colors = CheckboxDefaults.colors(
+                checkedColor = Color(0xFFF39C12),
+                uncheckedColor = Color(0xFF30363d)
+            ),
+            modifier = Modifier.testTag("checkbox_${label.replace(" ", "_").lowercase()}")
+        )
+        Text(text = label, color = Color.White, fontSize = 11.sp, maxLines = 1)
     }
 }
 
