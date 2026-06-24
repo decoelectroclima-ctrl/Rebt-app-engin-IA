@@ -443,85 +443,24 @@ fun MainAppLayout(viewModel: MainViewModel) {
                         ).show()
                     }
                 }
-                val adIndex = viewModel.currentAdIndex.coerceIn(0, viewModel.adminAds.size.coerceAtLeast(1) - 1)
-                val activeAd = if (viewModel.adminAds.isNotEmpty()) viewModel.adminAds[adIndex] else null
-                val adTintColor = if (activeAd != null) {
-                    try {
-                        Color(android.graphics.Color.parseColor(activeAd.tintColor))
-                    } catch (e: Exception) {
-                        Color(0xFFF39C12)
-                    }
-                } else {
-                    Color(0xFFf85149)
-                }
-
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp)
-                        .clickable {
-                            if (activeAd != null && activeAd.targetUrl.isNotBlank()) {
-                                try {
-                                    val intent = android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse(activeAd.targetUrl))
-                                    context.startActivity(intent)
-                                } catch (e: Exception) {
-                                    android.widget.Toast.makeText(context, "Visitando: ${activeAd.targetUrl}", android.widget.Toast.LENGTH_SHORT).show()
-                                }
-                            } else {
-                                viewModel.activeTab = "billing"
-                            }
+                if (viewModel.showCommercialSponsorAds) {
+                    val adIndex = viewModel.currentAdIndex.coerceIn(0, viewModel.adminAds.size.coerceAtLeast(1) - 1)
+                    val activeAd = if (viewModel.adminAds.isNotEmpty()) viewModel.adminAds[adIndex] else null
+                    val adTintColor = if (activeAd != null) {
+                        try {
+                            Color(android.graphics.Color.parseColor(activeAd.tintColor))
+                        } catch (e: Exception) {
+                            Color(0xFFF39C12)
                         }
-                        .testTag("advertisement_banner_frame"),
-                    shape = RoundedCornerShape(8.dp),
-                    colors = CardDefaults.cardColors(containerColor = adTintColor.copy(alpha = 0.15f)),
-                    border = BorderStroke(1.dp, adTintColor.copy(alpha = 0.4f))
-                ) {
-                    Row(
+                    } else {
+                        Color(0xFFf85149)
+                    }
+
+                    Card(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(10.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        if (activeAd != null && activeAd.imageUrl.isNotBlank()) {
-                            coil.compose.AsyncImage(
-                                model = activeAd.imageUrl,
-                                contentDescription = "Sponsor Logo",
-                                modifier = Modifier
-                                    .size(44.dp)
-                                    .clip(RoundedCornerShape(6.dp))
-                                    .border(1.dp, adTintColor.copy(alpha = 0.5f), RoundedCornerShape(6.dp)),
-                                contentScale = androidx.compose.ui.layout.ContentScale.Crop,
-                                error = androidx.compose.ui.res.painterResource(android.R.drawable.ic_menu_report_image)
-                            )
-                        } else {
-                            Icon(
-                                imageVector = Icons.Default.Campaign,
-                                contentDescription = "Patrocinado",
-                                tint = adTintColor,
-                                modifier = Modifier.size(24.dp)
-                             )
-                        }
-                        Spacer(modifier = Modifier.width(10.dp))
-                        Column(modifier = Modifier.weight(1f)) {
-                            Text(
-                                text = "ANUNCIO REBT: " + (activeAd?.sponsor ?: "Certificadora Oficial"),
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 11.sp,
-                                color = adTintColor,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
-                            )
-                            Text(
-                                text = activeAd?.message ?: "Consiga la habilitación de instalador oficial. Remueva la publicidad en soporte.",
-                                fontSize = 10.sp,
-                                color = Color.White,
-                                maxLines = 2,
-                                overflow = TextOverflow.Ellipsis
-                            )
-                        }
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Button(
-                            onClick = {
+                            .padding(8.dp)
+                            .clickable {
                                 if (activeAd != null && activeAd.targetUrl.isNotBlank()) {
                                     try {
                                         val intent = android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse(activeAd.targetUrl))
@@ -532,12 +471,75 @@ fun MainAppLayout(viewModel: MainViewModel) {
                                 } else {
                                     viewModel.activeTab = "billing"
                                 }
-                            },
-                            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp),
-                            modifier = Modifier.height(30.dp),
-                            colors = ButtonDefaults.buttonColors(containerColor = adTintColor)
+                            }
+                            .testTag("advertisement_banner_frame"),
+                        shape = RoundedCornerShape(8.dp),
+                        colors = CardDefaults.cardColors(containerColor = adTintColor.copy(alpha = 0.15f)),
+                        border = BorderStroke(1.dp, adTintColor.copy(alpha = 0.4f))
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(10.dp),
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text(activeAd?.ctaText ?: "Visitar", fontSize = 10.sp, fontWeight = FontWeight.Bold, color = Color.Black)
+                            if (activeAd != null && activeAd.imageUrl.isNotBlank()) {
+                                coil.compose.AsyncImage(
+                                    model = activeAd.imageUrl,
+                                    contentDescription = "Sponsor Logo",
+                                    modifier = Modifier
+                                        .size(44.dp)
+                                        .clip(RoundedCornerShape(6.dp))
+                                        .border(1.dp, adTintColor.copy(alpha = 0.5f), RoundedCornerShape(6.dp)),
+                                    contentScale = androidx.compose.ui.layout.ContentScale.Crop,
+                                    error = androidx.compose.ui.res.painterResource(android.R.drawable.ic_menu_report_image)
+                                )
+                            } else {
+                                Icon(
+                                    imageVector = Icons.Default.Campaign,
+                                    contentDescription = "Patrocinado",
+                                    tint = adTintColor,
+                                    modifier = Modifier.size(24.dp)
+                                )
+                            }
+                            Spacer(modifier = Modifier.width(10.dp))
+                            Column(modifier = Modifier.weight(1f)) {
+                                Text(
+                                    text = "ANUNCIO REBT: " + (activeAd?.sponsor ?: "Certificadora Oficial"),
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 11.sp,
+                                    color = adTintColor,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+                                Text(
+                                    text = activeAd?.message ?: "Consiga la habilitación de instalador oficial. Remueva la publicidad en soporte.",
+                                    fontSize = 10.sp,
+                                    color = Color.White,
+                                    maxLines = 2,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+                            }
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Button(
+                                onClick = {
+                                    if (activeAd != null && activeAd.targetUrl.isNotBlank()) {
+                                        try {
+                                            val intent = android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse(activeAd.targetUrl))
+                                            context.startActivity(intent)
+                                        } catch (e: Exception) {
+                                            android.widget.Toast.makeText(context, "Visitando: ${activeAd.targetUrl}", android.widget.Toast.LENGTH_SHORT).show()
+                                        }
+                                    } else {
+                                        viewModel.activeTab = "billing"
+                                    }
+                                },
+                                contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp),
+                                modifier = Modifier.height(30.dp),
+                                colors = ButtonDefaults.buttonColors(containerColor = adTintColor)
+                            ) {
+                                Text(activeAd?.ctaText ?: "Visitar", fontSize = 10.sp, fontWeight = FontWeight.Bold, color = Color.Black)
+                            }
                         }
                     }
                 }
@@ -5031,6 +5033,28 @@ fun AdminPanelTabContent(viewModel: MainViewModel) {
                         color = Color.Gray,
                         modifier = Modifier.padding(bottom = 14.dp)
                     )
+
+                    // Switch row for enabling/disabling commercial ads
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 10.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text("Mostrar Publicidad Comercial (Sponsors)", color = Color.White, fontSize = 13.sp, fontWeight = FontWeight.Bold)
+                            Text("Si se desactiva, la app se mostrará totalmente limpia de banners de patrocinadores hasta que asigne spónsors oficiales.", color = Color.Gray, fontSize = 11.sp)
+                        }
+                        Switch(
+                            checked = viewModel.showCommercialSponsorAds,
+                            onCheckedChange = { viewModel.showCommercialSponsorAds = it },
+                            colors = SwitchDefaults.colors(
+                                checkedThumbColor = Color(0xFFF39C12),
+                                checkedTrackColor = Color(0x66F39C12)
+                            )
+                        )
+                    }
 
                     // Switch row
                     Row(

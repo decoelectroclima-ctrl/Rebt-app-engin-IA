@@ -38,6 +38,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     )
 
     var adsIsDynamic by mutableStateOf(true)
+    var showCommercialSponsorAds by mutableStateOf(false)
     var selectedStaticAdIndex by mutableStateOf(0)
     var currentAdIndex by mutableStateOf(0)
     var adminModeEnabled by mutableStateOf(false) // Toggle secret admin panel view
