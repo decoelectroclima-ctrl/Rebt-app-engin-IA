@@ -350,7 +350,7 @@ fun SettingsScreen(viewModel: MainViewModel) {
             }
         }
 
-        // 4. Downloadable Documents & Resources
+        // 4. Documentación Oficial y Recursos
         item {
             Card(
                 shape = RoundedCornerShape(16.dp),
@@ -359,7 +359,7 @@ fun SettingsScreen(viewModel: MainViewModel) {
                 ),
                 border = BorderStroke(1.dp, if (viewModel.isDarkTheme) Color(0xFF30363D) else Color(0xFFE1E4E8))
             ) {
-                Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
                     Text(
                         text = "Documentación Oficial REBT",
                         fontSize = 15.sp,
@@ -367,6 +367,23 @@ fun SettingsScreen(viewModel: MainViewModel) {
                         color = MaterialTheme.colorScheme.onSurface
                     )
 
+                    // BOE 2026
+                    ActionRow(
+                        title = "BOE 2026 (Actualizado)",
+                        icon = Icons.Default.Description,
+                        isDark = viewModel.isDarkTheme
+                    )
+
+                    // Índice y Correlación
+                    ActionRow(
+                        title = "Índice y Correlación ITC",
+                        icon = Icons.Default.List,
+                        isDark = viewModel.isDarkTheme
+                    )
+
+                    HorizontalDivider(color = if (viewModel.isDarkTheme) Color(0xFF30363D) else Color(0xFFE1E4E8))
+
+                    // Documentos descargables existentes
                     Content.DOCUMENTS.forEach { doc ->
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
@@ -402,5 +419,37 @@ fun SettingsScreen(viewModel: MainViewModel) {
                 Text("Restablecer Historial de Estudio")
             }
         }
+    }
+}
+
+@Composable
+fun ActionRow(
+    title: String,
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    isDark: Boolean
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp)
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(20.dp)
+            )
+            Spacer(modifier = Modifier.width(10.dp))
+            Text(title, fontSize = 13.sp, fontWeight = FontWeight.Medium)
+        }
+        Icon(
+            imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+            contentDescription = null,
+            tint = Color.Gray,
+            modifier = Modifier.size(18.dp)
+        )
     }
 }

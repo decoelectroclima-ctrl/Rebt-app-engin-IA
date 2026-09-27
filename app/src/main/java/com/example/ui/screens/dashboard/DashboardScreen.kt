@@ -358,6 +358,23 @@ fun DashboardScreen(viewModel: MainViewModel) {
             )
         }
 
+        item {
+            // Action 5: Posits y Notas
+            ActionRowCard(
+                title = "Mis Posits y Notas",
+                description = "Gestiona tus notas, subrayados y puntos críticos guardados para consulta rápida.",
+                badgeText = "Notas",
+                badgeColor = Color(0xFFE67E22),
+                icon = Icons.Default.StickyNote2,
+                isDark = viewModel.isDarkTheme,
+                tag = "dashboard_action_posits",
+                onClick = {
+                    FeedbackManager.playClick(context)
+                    // TODO: Implement navigation to Posits screen
+                }
+            )
+        }
+
         // 4. Critical Weakness Advisory
         item {
             Card(
