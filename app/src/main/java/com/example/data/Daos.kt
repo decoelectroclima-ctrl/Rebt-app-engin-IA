@@ -103,4 +103,20 @@ interface EnigmaDao {
 
     @Query("DELETE FROM user_lead")
     suspend fun clearUserLeads()
+
+    // Question Reviews (Weaknesses / Spaced Repetition)
+    @Query("SELECT * FROM question_review ORDER BY failCount DESC, lastReviewedAt DESC")
+    fun getQuestionReviews(): Flow<List<QuestionReviewEntity>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertQuestionReview(review: QuestionReviewEntity)
+
+    @Query("DELETE FROM question_review WHERE questionId = :questionId")
+    suspend fun deleteQuestionReview(questionId: String)
+
+    @Query("UPDATE question_review SET isMastered = 1 WHERE questionId = :questionId")
+    suspend fun markQuestionMastered(questionId: String)
+
+    @Query("DELETE FROM question_review")
+    suspend fun clearQuestionReviews()
 }

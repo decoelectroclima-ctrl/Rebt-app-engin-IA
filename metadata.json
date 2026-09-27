@@ -1,6 +1,6 @@
 {
   "name": "EnginIA REBT",
-  "description": "Estudio del Reglamento Electrotécnico de Baja Tensión REBT para Examen de Certificadora con simuladores, calculadoras y pasarela de pago Google Play.",
+  "description": "Preparación y estudio exhaustivo del Nuevo Reglamento Electrotécnico de Baja Tensión REBT 2026 para exámenes oficiales de instalador y certificadora con simuladores, calculadoras y casos prácticos.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

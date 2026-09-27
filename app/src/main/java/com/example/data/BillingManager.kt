@@ -15,6 +15,8 @@ class BillingManager(
     private var billingClient: BillingClient? = null
     var isClientConnected = false
         private set
+    var isBillingServiceAvailable = true
+        private set
 
     // Dynamic providers set by ViewModel
     var priceProProvider: () -> Double = { 14.99 }
@@ -54,9 +56,16 @@ class BillingManager(
             override fun onBillingSetupFinished(billingResult: BillingResult) {
                 if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
                     isClientConnected = true
+                    isBillingServiceAvailable = true
                     Log.d("BillingManager", "Conexión con Google Play Billing establecida con éxito.")
                     queryActivePurchases()
                     onSuccess?.invoke()
+                } else if (billingResult.responseCode == BillingClient.BillingResponseCode.SERVICE_UNAVAILABLE ||
+                    billingResult.responseCode == BillingClient.BillingResponseCode.SERVICE_DISCONNECTED
+                ) {
+                    isClientConnected = false
+                    isBillingServiceAvailable = false
+                    Log.w("BillingManager", "Billing service unavailable (normal in emulator/sandbox): ${billingResult.debugMessage}")
                 } else {
                     Log.e("BillingManager", "Fallo al conectar con Google Play Billing: ${billingResult.debugMessage}")
                 }

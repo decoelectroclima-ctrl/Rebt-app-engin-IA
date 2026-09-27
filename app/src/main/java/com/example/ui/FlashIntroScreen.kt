@@ -289,7 +289,7 @@ fun FlashIntroScreen(viewModel: MainViewModel) {
             Spacer(modifier = Modifier.height(12.dp))
 
             Text(
-                text = "decoelectroclima@gmail.com - Licencia Activa",
+                text = "${viewModel.currentUserEmail} - Licencia Activa",
                 fontSize = 10.sp,
                 fontWeight = FontWeight.Medium,
                 fontFamily = FontFamily.Monospace,

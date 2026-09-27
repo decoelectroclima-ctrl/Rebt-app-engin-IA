@@ -15,9 +15,10 @@ import androidx.room.RoomDatabase
         PostItEntity::class,
         CustomDocumentEntity::class,
         CustomNewsEntity::class,
-        UserLeadEntity::class
+        UserLeadEntity::class,
+        QuestionReviewEntity::class
     ],
-    version = 3,
+    version = 4,
     exportSchema = false
 )
 abstract class EnigmaDatabase : RoomDatabase() {

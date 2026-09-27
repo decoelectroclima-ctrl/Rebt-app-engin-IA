@@ -107,4 +107,18 @@ data class UserLeadEntity(
     val registrationDate: Long = System.currentTimeMillis()
 )
 
+@Entity(tableName = "question_review")
+data class QuestionReviewEntity(
+    @PrimaryKey val questionId: String,
+    val questionText: String,
+    val moduleKey: String,
+    val selectedOption: Int,
+    val correctOption: Int,
+    val explanation: String,
+    val reference: String,
+    val failCount: Int = 1,
+    val isMastered: Boolean = false,
+    val lastReviewedAt: Long = System.currentTimeMillis()
+)
+
 

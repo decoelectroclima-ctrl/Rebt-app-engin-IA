@@ -14,19 +14,22 @@ android {
     applicationId = "com.aistudio.enginia.pwtvzc"
     minSdk = 24
     targetSdk = 36
-    versionCode = 9
-    versionName = "9.0"
+    versionCode = 11
+    versionName = "11.0"
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   }
 
   signingConfigs {
-    create("release") {
-      val keystorePath = System.getenv("KEYSTORE_PATH") ?: "${rootDir}/my-upload-key.jks"
-      storeFile = file(keystorePath)
-      storePassword = System.getenv("STORE_PASSWORD") ?: "enginia2026"
-      keyAlias = "upload"
-      keyPassword = System.getenv("KEY_PASSWORD") ?: "enginia2026"
+    val releaseKeystore = System.getenv("KEYSTORE_PATH")?.let { file(it) }
+      ?: file("${rootDir}/my-upload-key.jks")
+    if (releaseKeystore.exists()) {
+      create("release") {
+        storeFile = releaseKeystore
+        storePassword = System.getenv("STORE_PASSWORD") ?: "enginia2026"
+        keyAlias = System.getenv("KEY_ALIAS") ?: "upload"
+        keyPassword = System.getenv("KEY_PASSWORD") ?: "enginia2026"
+      }
     }
     create("debugConfig") {
       storeFile = file("${rootDir}/debug.keystore")
@@ -41,7 +44,9 @@ android {
       isCrunchPngs = false
       isMinifyEnabled = false
       proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-      signingConfig = signingConfigs.getByName("release")
+      if (signingConfigs.findByName("release") != null) {
+        signingConfig = signingConfigs.getByName("release")
+      }
     }
     debug {
       signingConfig = signingConfigs.getByName("debugConfig")

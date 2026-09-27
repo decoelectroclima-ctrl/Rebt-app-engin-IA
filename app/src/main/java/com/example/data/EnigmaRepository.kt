@@ -17,6 +17,7 @@ class EnigmaRepository(private val context: Context) {
     val customDocumentsFlow: Flow<List<CustomDocumentEntity>> = dao.getCustomDocuments()
     val customNewsFlow: Flow<List<CustomNewsEntity>> = dao.getCustomNews()
     val userLeadsFlow: Flow<List<UserLeadEntity>> = dao.getUserLeads()
+    val questionReviewsFlow: Flow<List<QuestionReviewEntity>> = dao.getQuestionReviews()
 
     // 2. Action functions
     suspend fun saveModuleProgress(progress: ModuleProgressEntity) {
@@ -209,5 +210,38 @@ class EnigmaRepository(private val context: Context) {
                 unlockedAchievements = ""
             )
         )
+    }
+
+    suspend fun recordQuestionMistake(
+        questionText: String,
+        moduleKey: String,
+        selectedOption: Int,
+        correctOption: Int,
+        explanation: String,
+        reference: String
+    ) {
+        val qId = "${moduleKey}_${questionText.hashCode()}"
+        dao.insertQuestionReview(
+            QuestionReviewEntity(
+                questionId = qId,
+                questionText = questionText,
+                moduleKey = moduleKey,
+                selectedOption = selectedOption,
+                correctOption = correctOption,
+                explanation = explanation,
+                reference = reference,
+                failCount = 1,
+                isMastered = false,
+                lastReviewedAt = System.currentTimeMillis()
+            )
+        )
+    }
+
+    suspend fun markQuestionMastered(questionId: String) {
+        dao.markQuestionMastered(questionId)
+    }
+
+    suspend fun clearQuestionReviews() {
+        dao.clearQuestionReviews()
     }
 }
