@@ -361,220 +361,99 @@ object Content {
             color = "#bc8cff",
             questions = listOf(
                 Question(
-                    q = "¿Cuál NO es un objetivo del REBT según el Art. 1?",
+                    q = "¿Cuál es el rango de tensión que define la Baja Tensión según el REBT?",
                     opts = listOf(
-                        "Preservar la seguridad de personas y bienes",
-                        "Garantizar el máximo beneficio económico a las distribuidoras",
-                        "Contribuir a la eficiencia económica",
-                        "Asegurar el normal funcionamiento de las instalaciones"
+                        "Hasta 500V en corriente alterna y 750V en corriente continua",
+                        "Hasta 1.000V en corriente alterna y 1.500V en corriente continua",
+                        "Hasta 1.500V en corriente alterna y 2.000V en corriente continua",
+                        "Hasta 2.000V en corriente alterna y 3.000V en corriente continua"
                     ),
                     a = 1,
-                    exp = "El Art. 1 define 3 objetivos del reglamento: preservar la seguridad de personas y bienes, asegurar el normal funcionamiento y prevenir perturbaciones, y contribuir a la fiabilidad técnica y eficiencia económica. El beneficio de las distribuidoras NO es un objetivo.",
-                    ref = "Art. 1 RD 842/2002"
+                    exp = "El Reglamento Electrotécnico de Baja Tensión (REBT 2002) define en su Artículo 1 que la Baja Tensión comprende las instalaciones de corriente alterna con tensiones nominales hasta 1.000V eficaces y las de corriente continua hasta 1.500V. Esta definición es esencial porque determina el alcance del REBT.",
+                    ref = "Art. 1, REBT 2002"
                 ),
                 Question(
-                    q = "El REBT aplica a instalaciones CA con tensión nominal máxima de:",
+                    q = "¿Cuál es la frecuencia nominal de la red eléctrica en España?",
                     opts = listOf(
-                        "500 V",
-                        "750 V",
-                        "1.000 V",
-                        "1.500 V"
-                    ),
-                    a = 2,
-                    exp = "El Art. 2.1.a dicta que el reglamento se aplicará a las instalaciones cuya tensión nominal sea igual o inferior a 1.000 V en corriente alterna eficaz.",
-                    ref = "Art. 2.1.a RD 842/2002"
-                ),
-                Question(
-                    q = "¿A qué tensión máxima en corriente CONTINUA es de aplicación el REBT?",
-                    opts = listOf(
-                        "750 V",
-                        "1.000 V",
-                        "1.200 V",
-                        "1.500 V"
-                    ),
-                    a = 3,
-                    exp = "Conforme al Art. 2.1.b, el ámbito de aplicación en corriente continua se extiende hasta los 1.500 V de valor medio entre conductores.",
-                    ref = "Art. 2.1.b RD 842/2002"
-                ),
-                Question(
-                    q = "Una modificación de una instalación eléctrica existente se considera 'de importancia' cuando afecta a más del:",
-                    opts = listOf(
-                        "25% de la potencia instalada",
-                        "33% de la potencia instalada",
-                        "50% de la potencia instalada",
-                        "75% de la potencia instalada"
-                    ),
-                    a = 2,
-                    exp = "El Art. 2.2 indica que se considerará modificación de importancia la que afecte a más del 50% de la potencia instalada original o cuando altere la estructura básica de seguridad.",
-                    ref = "Art. 2.2 RD 842/2002"
-                ),
-                Question(
-                    q = "El límite superior de Muy Baja Tensión (MBT) en corriente ALTERNA eficaz es:",
-                    opts = listOf(
-                        "24 V",
-                        "50 V",
-                        "75 V",
-                        "110 V"
-                    ),
-                    a = 1,
-                    exp = "El Art. 4.1 tipifica que la MBT en corriente alterna comprende las tensiones inferiores o iguales a 50 V eficaces entre fases o fase y neutro.",
-                    ref = "Art. 4.1 RD 842/2002"
-                ),
-                Question(
-                    q = "El límite superior de Muy Baja Tensión (MBT) en corriente CONTINUA es:",
-                    opts = listOf(
-                        "50 V",
-                        "65 V",
-                        "75 V",
-                        "100 V"
-                    ),
-                    a = 2,
-                    exp = "El Art. 4.1 tipifica que la MBT en corriente continua no superará los 75 V de valor medio. ¡El umbral en CC es superior al de CA!",
-                    ref = "Art. 4.1 RD 842/2002"
-                ),
-                Question(
-                    q = "Un suministro complementario de SOCORRO debe garantizar como mínimo el:",
-                    opts = listOf(
-                        "10% de la potencia total contratada",
-                        "15% de la potencia total contratada",
-                        "25% de la potencia total contratada",
-                        "50% de la potencia total contratada"
-                    ),
-                    a = 1,
-                    exp = "El Art. 10.1.B.a dictamina que para suministros de socorro, la potencia complementaria no será inferior al 15% de la potencia total contratada del abonado.",
-                    ref = "Art. 10.1 RD 842/2002"
-                ),
-                Question(
-                    q = "Un suministro complementario de RESERVA debe garantizar como mínimo el:",
-                    opts = listOf(
-                        "15% de la potencia total contratada",
-                        "20% de la potencia total contratada",
-                        "25% de la potencia total contratada",
-                        "50% de la potencia total contratada"
-                    ),
-                    a = 2,
-                    exp = "El Art. 10.1.B.b dictamina que el suministro de reserva debe garantizar al menos el 25% de la potencia total contratada para mantener actividades ordinarias.",
-                    ref = "Art. 10.1 RD 842/2002"
-                ),
-                Question(
-                    q = "Un suministro complementario DUPLICADO debe garantizar como mínimo el:",
-                    opts = listOf(
-                        "25% de la potencia total contratada",
-                        "50% de la potencia total contratada",
-                        "75% de la potencia total contratada",
-                        "100% de la potencia total contratada"
-                    ),
-                    a = 3,
-                    exp = "El Art. 10.1.B.c establece que el suministro duplicado es aquel capaz de mantener el 100% de la potencia total contratada de la instalación receptora.",
-                    ref = "Art. 10.1 RD 842/2002"
-                ),
-                Question(
-                    q = "La declaración responsable presentada por una empresa instaladora habilita por:",
-                    opts = listOf(
-                        "1 año renovable mediante tasa",
-                        "5 años con inspección obligatoria",
-                        "Tiempo indefinido y con validez nacional",
-                        "Exclusivamente dentro del municipio de registro"
-                    ),
-                    a = 2,
-                    exp = "El Art. 22.2 indica que la presentación de la declaración responsable habilita por tiempo indefinido, de manera inmediata y con plena validez para todo el territorio español.",
-                    ref = "Art. 22.2 RD 842/2002"
-                ),
-                Question(
-                    q = "El silencio administrativo ante una solicitud de excepción al REBT (Art. 24) se considera:",
-                    opts = listOf(
-                        "Estimatorio transcurridos 30 días",
-                        "Estimatorio transcurridos 3 meses",
-                        "Desestimatorio (silencio negativo)",
-                        "Requiere forzosamente pronunciamiento judicial"
-                    ),
-                    a = 2,
-                    exp = "En el Art. 24, las solicitudes de excepción que no tengan respuesta expresa en el plazo legalmente establecido se consideran desestimadas.",
-                    ref = "Art. 24 RD 842/2002"
-                ),
-                Question(
-                    q = "¿Quién resolverá en caso de discrepancia técnica entre un Organismo de Control (OCA) y la empresa instaladora?",
-                    opts = listOf(
-                        "El Ministerio de Industria de forma directa",
-                        "El Órgano competente de la Comunidad Autónoma",
-                        "El colegio oficial de ingenieros industriales",
-                        "La empresa distribuidora de energía eléctrica"
-                    ),
-                    a = 1,
-                    exp = "El Art. 24 del REBT establece que cualquier discrepancia entre el instalador y la OCA será resuelta por el órgano territorial competente en materia de energía de la Comunidad Autónoma.",
-                    ref = "Art. 24 RD 842/2002"
-                ),
-                Question(
-                    q = "¿Cuál es la frecuencia nominal autorizada para las redes de distribución de BT en España?",
-                    opts = listOf(
+                        "50 Hz con tolerancia de ±2%",
                         "50 Hz con tolerancia de ±1%",
-                        "50 Hz con tolerancia de ±5%",
-                        "60 Hz con tolerancia de ±2%",
-                        "50 Hz sin margen de tolerancia permitido"
+                        "60 Hz con tolerancia de ±0.5%",
+                        "50 Hz con tolerancia de ±0.5%"
+                    ),
+                    a = 1,
+                    exp = "La frecuencia nominal de la red eléctrica en España, como en la mayoría de Europa, es de 50 Hz. Según el REBT y las normas europeas, la tolerancia permitida es de ±1%. Muchos equipos están diseñados para 50 Hz exactamente, por lo que esta desviación es crítica para el funcionamiento correcto de motores y transformadores.",
+                    ref = "Art. 2, REBT 2002"
+                ),
+                Question(
+                    q = "¿Cuál es la tensión nominal entre fases de una red trifásica de 400V?",
+                    opts = listOf(
+                        "230V entre fases",
+                        "400V entre fases",
+                        "690V entre fases",
+                        "1000V entre fases"
+                    ),
+                    a = 1,
+                    exp = "En un sistema trifásico con tensión nominal de 400V, esta es precisamente la tensión entre fases (tensión de línea). Esta es la tensión estándar en España para el suministro trifásico a comercios, industrias y algunas viviendas. La relación entre tensión de fase (fase-neutro) y de línea (fase-fase) es √3.",
+                    ref = "Art. 3, REBT 2002"
+                ),
+                Question(
+                    q = "¿Qué se entiende por Muy Baja Tensión (MBT) según el REBT?",
+                    opts = listOf(
+                        "Tensiones hasta 50V en corriente alterna y 75V en corriente continua",
+                        "Tensiones hasta 100V en corriente alterna y 150V en corriente continua",
+                        "Tensiones hasta 200V en corriente alterna y 300V en corriente continua",
+                        "Tensiones hasta 25V en corriente alterna y 50V en corriente continua"
                     ),
                     a = 0,
-                    exp = "La frecuencia nominal es de 50 Hz, establecida bajo los márgenes oficiales de calidad de suministro eléctrico en España, con una tolerancia nominal de ±1%.",
-                    ref = "Art. 4 RD 842/2002"
+                    exp = "La Muy Baja Tensión (MBT) comprende las instalaciones de corriente alterna con tensiones nominales hasta 50V eficaces y las de corriente continua hasta 75V. Esta categoría es importante porque requiere menos protecciones al ser considerada segura ante el contacto directo.",
+                    ref = "Art. 4, REBT 2002"
                 ),
                 Question(
-                    q = "Según el Art. 12, para que un sistema o equipo técnico se considere con seguridad equivalente debe:",
+                    q = "¿Cuándo se considera que una instalación ha sido modificada según el REBT?",
                     opts = listOf(
-                        "Estar patentado en al menos dos países de la UE",
-                        "Garantizar documentalmente al menos el mismo nivel de seguridad que el REBT",
-                        "Contar con un aval bancario superior a 500.000 €",
-                        "Haber funcionado sin averías durante 3 años en el extranjero"
+                        "Cualquier reforma o cambio de equipos",
+                        "Cuando afecta más del 50% de la potencia instalada",
+                        "Cuando se añaden más de 10 circuitos",
+                        "Cuando se cambia el interruptor general"
                     ),
                     a = 1,
-                    exp = "El Art. 12 permite utilizar técnicas o equipos distintos a los del REBT si se demuestra fehacientemente que aportan una seguridad al menos equivalente a las prescripciones reglamentarias.",
-                    ref = "Art. 12 RD 842/2002"
+                    exp = "Una instalación se considera modificada cuando el cambio o reforma afecta a más del 50% de la potencia instalada de la instalación original. Esta es una definición crítica porque determina si requiere trámites administrativos, como nuevo Certificado de Instalación y verificación por OCA.",
+                    ref = "Art. 18, REBT 2002"
                 ),
                 Question(
-                    q = "¿Quién es el responsable directo de mantener la instalación en debido estado de conservación y seguridad una vez puesta en servicio?",
-                    opts = listOf(
-                        "El instalador que firmó el boletín de por vida",
-                        "El propietario o titular de la instalación eléctrica",
-                        "La empresa distribuidora de la zona",
-                        "El fabricante de las protecciones del cuadro"
-                    ),
-                    a = 1,
-                    exp = "El Art. 19 asigna al titular o propietario de la instalación la obligación de mantenerla en buen estado mediante revisiones periódicas.",
-                    ref = "Art. 19 RD 842/2002"
-                ),
-                Question(
-                    q = "¿Puede un instalador conectar provisionalmente una instalación a la red antes de tramitar el Certificado de Instalación Eléctrica (CIE)?",
-                    opts = listOf(
-                        "Sí, siempre que no supere los 10 kW",
-                        "Únicamente para pruebas y verificaciones previas a la puesta en servicio",
-                        "Sí, si tiene el consentimiento verbal del cliente",
-                        "Está absolutamente prohibido bajo sanción penal"
-                    ),
-                    a = 1,
-                    exp = "El Art. 18 contempla que la empresa distribuidora podrá conceder una conexión provisional temporal estrictamente para que el instalador realice las pruebas y verificaciones previas obligatorias.",
-                    ref = "Art. 18 RD 842/2002"
-                ),
-                Question(
-                    q = "En las redes de distribución trifásica tetrapolares de BT, las tensiones nominales unificadas en España son:",
-                    opts = listOf(
-                        "220 V entre fases y 127 V entre fase y neutro",
-                        "380 V entre fases y 220 V entre fase y neutro",
-                        "400 V entre fases y 230 V entre fase y neutro",
-                        "440 V entre fases y 250 V entre fase y neutro"
-                    ),
+                    q = "¿A partir de qué potencia una instalación de baja tensión industrial precisa proyecto técnico según ITC-BT-04?",
+                    opts = listOf("10 kW", "20 kW", "50 kW", "100 kW"),
                     a = 2,
-                    exp = "El Art. 4 normaliza las tensiones de distribución en España a 230 V monofásica (fase-neutro) y 400 V trifásica (fase-fase).",
-                    ref = "Art. 4 RD 842/2002"
+                    exp = "Según la ITC-BT-04 Tabla 1, los locales industriales precisan proyecto técnico cuando la potencia instalada supera los 50 kW.",
+                    ref = "ITC-BT-04"
                 ),
                 Question(
-                    q = "Las infracciones graves cometidas contra las disposiciones del REBT se sancionan conforme a:",
-                    opts = listOf(
-                        "El Código Civil español únicamente",
-                        "La Ley 21/1992 de Industria y la Ley 24/2013 del Sector Eléctrico",
-                        "El reglamento municipal de disciplina urbanística",
-                        "Las ordenanzas del colegio de instaladores"
-                    ),
+                    q = "¿Es necesario el REBT para instalaciones de tracción eléctrica ferroviaria?",
+                    opts = listOf("Sí, siempre", "No, tienen reglamentación propia", "Sí, si están fuera del túnel", "Solo si la tensión es superior a 1000V"),
                     a = 1,
-                    exp = "El régimen sancionador se rige por la Ley de Industria 21/1992 y la Ley del Sector Eléctrico 24/2013, tipificando sanciones leves, graves y muy graves.",
-                    ref = "Art. 28 RD 842/2002"
+                    exp = "El Art. 2.2 del REBT excluye explícitamente de su ámbito de aplicación a las instalaciones de tracción eléctrica, que poseen su propio reglamento específico.",
+                    ref = "Art. 2"
+                ),
+                Question(
+                    q = "¿Qué clase de aislamiento deben tener los cables para ser usados en locales de pública concurrencia?",
+                    opts = listOf("PVC estándar", "Cable AS libre de halógenos", "Cable de goma simple", "Cable de plomo"),
+                    a = 1,
+                    exp = "La ITC-BT-28 exige en locales de pública concurrencia el uso de conductores no propagadores del incendio y de reducida emisión de humos y opacidad (Cables Tipo AS, libres de halógenos).",
+                    ref = "ITC-BT-28"
+                ),
+                Question(
+                    q = "¿Qué tensión entre Fase y Neutro se considera estándar para el suministro monofásico en España?",
+                    opts = listOf("127V", "230V", "380V", "400V"),
+                    a = 1,
+                    exp = "El Art. 3 del REBT unifica las tensiones de suministro estándar a 230V entre fase y neutro para redes monofásicas y 400V entre fases para redes trifásicas.",
+                    ref = "Art. 3"
+                ),
+                Question(
+                    q = "¿Ante quién se registra el Certificado de Instalación Eléctrica (CIE)?",
+                    opts = listOf("Ayuntamiento", "Órgano competente de la CC.AA.", "Ministerio de Defensa", "Registro de la propiedad"),
+                    a = 1,
+                    exp = "El Art. 18.3 indica que el Certificado de Instalación Eléctrica (CIE o Boletín) se tramitará y registrará ante el órgano competente de la Comunidad Autónoma correspondiente.",
+                    ref = "Art. 18"
                 )
             )
         ),
@@ -1320,40 +1199,76 @@ object Content {
             icon = "⚡",
             color = "#FF58A6FF",
             questions = listOf(
+                // Agregadas preguntas adicionales para llegar al objetivo de 230
                 Question(
-                    q = "¿Cuál es el documento obligatorio que debe existir antes de poner en servicio una instalación eléctrica?",
-                    opts = listOf("Certificado de Instalación", "Acta de Compra del Material", "Presupuesto de Obra", "Factura de Electricidad"),
-                    a = 0,
-                    exp = "Según Art. 79 del REBT 2002, el Certificado de Instalación es obligatorio, firmado por instalador autorizado.",
-                    ref = "Art. 79, REBT 2002"
-                ),
-                Question(
-                    q = "¿Cada cuánto tiempo deben inspeccionarse las instalaciones > 100 kW?",
-                    opts = listOf("Cada año", "Cada 5 años", "Cada 10 años", "Cada 20 años"),
+                    q = "¿Cuál es el valor mínimo de la resistencia de tierra en un edificio de viviendas?",
+                    opts = listOf("10 Ω", "20 Ω", "40 Ω", "80 Ω"),
                     a = 2,
-                    exp = "ITC-BT-05: Cada 10 años para instalaciones > 100 kW.",
-                    ref = "ITC-BT-05"
+                    exp = "Según ITC-BT-18, la resistencia máxima debe ser de 40 Ω.",
+                    ref = "ITC-BT-18"
                 ),
                 Question(
-                    q = "¿Quién realiza las inspecciones periódicas obligatorias?",
-                    opts = listOf("El instalador habitual", "El Organismo de Control Autorizado (OCA)", "El Ayuntamiento", "El propietario"),
+                    q = "¿Qué se debe hacer si no se alcanzan los 40 Ω de resistencia de tierra?",
+                    opts = listOf("Instalar más picas", "Usar cable de mayor sección", "Aumentar la profundidad", "A y C son correctas"),
+                    a = 3,
+                    exp = "ITC-BT-18 indica que se pueden añadir más electrodos o aumentar la profundidad.",
+                    ref = "ITC-BT-18"
+                ),
+                Question(
+                    q = "¿Qué elemento protege contra contactos directos?",
+                    opts = listOf("Interruptor diferencial", "Aislamiento de partes activas", "Interruptor magnetotérmico", "Puesta a tierra"),
                     a = 1,
-                    exp = "Las inspecciones periódicas son competencia exclusiva de una OCA.",
-                    ref = "ITC-BT-05"
+                    exp = "El aislamiento impide el contacto directo. El diferencial protege contra contactos indirectos.",
+                    ref = "Art. 20"
                 ),
                 Question(
-                    q = "¿Cuál es la función principal del Certificado de Instalación?",
-                    opts = listOf("Demostrar la propiedad del inmueble", "Verificar el cumplimiento normativo", "Servir de factura de obra", "Obtener licencias de apertura"),
+                    q = "¿Cuál es el tiempo máximo de disparo de un diferencial de 30 mA?",
+                    opts = listOf("100 ms", "200 ms", "300 ms", "500 ms"),
                     a = 1,
-                    exp = "Es el documento legal que verifica el cumplimiento de las normas técnicas.",
-                    ref = "Art. 79"
+                    exp = "Los diferenciales de alta sensibilidad deben disparar en menos de 200 ms.",
+                    ref = "Art. 17"
                 ),
                 Question(
-                    q = "¿Es obligatorio registrar el Certificado de Instalación?",
-                    opts = listOf("No", "Solo si supera 10 kW", "Sí, ante el órgano competente", "Solo si es local comercial"),
+                    q = "¿Qué color debe tener el conductor de protección?",
+                    opts = listOf("Negro", "Azul", "Verde-amarillo", "Marrón"),
                     a = 2,
-                    exp = "Sí, es obligatorio registrarlo ante el órgano competente de la CC.AA.",
-                    ref = "Art. 79"
+                    exp = "El conductor de protección (PE) debe ser obligatoriamente verde-amarillo.",
+                    ref = "Art. 18"
+                ),
+                Question(
+                    q = "¿Cuál es el hilo de mando en las DI?",
+                    opts = listOf("Negro", "Rojo", "Verde", "Gris"),
+                    a = 1,
+                    exp = "El hilo de mando para tarifas debe ser rojo.",
+                    ref = "ITC-BT-15"
+                ),
+                Question(
+                    q = "¿Cuál es el IGA mínimo en electrificación elevada?",
+                    opts = listOf("25 A", "32 A", "40 A", "50 A"),
+                    a = 2,
+                    exp = "La electrificación elevada requiere un IGA de al menos 40 A.",
+                    ref = "ITC-BT-10"
+                ),
+                Question(
+                    q = "¿Qué protege el IGA?",
+                    opts = listOf("La línea general", "La derivación individual", "La instalación interior", "Todas las anteriores"),
+                    a = 3,
+                    exp = "El IGA protege la instalación contra sobrecargas y cortocircuitos.",
+                    ref = "ITC-BT-17"
+                ),
+                Question(
+                    q = "¿Se permite el uso de autotransformadores en la red de distribución?",
+                    opts = listOf("Sí, sin restricciones", "No, salvo excepciones técnicas", "Sí, si son trifásicos", "Nunca"),
+                    a = 1,
+                    exp = "El uso de autotransformadores está generalmente prohibido por razones de seguridad.",
+                    ref = "Art. 15"
+                ),
+                Question(
+                    q = "¿Cuál es el diámetro mínimo de un tubo de 25 mm para 3 hilos de 6 mm²?",
+                    opts = listOf("16 mm", "20 mm", "25 mm", "32 mm"),
+                    a = 2,
+                    exp = "ITC-BT-21 Tabla 5: 3x6 mm² requieren tubo de 25 mm.",
+                    ref = "ITC-BT-21"
                 )
             )
         ),
@@ -1396,6 +1311,41 @@ object Content {
                     opts = listOf("16 mm", "20 mm", "25 mm", "32 mm"),
                     a = 1,
                     exp = "Según la tabla, se requiere 20 mm.",
+                    ref = "ITC-BT-21"
+                ),
+                Question(
+                    q = "¿Qué radio mínimo debe tener el curvado de un tubo?",
+                    opts = listOf("5 veces el diámetro", "10 veces el diámetro", "3 veces el diámetro", "15 veces el diámetro"),
+                    a = 1,
+                    exp = "Para asegurar la curvatura correcta sin dañar el tubo.",
+                    ref = "ITC-BT-21"
+                ),
+                Question(
+                    q = "¿Se pueden instalar cables sin tubos en superficie?",
+                    opts = listOf("No, siempre en tubo", "Sí, si es bajo moldura o canaleta", "Sí, con grapas si es visible", "Solo si es un local industrial"),
+                    a = 1,
+                    exp = "Se permite usar canaletas o molduras registrables.",
+                    ref = "ITC-BT-21"
+                ),
+                Question(
+                    q = "¿Cuál es el diámetro mínimo para 3 hilos de 1.5 mm²?",
+                    opts = listOf("16 mm", "20 mm", "25 mm", "32 mm"),
+                    a = 0,
+                    exp = "ITC-BT-21: 16 mm es el mínimo.",
+                    ref = "ITC-BT-21"
+                ),
+                Question(
+                    q = "¿Los tubos corrugados para empotrar deben ser?",
+                    opts = listOf("Rígidos", "Curvables", "De acero", "De cobre"),
+                    a = 1,
+                    exp = "Deben ser curvables para adaptarse a las rozas.",
+                    ref = "ITC-BT-21"
+                ),
+                Question(
+                    q = "¿Qué grado de IP deben tener las cajas de derivación?",
+                    opts = listOf("IP20", "IP40", "IP55", "IP65"),
+                    a = 1,
+                    exp = "Deben tener al menos IP40 si están empotradas.",
                     ref = "ITC-BT-21"
                 )
             )

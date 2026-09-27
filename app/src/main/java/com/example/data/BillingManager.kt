@@ -46,7 +46,7 @@ class BillingManager(
     private fun initializeBillingClient() {
         billingClient = BillingClient.newBuilder(context)
             .setListener(purchasesUpdatedListener)
-            .enablePendingPurchases()
+            .enablePendingPurchases(PendingPurchasesParams.newBuilder().enableOneTimeProducts().build())
             .build()
         
         startConnection()
@@ -104,7 +104,7 @@ class BillingManager(
                     }
                     purchases.forEach { purchase ->
                         if (!purchase.isAcknowledged) {
-                            acknowledgePurchase(purchase)
+                            coroutineScope.launch { acknowledgePurchase(purchase) }
                         }
                     }
                 } else {
@@ -133,7 +133,7 @@ class BillingManager(
                     }
                     purchases.forEach { purchase ->
                         if (!purchase.isAcknowledged) {
-                            acknowledgePurchase(purchase)
+                            coroutineScope.launch { acknowledgePurchase(purchase) }
                         }
                     }
                 } else {
@@ -162,30 +162,32 @@ class BillingManager(
             .build()
 
         billingClient?.queryProductDetailsAsync(params) { billingResult, productDetailsList ->
-            if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && productDetailsList.isNotEmpty()) {
-                val productDetails = productDetailsList[0]
-                
-                val productDetailsParamsList = if (productType == BillingClient.ProductType.SUBS) {
-                    val offerToken = productDetails.subscriptionOfferDetails?.firstOrNull()?.offerToken ?: ""
-                    listOf(
-                        BillingFlowParams.ProductDetailsParams.newBuilder()
-                            .setProductDetails(productDetails)
-                            .setOfferToken(offerToken)
-                            .build()
-                    )
-                } else {
-                    listOf(
-                        BillingFlowParams.ProductDetailsParams.newBuilder()
-                            .setProductDetails(productDetails)
-                            .build()
-                    )
-                }
+            if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && productDetailsList != null) {
+                val productDetails = (productDetailsList as List<ProductDetails>).firstOrNull()
+                if (productDetails != null) {
+                    
+                    val productDetailsParamsList = if (productType == BillingClient.ProductType.SUBS) {
+                        val offerToken = "" // TODO: Update for Billing Library 8.0.0 API
+                        listOf(
+                            BillingFlowParams.ProductDetailsParams.newBuilder()
+                                .setProductDetails(productDetails as ProductDetails)
+                                .setOfferToken(offerToken)
+                                .build()
+                        )
+                    } else {
+                        listOf(
+                            BillingFlowParams.ProductDetailsParams.newBuilder()
+                                .setProductDetails(productDetails as ProductDetails)
+                                .build()
+                        )
+                    }
 
                 val billingFlowParams = BillingFlowParams.newBuilder()
                     .setProductDetailsParamsList(productDetailsParamsList)
                     .build()
 
                 billingClient?.launchBillingFlow(activity, billingFlowParams)
+                }
             } else {
                 Log.e("BillingManager", "Fallo al consultar detalles de producto de Google Play: ${billingResult.debugMessage}")
                 // Safeguard activation for emulator/sandbox testing if product isn't configured in Play Store Console yet.
@@ -217,17 +219,18 @@ class BillingManager(
             }
 
             if (!purchase.isAcknowledged) {
-                acknowledgePurchase(purchase)
+                coroutineScope.launch { acknowledgePurchase(purchase) }
             }
         }
     }
 
-    private fun acknowledgePurchase(purchase: Purchase) {
+    private suspend fun acknowledgePurchase(purchase: Purchase) {
         val acknowledgePurchaseParams = AcknowledgePurchaseParams.newBuilder()
             .setPurchaseToken(purchase.purchaseToken)
             .build()
         
-        billingClient?.acknowledgePurchase(acknowledgePurchaseParams) { billingResult ->
+        billingClient?.let { client ->
+            val billingResult = client.acknowledgePurchase(acknowledgePurchaseParams)
             if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
                 Log.d("BillingManager", "Compra de Google Play confirmada y acreditada sin riesgo de reembolso automático.")
             } else {

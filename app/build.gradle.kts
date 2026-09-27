@@ -14,8 +14,8 @@ android {
     applicationId = "com.aistudio.enginia.pwtvzc"
     minSdk = 24
     targetSdk = 36
-    versionCode = 11
-    versionName = "11.0"
+    versionCode = 12
+    versionName = "12.0"
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   }
@@ -95,7 +95,7 @@ dependencies {
   // implementation(libs.androidx.navigation.compose)
   implementation(libs.androidx.room.ktx)
   implementation(libs.androidx.room.runtime)
-  implementation("com.android.billingclient:billing-ktx:7.1.1")
+  implementation("com.android.billingclient:billing-ktx:8.0.0")
   implementation(libs.coil.compose)
   implementation(libs.kotlinx.coroutines.android)
   implementation(libs.kotlinx.coroutines.core)
