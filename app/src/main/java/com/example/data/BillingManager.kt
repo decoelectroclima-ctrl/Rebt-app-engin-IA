@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.util.Log
 import com.android.billingclient.api.*
+import com.example.BuildConfig
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -187,12 +188,16 @@ class BillingManager(
                 billingClient?.launchBillingFlow(activity, billingFlowParams)
             } else {
                 Log.e("BillingManager", "Fallo al consultar detalles de producto de Google Play: ${billingResult.debugMessage}")
-                Log.w("BillingManager", "Como salvaguarda local, activando plan de prueba para desarrollo local en sandbox.")
                 // Safeguard activation for emulator/sandbox testing if product isn't configured in Play Store Console yet.
-                coroutineScope.launch {
-                    val plan = if (productId == PRO_MONTHLY_PRODUCT_ID) "pro" else "premium"
-                    val price = if (productId == PRO_MONTHLY_PRODUCT_ID) priceProProvider() else pricePremiumProvider()
-                    repository.activatePremiumSubscription(plan, price)
+                if (BuildConfig.DEBUG) {
+                    Log.w("BillingManager", "SANDBOX: Activando plan de prueba para desarrollo local.")
+                    coroutineScope.launch {
+                        val plan = if (productId == PRO_MONTHLY_PRODUCT_ID) "pro" else "premium"
+                        val price = if (productId == PRO_MONTHLY_PRODUCT_ID) priceProProvider() else pricePremiumProvider()
+                        repository.activatePremiumSubscription(plan, price)
+                    }
+                } else {
+                    Log.e("BillingManager", "PRODUCCIÓN: Producto no disponible en Play Console. Usuario permanece en plan gratuito.")
                 }
             }
         }

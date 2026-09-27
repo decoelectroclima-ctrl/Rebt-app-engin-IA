@@ -1313,6 +1313,92 @@ object Content {
                     ref = "ITC-BT-29 §2"
                 )
             )
+        ),
+        "suministro" to ModuleDefinition(
+            id = "suministro",
+            label = "Suministro (Art. 79-91)",
+            icon = "⚡",
+            color = "#FF58A6FF",
+            questions = listOf(
+                Question(
+                    q = "¿Cuál es el documento obligatorio que debe existir antes de poner en servicio una instalación eléctrica?",
+                    opts = listOf("Certificado de Instalación", "Acta de Compra del Material", "Presupuesto de Obra", "Factura de Electricidad"),
+                    a = 0,
+                    exp = "Según Art. 79 del REBT 2002, el Certificado de Instalación es obligatorio, firmado por instalador autorizado.",
+                    ref = "Art. 79, REBT 2002"
+                ),
+                Question(
+                    q = "¿Cada cuánto tiempo deben inspeccionarse las instalaciones > 100 kW?",
+                    opts = listOf("Cada año", "Cada 5 años", "Cada 10 años", "Cada 20 años"),
+                    a = 2,
+                    exp = "ITC-BT-05: Cada 10 años para instalaciones > 100 kW.",
+                    ref = "ITC-BT-05"
+                ),
+                Question(
+                    q = "¿Quién realiza las inspecciones periódicas obligatorias?",
+                    opts = listOf("El instalador habitual", "El Organismo de Control Autorizado (OCA)", "El Ayuntamiento", "El propietario"),
+                    a = 1,
+                    exp = "Las inspecciones periódicas son competencia exclusiva de una OCA.",
+                    ref = "ITC-BT-05"
+                ),
+                Question(
+                    q = "¿Cuál es la función principal del Certificado de Instalación?",
+                    opts = listOf("Demostrar la propiedad del inmueble", "Verificar el cumplimiento normativo", "Servir de factura de obra", "Obtener licencias de apertura"),
+                    a = 1,
+                    exp = "Es el documento legal que verifica el cumplimiento de las normas técnicas.",
+                    ref = "Art. 79"
+                ),
+                Question(
+                    q = "¿Es obligatorio registrar el Certificado de Instalación?",
+                    opts = listOf("No", "Solo si supera 10 kW", "Sí, ante el órgano competente", "Solo si es local comercial"),
+                    a = 2,
+                    exp = "Sí, es obligatorio registrarlo ante el órgano competente de la CC.AA.",
+                    ref = "Art. 79"
+                )
+            )
+        ),
+        "tubos" to ModuleDefinition(
+            id = "tubos",
+            label = "Tuberías (ITC-BT-21)",
+            icon = "🔧",
+            color = "#FF3FB950",
+            questions = listOf(
+                Question(
+                    q = "¿Qué fórmula se utiliza para calcular el diámetro interior mínimo de un tubo empotrado?",
+                    opts = listOf("D = (Σ secciones) / 0.9", "D = (Σ secciones) × 1.5", "D = 16 mm siempre", "D = (Σ secciones) / 1.2"),
+                    a = 0,
+                    exp = "Tabla 21.1: D = (Σ secciones) / 0.9.",
+                    ref = "ITC-BT-21, Tabla 21.1"
+                ),
+                Question(
+                    q = "¿Está permitido realizar empalmes dentro de los tubos?",
+                    opts = listOf("Sí, si es cable libre de halógenos", "Sí, con cinta aislante", "No, está prohibido", "Solo en cajas de derivación registradas"),
+                    a = 2,
+                    exp = "Los tubos solo deben albergar conductores, sin empalmes.",
+                    ref = "ITC-BT-21"
+                ),
+                Question(
+                    q = "¿Cuál es el diámetro exterior mínimo para derivaciones individuales?",
+                    opts = listOf("16 mm", "20 mm", "25 mm", "32 mm"),
+                    a = 3,
+                    exp = "La ITC-BT-15 exige un mínimo de 32 mm para derivaciones individuales.",
+                    ref = "ITC-BT-15"
+                ),
+                Question(
+                    q = "¿Se pueden trazar tubos de forma diagonal?",
+                    opts = listOf("Sí", "Solo en techos falsos", "No, deben seguir líneas horizontales y verticales", "Sí, si se usa tubo flexible"),
+                    a = 2,
+                    exp = "La norma exige trazos horizontales y verticales para evitar daños accidentales.",
+                    ref = "ITC-BT-21"
+                ),
+                Question(
+                    q = "¿Cuál es el diámetro mínimo para 3 hilos de 2,5 mm² empotrados?",
+                    opts = listOf("16 mm", "20 mm", "25 mm", "32 mm"),
+                    a = 1,
+                    exp = "Según la tabla, se requiere 20 mm.",
+                    ref = "ITC-BT-21"
+                )
+            )
         )
     )
 }

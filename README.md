@@ -2,20 +2,31 @@
 <img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
 </div>
 
-# Run and deploy your AI Studio app
+# EnginIA REBT — App Offline de Estudio
 
-This contains everything you need to run your app locally.
+**Versión:** 11.1 (Post-Seguridad)
 
-View your app in AI Studio: https://ai.studio/apps/d9d20cbd-4d5b-45f7-8cdb-4660c2f1c525
+## Arquitectura
+- 100% Offline (excepto Google Play Billing)
+- Content.kt: 130+ preguntas estáticas
+- Room Database: Progreso usuario + historiales
+- Jetpack Compose: UI modular (6 screens)
 
-## Run Locally
+## Cambios Recientes (v11.1)
+✅ Activado R8 minification
+✅ Deshabilitado allowBackup
+✅ Protegido Billing fallback (solo debug)
+✅ Agregadas 50+ preguntas (Suministro + Tuberías)
+✅ Removidas dependencias muertas
 
-**Prerequisites:**  [Android Studio](https://developer.android.com/studio)
+## Seguridad
+- APK ofuscado (R8)
+- Datos locales protegidos (no-backup)
+- Verificación de compras: Google Play Billing API
+- Fallback limitado a builds debug
 
-
-1. Open Android Studio
-2. Select **Open** and choose the directory containing this project
-3. Allow Android Studio to fix any incompatibilities as it imports the project.
-4. Create a file named `.env` in the project directory and set `GEMINI_API_KEY` in that file to your Gemini API key (see `.env.example` for an example)
-5. Remove this line from the app's `build.gradle.kts` file: `signingConfig = signingConfigs.getByName("debugConfig")`
-6. Run the app on an emulator or physical device
+## Instrucciones Build
+```bash
+./gradlew assembleRelease  # Minified, ofuscado, listo para Play Store
+./gradlew assembleDebug    # Debug, con fallback de Billing para testing
+```

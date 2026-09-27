@@ -42,7 +42,7 @@ android {
   buildTypes {
     release {
       isCrunchPngs = false
-      isMinifyEnabled = false
+      isMinifyEnabled = true
       proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
       if (signingConfigs.findByName("release") != null) {
         signingConfig = signingConfigs.getByName("release")
@@ -97,15 +97,13 @@ dependencies {
   implementation(libs.androidx.room.runtime)
   implementation("com.android.billingclient:billing-ktx:7.1.1")
   implementation(libs.coil.compose)
-  implementation(libs.converter.moshi)
-  // implementation(libs.firebase.ai)
   implementation(libs.kotlinx.coroutines.android)
   implementation(libs.kotlinx.coroutines.core)
-  implementation(libs.logging.interceptor)
-  implementation(libs.moshi.kotlin)
-  implementation(libs.okhttp)
-  // implementation(libs.play.services.location)
-  implementation(libs.retrofit)
+  // implementation(libs.retrofit)
+  // implementation(libs.moshi.kotlin)
+  // implementation(libs.okhttp)
+  // implementation(libs.logging.interceptor)
+  // implementation(libs.converter.moshi)
   testImplementation(libs.androidx.compose.ui.test.junit4)
   testImplementation(libs.androidx.core)
   testImplementation(libs.androidx.junit)
