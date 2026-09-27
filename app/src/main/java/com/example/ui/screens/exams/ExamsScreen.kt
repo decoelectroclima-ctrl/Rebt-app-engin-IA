@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
@@ -143,92 +144,17 @@ fun OfficialSimulationsTab(viewModel: MainViewModel) {
         verticalArrangement = Arrangement.spacedBy(14.dp),
         contentPadding = PaddingValues(bottom = 32.dp)
     ) {
+        // Express simulation
         item {
-            // Hero Official Simulation 80 questions
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .testTag("official_sim_80_card"),
-                shape = RoundedCornerShape(18.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = if (viewModel.isDarkTheme) Color(0xFF161B22) else Color.White
-                ),
-                border = BorderStroke(1.5.dp, Color(0xFF58A6FF))
-            ) {
-                Column(modifier = Modifier.padding(18.dp)) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Surface(
-                            shape = RoundedCornerShape(8.dp),
-                            color = Color(0xFF58A6FF).copy(alpha = 0.15f)
-                        ) {
-                            Text(
-                                text = "CONVOCATORIA OFICIAL",
-                                fontSize = 11.sp,
-                                fontWeight = FontWeight.ExtraBold,
-                                color = Color(0xFF58A6FF),
-                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
-                            )
-                        }
-
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(Icons.Default.Timer, contentDescription = null, tint = Color.Gray, modifier = Modifier.size(14.dp))
-                            Spacer(modifier = Modifier.width(4.dp))
-                            Text("180 min", fontSize = 12.sp, color = Color.Gray)
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.height(10.dp))
-                    Text(
-                        text = "Simulacro Oficial General (80 Preguntas)",
-                        fontSize = 17.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                    Spacer(modifier = Modifier.height(6.dp))
-                    Text(
-                        text = "Examen con distribución oficial idéntica a las pruebas de acreditación de Industria. Umbral de Aprobado: 75% de aciertos.",
-                        fontSize = 13.sp,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        lineHeight = 18.sp
-                    )
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    Button(
-                        onClick = {
-                            FeedbackManager.playClick(context)
-                            viewModel.startOfficialSimulation()
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(46.dp)
-                            .testTag("start_official_exam_80"),
-                        shape = RoundedCornerShape(12.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF238636))
-                    ) {
-                        Icon(Icons.Default.PlayArrow, contentDescription = null)
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text("Comenzar Simulacro Oficial", fontWeight = FontWeight.Bold)
-                    }
-                }
-            }
-        }
-
-        item {
-            // Half simulation 40 questions
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .testTag("practice_sim_40_card"),
+                    .testTag("express_sim_1_card"),
                 shape = RoundedCornerShape(16.dp),
                 colors = CardDefaults.cardColors(
                     containerColor = if (viewModel.isDarkTheme) Color(0xFF161B22) else Color.White
                 ),
-                border = BorderStroke(1.dp, if (viewModel.isDarkTheme) Color(0xFF30363D) else Color(0xFFE1E4E8))
+                border = BorderStroke(1.dp, Color(0xFFD97706))
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Row(
@@ -237,16 +163,16 @@ fun OfficialSimulationsTab(viewModel: MainViewModel) {
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Text(
-                            text = "Simulacro Intermedio (40 Preguntas)",
+                            text = "Pregunta Express (60s)",
                             fontSize = 15.sp,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSurface
                         )
-                        Text("90 min", fontSize = 12.sp, color = Color.Gray)
+                        Text("60 seg", fontSize = 12.sp, color = Color(0xFFD97706))
                     }
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = "Sesión representativa para días con menor disponibilidad horaria.",
+                        text = "Pon a prueba tu agilidad mental con una pregunta aleatoria.",
                         fontSize = 12.sp,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -254,26 +180,99 @@ fun OfficialSimulationsTab(viewModel: MainViewModel) {
                     OutlinedButton(
                         onClick = {
                             FeedbackManager.playClick(context)
-                            val allQ = Content.QUESTIONS.values.flatMap { it.questions }.shuffled().take(40)
+                            val allQ = Content.QUESTIONS.values.flatMap { it.questions }.shuffled().take(1)
                             val module = com.example.data.ModuleDefinition(
-                                id = "sim_intermedio_${System.currentTimeMillis()}",
-                                label = "Simulacro Intermedio (40 Q)",
-                                icon = "📝",
-                                color = "#3498DB",
+                                id = "express_${System.currentTimeMillis()}",
+                                label = "Express",
+                                icon = "⚡",
+                                color = "#D97706",
                                 questions = allQ
                             )
-                            viewModel.activeExamMode = ExamMode.OFFICIAL_SIMULATION
-                            viewModel.startTopicPractice("articulado") // Fallback loader
+                            viewModel.activeExamMode = ExamMode.TOPIC_PRACTICE
                             viewModel.activeExamModule = module
-                            viewModel.examRemainingSeconds = 90 * 60
-                            viewModel.examTotalSeconds = 90 * 60
+                            viewModel.examRemainingSeconds = 60
+                            viewModel.examTotalSeconds = 60
+                            viewModel.activeTab = "exams"
                         },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(10.dp)
                     ) {
-                        Text("Iniciar Sesión de 40 Preguntas")
+                        Text("Iniciar Desafío Express")
                     }
                 }
+            }
+        }
+        
+        // 20 Questions
+        item {
+            SimulationCard(
+                viewModel = viewModel,
+                title = "Simulacro Corto (20 Preguntas)",
+                questionCount = 20,
+                timeMinutes = 45,
+                color = Color(0xFF3498DB),
+                testTag = "start_sim_20"
+            )
+        }
+
+        // 40 Questions
+        item {
+            SimulationCard(
+                viewModel = viewModel,
+                title = "Simulacro Completo (40 Preguntas)",
+                questionCount = 40,
+                timeMinutes = 90,
+                color = Color(0xFF238636),
+                testTag = "start_sim_40"
+            )
+        }
+    }
+}
+
+@Composable
+fun SimulationCard(
+    viewModel: MainViewModel,
+    title: String,
+    questionCount: Int,
+    timeMinutes: Int,
+    color: Color,
+    testTag: String
+) {
+    val context = LocalContext.current
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = if (viewModel.isDarkTheme) Color(0xFF161B22) else Color.White
+        ),
+        border = BorderStroke(1.dp, color)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(title, fontWeight = FontWeight.Bold, fontSize = 15.sp)
+            Spacer(modifier = Modifier.height(8.dp))
+            Button(
+                onClick = {
+                    FeedbackManager.playClick(context)
+                    val allQuestions = Content.QUESTIONS.values.flatMap { it.questions }.shuffled()
+                    val questions = allQuestions.take(questionCount)
+                    
+                    val module = com.example.data.ModuleDefinition(
+                        id = "sim_${questionCount}_${System.currentTimeMillis()}",
+                        label = title,
+                        icon = "📝",
+                        color = "#${Integer.toHexString(color.toArgb()).substring(2)}",
+                        questions = questions
+                    )
+                    viewModel.activeExamMode = ExamMode.OFFICIAL_SIMULATION
+                    viewModel.activeExamModule = module
+                    viewModel.examRemainingSeconds = timeMinutes * 60
+                    viewModel.examTotalSeconds = timeMinutes * 60
+                    viewModel.activeTab = "exams"
+                },
+                modifier = Modifier.fillMaxWidth().testTag(testTag),
+                colors = ButtonDefaults.buttonColors(containerColor = color)
+            ) {
+                Text("Iniciar ($timeMinutes min)")
             }
         }
     }

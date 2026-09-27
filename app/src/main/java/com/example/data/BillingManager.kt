@@ -62,13 +62,14 @@ class BillingManager(
                     queryActivePurchases()
                     onSuccess?.invoke()
                 } else if (billingResult.responseCode == BillingClient.BillingResponseCode.SERVICE_UNAVAILABLE ||
-                    billingResult.responseCode == BillingClient.BillingResponseCode.SERVICE_DISCONNECTED
+                    billingResult.responseCode == BillingClient.BillingResponseCode.SERVICE_DISCONNECTED ||
+                    billingResult.responseCode == BillingClient.BillingResponseCode.FEATURE_NOT_SUPPORTED
                 ) {
                     isClientConnected = false
                     isBillingServiceAvailable = false
                     Log.w("BillingManager", "Billing service unavailable (normal in emulator/sandbox): ${billingResult.debugMessage}")
                 } else {
-                    Log.e("BillingManager", "Fallo al conectar con Google Play Billing: ${billingResult.debugMessage}")
+                    Log.d("BillingManager", "Código de estado de Billing inesperado: ${billingResult.responseCode} - ${billingResult.debugMessage}")
                 }
             }
 

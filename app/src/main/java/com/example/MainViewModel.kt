@@ -56,6 +56,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     val remindersFlow: StateFlow<List<ReminderEntity>> = repository.remindersFlow
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
+    val postItsFlow: StateFlow<List<PostItEntity>> = repository.postItsFlow
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
     // --- REMINDERS SYSTEM STATES ---
     var reminderStatusFilter by mutableStateOf("Todos") // "Todos", "Pendiente", "Completado", "Vencido"
     var reminderPriorityFilter by mutableStateOf("Todos") // "Todos", "Alta", "Media", "Baja"
@@ -158,7 +161,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     fun startOfficialSimulation() {
         activeExamMode = ExamMode.OFFICIAL_SIMULATION
         val allQuestions = Content.QUESTIONS.values.flatMap { it.questions }.shuffled()
-        val questions80 = allQuestions.take(minOf(80, allQuestions.size))
+        val questions80 = allQuestions.take(80)
 
         val module = ModuleDefinition(
             id = "simulacro_oficial_${System.currentTimeMillis()}",
