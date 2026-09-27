@@ -121,4 +121,20 @@ data class QuestionReviewEntity(
     val lastReviewedAt: Long = System.currentTimeMillis()
 )
 
+@Entity(tableName = "rebt_reminder")
+data class ReminderEntity(
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    val title: String,
+    val description: String,
+    val rebtArticle: String = "ITC-BT-05",
+    val dueDate: Long = System.currentTimeMillis() + 86400000L, // timestamp
+    val periodicity: String = "Puntual", // "Puntual", "Diaria", "Semanal", "Mensual", "Anual"
+    val priority: String = "Media", // "Baja", "Media", "Alta"
+    val status: String = "Pendiente", // "Pendiente", "Completado", "Vencido"
+    val notifyEnabled: Boolean = true,
+    val createdAt: Long = System.currentTimeMillis(),
+    val completedAt: Long? = null
+)
+
+
 

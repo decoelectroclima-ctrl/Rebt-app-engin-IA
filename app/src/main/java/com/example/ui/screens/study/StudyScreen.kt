@@ -138,6 +138,11 @@ fun StudyScreen(viewModel: MainViewModel) {
                         else -> "especiales"
                     }
                     viewModel.startTopicPractice(mappedKey)
+                },
+                onAddReminder = {
+                    FeedbackManager.playClick(context)
+                    viewModel.openCreateReminderDialog(item.code)
+                    viewModel.activeTab = "reminders"
                 }
             )
         }
@@ -150,7 +155,8 @@ fun StudyItemCard(
     isDark: Boolean,
     isVisualExpanded: Boolean,
     onToggleVisual: () -> Unit,
-    onStartPractice: () -> Unit
+    onStartPractice: () -> Unit,
+    onAddReminder: () -> Unit
 ) {
     Card(
         modifier = Modifier
@@ -332,6 +338,18 @@ fun StudyItemCard(
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(if (isVisualExpanded) "Ocultar" else "Esquema", fontSize = 12.sp)
+                }
+
+                IconButton(
+                    onClick = onAddReminder,
+                    modifier = Modifier.size(40.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.NotificationAdd,
+                        contentDescription = "Crear Recordatorio para esta ITC",
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(20.dp)
+                    )
                 }
 
             }

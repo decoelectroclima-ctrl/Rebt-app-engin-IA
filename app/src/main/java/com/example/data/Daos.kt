@@ -119,4 +119,26 @@ interface EnigmaDao {
 
     @Query("DELETE FROM question_review")
     suspend fun clearQuestionReviews()
+
+    // Reminders (Recordatorios REBT)
+    @Query("SELECT * FROM rebt_reminder ORDER BY dueDate ASC, createdAt DESC")
+    fun getReminders(): Flow<List<ReminderEntity>>
+
+    @Query("SELECT * FROM rebt_reminder WHERE id = :id LIMIT 1")
+    suspend fun getReminderById(id: Int): ReminderEntity?
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertReminder(reminder: ReminderEntity): Long
+
+    @Update
+    suspend fun updateReminder(reminder: ReminderEntity)
+
+    @Query("DELETE FROM rebt_reminder WHERE id = :id")
+    suspend fun deleteReminderById(id: Int)
+
+    @Query("UPDATE rebt_reminder SET status = :status, completedAt = :completedAt WHERE id = :id")
+    suspend fun updateReminderStatus(id: Int, status: String, completedAt: Long?)
+
+    @Query("DELETE FROM rebt_reminder")
+    suspend fun clearReminders()
 }

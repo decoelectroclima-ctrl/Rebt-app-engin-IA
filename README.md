@@ -4,10 +4,10 @@
 
 # EnginIA REBT — App Offline de Estudio
 
-**Versión:** 11.1 (Post-Seguridad)
+**Versión:** 12.0 (Play Billing 8.0.0 Ready)
 
 ## Arquitectura
-- 100% Offline (excepto Google Play Billing)
+- 100% Offline (excepto Google Play Billing v8.0.0)
 - Content.kt: 130+ preguntas estáticas
 - Room Database: Progreso usuario + historiales
 - Jetpack Compose: UI modular (6 screens)

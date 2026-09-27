@@ -180,6 +180,41 @@ fun SettingsScreen(viewModel: MainViewModel) {
                             modifier = Modifier.testTag("settings_theme_switch")
                         )
                     }
+
+                    HorizontalDivider(color = if (viewModel.isDarkTheme) Color(0xFF30363D) else Color(0xFFE1E4E8))
+
+                    // Shortcut to Reminders
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                FeedbackManager.playClick(context)
+                                viewModel.activeTab = "reminders"
+                            }
+                            .padding(vertical = 4.dp)
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(
+                                imageVector = Icons.Default.NotificationsActive,
+                                contentDescription = null,
+                                tint = Color(0xFFE67E22),
+                                modifier = Modifier.size(20.dp)
+                            )
+                            Spacer(modifier = Modifier.width(10.dp))
+                            Column {
+                                Text("Recordatorios y Revisiones REBT", fontSize = 13.sp, fontWeight = FontWeight.Medium)
+                                Text("Gestionar plazos de OCA, tierras y diferenciales", fontSize = 11.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            }
+                        }
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                            contentDescription = null,
+                            tint = Color.Gray,
+                            modifier = Modifier.size(18.dp)
+                        )
+                    }
                 }
             }
         }

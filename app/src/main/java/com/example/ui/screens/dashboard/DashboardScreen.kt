@@ -35,8 +35,13 @@ fun DashboardScreen(viewModel: MainViewModel) {
     val examHistory by viewModel.examHistoryFlow.collectAsState()
     val dailyActivity by viewModel.dailyActivityFlow.collectAsState()
     val mistakeReviews by viewModel.questionReviewsFlow.collectAsState()
+    val remindersList by viewModel.remindersFlow.collectAsState()
     val subscription by viewModel.subscriptionFlow.collectAsState()
     val isPremium = subscription?.isActive == true
+
+    // Computed Reminders
+    val pendingRemindersCount = remindersList.count { it.status == "Pendiente" }
+    val expiredRemindersCount = remindersList.count { it.status == "Vencido" || (it.status != "Completado" && it.dueDate < System.currentTimeMillis()) }
 
     // Computed Analytics
     val totalAnswered = examHistory.sumOf { it.totalCount }
@@ -287,6 +292,29 @@ fun DashboardScreen(viewModel: MainViewModel) {
                 onClick = {
                     FeedbackManager.playClick(context)
                     viewModel.activeTab = "laboratory"
+                }
+            )
+        }
+
+        item {
+            // Action 4: Recordatorios y Revisiones REBT
+            ActionRowCard(
+                title = "Recordatorios y Revisiones REBT",
+                description = if (expiredRemindersCount > 0) {
+                    "Tienes $expiredRemindersCount revisiones vencidas y $pendingRemindersCount pendientes asociadas a ITCs del REBT."
+                } else if (pendingRemindersCount > 0) {
+                    "Tienes $pendingRemindersCount tareas programadas (inspecciones OCA, puesta a tierra, diferenciales)."
+                } else {
+                    "Gestiona avisos periódicos de mantenimiento, seguros y revisiones reglamentarias."
+                },
+                badgeText = if (expiredRemindersCount > 0) "$expiredRemindersCount vencidos" else "$pendingRemindersCount activos",
+                badgeColor = if (expiredRemindersCount > 0) Color(0xFFF85149) else Color(0xFFE67E22),
+                icon = Icons.Default.NotificationsActive,
+                isDark = viewModel.isDarkTheme,
+                tag = "dashboard_action_reminders",
+                onClick = {
+                    FeedbackManager.playClick(context)
+                    viewModel.activeTab = "reminders"
                 }
             )
         }

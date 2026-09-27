@@ -18,6 +18,7 @@ class EnigmaRepository(private val context: Context) {
     val customNewsFlow: Flow<List<CustomNewsEntity>> = dao.getCustomNews()
     val userLeadsFlow: Flow<List<UserLeadEntity>> = dao.getUserLeads()
     val questionReviewsFlow: Flow<List<QuestionReviewEntity>> = dao.getQuestionReviews()
+    val remindersFlow: Flow<List<ReminderEntity>> = dao.getReminders()
 
     // 2. Action functions
     suspend fun saveModuleProgress(progress: ModuleProgressEntity) {
@@ -243,5 +244,117 @@ class EnigmaRepository(private val context: Context) {
 
     suspend fun clearQuestionReviews() {
         dao.clearQuestionReviews()
+    }
+
+    // -------------------------------------------------------------
+    // REMINDERS (SISTEMA DE RECORDATORIOS REBT)
+    // -------------------------------------------------------------
+
+    suspend fun insertReminder(reminder: ReminderEntity): Long {
+        val id = dao.insertReminder(reminder)
+        val savedReminder = reminder.copy(id = id.toInt())
+        ReminderNotificationManager.scheduleReminderAlarm(context, savedReminder)
+        return id
+    }
+
+    suspend fun updateReminder(reminder: ReminderEntity) {
+        dao.updateReminder(reminder)
+        ReminderNotificationManager.scheduleReminderAlarm(context, reminder)
+    }
+
+    suspend fun deleteReminder(id: Int) {
+        ReminderNotificationManager.cancelReminderAlarm(context, id)
+        dao.deleteReminderById(id)
+    }
+
+    suspend fun toggleReminderStatus(reminder: ReminderEntity) {
+        if (reminder.status == "Completado") {
+            // Revert back to Pendiente
+            val newStatus = if (reminder.dueDate < System.currentTimeMillis()) "Vencido" else "Pendiente"
+            val updated = reminder.copy(status = newStatus, completedAt = null)
+            dao.updateReminder(updated)
+            ReminderNotificationManager.scheduleReminderAlarm(context, updated)
+        } else {
+            // Mark as Completado
+            if (reminder.periodicity != "Puntual") {
+                // If periodic, calculate next due date and keep active or advance date
+                val nextDate = ReminderNotificationManager.calculateNextDueDate(reminder.dueDate, reminder.periodicity)
+                val updated = reminder.copy(
+                    dueDate = nextDate,
+                    status = "Pendiente",
+                    completedAt = System.currentTimeMillis()
+                )
+                dao.updateReminder(updated)
+                ReminderNotificationManager.scheduleReminderAlarm(context, updated)
+            } else {
+                val updated = reminder.copy(
+                    status = "Completado",
+                    completedAt = System.currentTimeMillis()
+                )
+                dao.updateReminder(updated)
+                ReminderNotificationManager.cancelReminderAlarm(context, reminder.id)
+            }
+        }
+    }
+
+    suspend fun seedDefaultRemindersIfEmpty() {
+        val list = dao.getReminderById(1)
+        // If no reminder with ID 1 exists, let's seed official template reminders
+        val defaultReminders = listOf(
+            ReminderEntity(
+                title = "Inspección Periódica OCA (Pública Concurrencia)",
+                description = "Revisión quinquenal obligatoria por Organismo de Control Autorizado para locales de pública concurrencia (aforo > 100 personas).",
+                rebtArticle = "ITC-BT-05 / ITC-BT-28",
+                dueDate = System.currentTimeMillis() + (3 * 86400000L), // In 3 days
+                periodicity = "Anual",
+                priority = "Alta",
+                status = "Pendiente",
+                notifyEnabled = true
+            ),
+            ReminderEntity(
+                title = "Comprobación Anual Resistencia de Puesta a Tierra",
+                description = "Medición del valor óhmico en electrodos de tierra y revisión de continuidad de conductores de protección en época más seca.",
+                rebtArticle = "ITC-BT-18 (Puesta a Tierra)",
+                dueDate = System.currentTimeMillis() + (7 * 86400000L), // In 7 days
+                periodicity = "Anual",
+                priority = "Alta",
+                status = "Pendiente",
+                notifyEnabled = true
+            ),
+            ReminderEntity(
+                title = "Test Semestral de Interruptores Diferenciales (ID)",
+                description = "Comprobación del pulsador de prueba (test) y verificación de disparo a corriente residual nominal (≤ 30 mA).",
+                rebtArticle = "ITC-BT-24 (Protecciones)",
+                dueDate = System.currentTimeMillis() + (14 * 86400000L), // In 14 days
+                periodicity = "Semanal",
+                priority = "Media",
+                status = "Pendiente",
+                notifyEnabled = true
+            ),
+            ReminderEntity(
+                title = "Revisión Alumbrado de Emergencia y Autonomía",
+                description = "Corte de suministro voluntario para verificar 1 hora mínima de autonomía lumínica y señalización de evacuación.",
+                rebtArticle = "ITC-BT-28 (Emergencia)",
+                dueDate = System.currentTimeMillis() - (2 * 86400000L), // Expired 2 days ago to demonstrate vencido state
+                periodicity = "Mensual",
+                priority = "Media",
+                status = "Vencido",
+                notifyEnabled = true
+            ),
+            ReminderEntity(
+                title = "Renovación Póliza Responsabilidad Civil Instalador",
+                description = "Mantener en vigor la póliza de seguro de RC por un mínimo de 600.000€ / 900.000€ según categoría básica o especialista.",
+                rebtArticle = "Art. 22 (Empresas Instaladoras)",
+                dueDate = System.currentTimeMillis() + (30 * 86400000L), // In 30 days
+                periodicity = "Anual",
+                priority = "Alta",
+                status = "Pendiente",
+                notifyEnabled = true
+            )
+        )
+
+        for (item in defaultReminders) {
+            insertReminder(item)
+        }
     }
 }

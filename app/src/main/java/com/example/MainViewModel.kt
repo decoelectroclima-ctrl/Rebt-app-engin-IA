@@ -53,6 +53,26 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     val questionReviewsFlow: StateFlow<List<QuestionReviewEntity>> = repository.questionReviewsFlow
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
+    val remindersFlow: StateFlow<List<ReminderEntity>> = repository.remindersFlow
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    // --- REMINDERS SYSTEM STATES ---
+    var reminderStatusFilter by mutableStateOf("Todos") // "Todos", "Pendiente", "Completado", "Vencido"
+    var reminderPriorityFilter by mutableStateOf("Todos") // "Todos", "Alta", "Media", "Baja"
+    var reminderSearchQuery by mutableStateOf("")
+    var showReminderDialog by mutableStateOf(false)
+    var editingReminder by mutableStateOf<ReminderEntity?>(null)
+    var showDeleteConfirmDialog by mutableStateOf<ReminderEntity?>(null)
+
+    // Reminder form fields
+    var reminderInputTitle by mutableStateOf("")
+    var reminderInputDescription by mutableStateOf("")
+    var reminderInputArticle by mutableStateOf("ITC-BT-05")
+    var reminderInputDueDate by mutableStateOf(System.currentTimeMillis() + 86400000L)
+    var reminderInputPeriodicity by mutableStateOf("Puntual")
+    var reminderInputPriority by mutableStateOf("Media")
+    var reminderInputNotify by mutableStateOf(true)
+
     // --- EXAM ENGINE STATES ---
     var activeExamMode by mutableStateOf(ExamMode.OFFICIAL_SIMULATION)
     var activeExamModule by mutableStateOf<ModuleDefinition?>(null)
@@ -116,6 +136,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     init {
         billingManager.queryActivePurchases()
+        ReminderNotificationManager.ensureNotificationChannel(application)
+        viewModelScope.launch {
+            repository.seedDefaultRemindersIfEmpty()
+        }
         runLaboratoryCalculation()
         runBuildingForecastingCalculation()
         runTubeDiameterCalculation()
@@ -462,4 +486,98 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             repository.clearExamHistory()
         }
     }
+
+    // -------------------------------------------------------------
+    // REMINDER SYSTEM ACTIONS
+    // -------------------------------------------------------------
+
+    fun openCreateReminderDialog(defaultArticle: String = "ITC-BT-05") {
+        editingReminder = null
+        reminderInputTitle = ""
+        reminderInputDescription = ""
+        reminderInputArticle = defaultArticle
+        reminderInputDueDate = System.currentTimeMillis() + (24 * 3600 * 1000L) // Default tomorrow
+        reminderInputPeriodicity = "Puntual"
+        reminderInputPriority = "Media"
+        reminderInputNotify = true
+        showReminderDialog = true
+    }
+
+    fun openEditReminderDialog(reminder: ReminderEntity) {
+        editingReminder = reminder
+        reminderInputTitle = reminder.title
+        reminderInputDescription = reminder.description
+        reminderInputArticle = reminder.rebtArticle
+        reminderInputDueDate = reminder.dueDate
+        reminderInputPeriodicity = reminder.periodicity
+        reminderInputPriority = reminder.priority
+        reminderInputNotify = reminder.notifyEnabled
+        showReminderDialog = true
+    }
+
+    fun saveReminder() {
+        if (reminderInputTitle.isBlank()) return
+
+        val currentEditing = editingReminder
+        val initialStatus = if (reminderInputDueDate < System.currentTimeMillis()) "Vencido" else "Pendiente"
+
+        viewModelScope.launch {
+            if (currentEditing != null) {
+                val updated = currentEditing.copy(
+                    title = reminderInputTitle.trim(),
+                    description = reminderInputDescription.trim(),
+                    rebtArticle = reminderInputArticle.trim(),
+                    dueDate = reminderInputDueDate,
+                    periodicity = reminderInputPeriodicity,
+                    priority = reminderInputPriority,
+                    status = if (currentEditing.status == "Completado") "Completado" else initialStatus,
+                    notifyEnabled = reminderInputNotify
+                )
+                repository.updateReminder(updated)
+            } else {
+                val newReminder = ReminderEntity(
+                    title = reminderInputTitle.trim(),
+                    description = reminderInputDescription.trim(),
+                    rebtArticle = reminderInputArticle.trim(),
+                    dueDate = reminderInputDueDate,
+                    periodicity = reminderInputPeriodicity,
+                    priority = reminderInputPriority,
+                    status = initialStatus,
+                    notifyEnabled = reminderInputNotify
+                )
+                repository.insertReminder(newReminder)
+            }
+            showReminderDialog = false
+            editingReminder = null
+        }
+    }
+
+    fun toggleReminderStatus(reminder: ReminderEntity) {
+        viewModelScope.launch {
+            repository.toggleReminderStatus(reminder)
+        }
+    }
+
+    fun deleteReminder(id: Int) {
+        viewModelScope.launch {
+            repository.deleteReminder(id)
+            showDeleteConfirmDialog = null
+        }
+    }
+
+    fun seedDefaultReminders() {
+        viewModelScope.launch {
+            repository.seedDefaultRemindersIfEmpty()
+        }
+    }
+
+    fun sendTestNotification(title: String, description: String, article: String) {
+        ReminderNotificationManager.sendTestNotification(
+            getApplication(),
+            title = title,
+            description = description,
+            article = article
+        )
+    }
 }
+

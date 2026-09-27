@@ -1,5 +1,13 @@
 # Changelog
 
+## v12.0 - 27 Septiembre 2026 (Google Play Release)
+
+### Play Billing Library 8.0.0
+- Migración obligatoria a Google Play Billing Library v8.0.0 (`billing-ktx:8.0.0`)
+- Configuración de `PendingPurchasesParams` para compras únicas
+- Actualizado `versionCode` a 12 y `versionName` a "12.0"
+- Build verificado y optimizado para publicación en Google Play Console
+
 ## v11.1 - 27 Septiembre 2026 (Post-Audit)
 
 ### Seguridad

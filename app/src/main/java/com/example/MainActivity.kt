@@ -37,6 +37,7 @@ import com.example.ui.screens.analytics.AnalyticsScreen
 import com.example.ui.screens.dashboard.DashboardScreen
 import com.example.ui.screens.exams.ExamsScreen
 import com.example.ui.screens.laboratory.LaboratoryScreen
+import com.example.ui.screens.reminders.RemindersScreen
 import com.example.ui.screens.settings.SettingsScreen
 import com.example.ui.screens.study.StudyScreen
 
@@ -44,8 +45,14 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        val navigateTarget = intent?.getStringExtra("navigate_to")
         setContent {
             val viewModel: MainViewModel = viewModel()
+            LaunchedEffect(navigateTarget) {
+                if (!navigateTarget.isNullOrBlank()) {
+                    viewModel.activeTab = navigateTarget
+                }
+            }
             EnginIaAppTheme(isDark = viewModel.isDarkTheme) {
                 MainAppLayout(viewModel)
             }
@@ -99,6 +106,9 @@ fun MainAppLayout(viewModel: MainViewModel) {
     val context = LocalContext.current
     val subscription by viewModel.subscriptionFlow.collectAsState()
     val isPremium = subscription?.isActive == true
+
+    val remindersList by viewModel.remindersFlow.collectAsState()
+    val pendingReminders = remindersList.count { it.status == "Pendiente" || (it.status != "Completado" && it.dueDate < System.currentTimeMillis()) }
 
     // Handle back button: if inside active exam, prompt before exiting; otherwise return to dashboard
     BackHandler {
@@ -193,6 +203,32 @@ fun MainAppLayout(viewModel: MainViewModel) {
                     }
                 },
                 actions = {
+                    IconButton(
+                        onClick = {
+                            FeedbackManager.playClick(context)
+                            viewModel.activeTab = "reminders"
+                        },
+                        modifier = Modifier.testTag("app_bar_reminders_button")
+                    ) {
+                        BadgedBox(
+                            badge = {
+                                if (pendingReminders > 0) {
+                                    Badge(
+                                        containerColor = Color(0xFFF85149),
+                                        contentColor = Color.White
+                                    ) {
+                                        Text("$pendingReminders")
+                                    }
+                                }
+                            }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Notifications,
+                                contentDescription = "Recordatorios",
+                                tint = if (viewModel.activeTab == "reminders") MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
+                            )
+                        }
+                    }
                     IconButton(
                         onClick = {
                             viewModel.isDarkTheme = !viewModel.isDarkTheme
@@ -294,6 +330,7 @@ fun MainAppLayout(viewModel: MainViewModel) {
                 "laboratory" -> LaboratoryScreen(viewModel)
                 "analytics" -> AnalyticsScreen(viewModel)
                 "settings" -> SettingsScreen(viewModel)
+                "reminders" -> RemindersScreen(viewModel)
                 else -> DashboardScreen(viewModel)
             }
         }
