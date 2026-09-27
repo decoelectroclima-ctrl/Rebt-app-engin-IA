@@ -80,11 +80,11 @@ object Content {
         )
     )
 
-    // Curated Syllabus items with high-value technical highlights
+    // Curated Syllabus items with high-value technical highlights - Complete REBT Catalog
     val SYLLABUS = listOf(
         UnderliningItcItem(
             id = "art-1-5",
-            code = "Artículos 1 al 5",
+            code = "Art. 1-5",
             title = "Objeto, Ámbito y Tensiones reglamentarias",
             category = "Articulado",
             freq = "Crítica",
@@ -101,6 +101,104 @@ object Content {
             trap = "¡Ojo al límite de MBT en corriente continua! No es 50 V como en CA, sino 75 V de valor medio. Suele salir en test como pregunta trampa.",
             keyConcept = "CA ≤ 1.000 V | CC ≤ 1.500 V. Modificación de importancia > 50% potencia. MBT CA ≤ 50V / CC ≤ 75V.",
             examReference = "Art. 2 y Art. 4 RD 842/2002"
+        ),
+        UnderliningItcItem(
+            id = "art-6-13",
+            code = "Art. 6-13",
+            title = "Equipos, Materiales y Redes de Distribución",
+            category = "Articulado",
+            freq = "Alta",
+            page = "Art. 6-13",
+            redUnderline = listOf(
+                "Todos los materiales deben ostentar el Marcado CE y cumplir las directivas de seguridad aplicables.",
+                "Las empresas distribuidoras están obligadas a mantener la calidad de suministro y la tensión nominal dentro de ±7%.",
+                "Las acometidas forman parte de la red de distribución aunque sean sufragadas por el promotor."
+            ),
+            greenUnderline = listOf(
+                "Prescripciones de compatibilidad electromagnética (CEM) para evitar perturbaciones en la red general.",
+                "Homologación y especificaciones particulares de compañías distribuidoras aprobadas por la Comunidad Autónoma."
+            ),
+            trap = "¿Quién es propietario de la acometida? La empresa distribuidora es responsable de su mantenimiento, aun cuando haya sido financiada por los usuarios en la solicitud de enganche.",
+            keyConcept = "Marcado CE obligatorio. Tolerancia tensión ±7%. Distribuidora responsable de red y acometida.",
+            examReference = "Art. 6 al 13 RD 842/2002"
+        ),
+        UnderliningItcItem(
+            id = "art-14-22",
+            code = "Art. 14-22",
+            title = "Empresas Instaladoras y Habilitación Profesional",
+            category = "Articulado",
+            freq = "Crítica",
+            page = "Art. 14-22",
+            redUnderline = listOf(
+                "La habilitación como instalador autorizado se obtiene mediante Declaración Responsable ante la Administración.",
+                "Validez indefinida y con eficacia en todo el territorio español sin necesidad de trámites autonómicos adicionales.",
+                "Póliza de seguro de Responsabilidad Civil obligatoria: Cobertura mínima reglamentaria actualizada (600.000€ básica / 900.000€ especialista)."
+            ),
+            greenUnderline = listOf(
+                "Obligación de mantener los equipos de medida con calibración vigente y registrar las actuaciones.",
+                "El instalador debe conservar copias de los certificados de instalación emitidos durante al menos 5 años."
+            ),
+            trap = "¿Caduca la acreditación de instalador autorizado? No, la declaración responsable no tiene caducidad temporal salvo cese de actividad o sanción.",
+            keyConcept = "Declaración responsable con validez nacional indefinida. Seguro RC y personal contratado.",
+            examReference = "Art. 22 RD 842/2002 y Ley Ómnibus"
+        ),
+        UnderliningItcItem(
+            id = "art-23-29",
+            code = "Art. 23-29",
+            title = "Inspecciones, OCAs y Régimen de Infracciones",
+            category = "Articulado",
+            freq = "Alta",
+            page = "Art. 23-29",
+            redUnderline = listOf(
+                "Las inspecciones periódicas son realizadas por Organismos de Control Autorizados (OCA).",
+                "Calificaciones del acta de inspección: Favorable, Condicionada o Negativa.",
+                "Defecto muy grave: Aquel que entraña un peligro inmediato para la seguridad de personas o cosas (corte de suministro cautelar)."
+            ),
+            greenUnderline = listOf(
+                "Infracciones leves, graves y muy graves con sanciones económicas según la Ley de Industria 21/1992.",
+                "Plazo de subsanación para defectos calificados como 'Condicionada': Máximo 6 meses."
+            ),
+            trap = "Un defecto muy grave suspende el suministro de inmediato, mientras que uno grave permite 6 meses de plazo si no existe riesgo inminente.",
+            keyConcept = "Actas OCA: Favorable, Condicionada (6 meses), Negativa. Defecto muy grave = corte inmediato.",
+            examReference = "Art. 23 y Ley 21/1992 de Industria"
+        ),
+        UnderliningItcItem(
+            id = "itc-01",
+            code = "ITC-BT-01",
+            title = "Terminología y Definiciones Oficiales",
+            category = "Administrativas",
+            freq = "Alta",
+            page = "ITC-01",
+            redUnderline = listOf(
+                "Masa: Parte conductora de un equipo eléctrico que puede ser tocada y que no está normalmente en tensión pero puede estarlo en caso de defecto.",
+                "Conductor de protección (PE): Conductor requerido para medidas de protección contra choques eléctricos.",
+                "Corte omnipolar: Corte simultáneo de todos los conductores activos (fases y neutro)."
+            ),
+            greenUnderline = listOf(
+                "Contacto directo: Contacto de personas o animales con partes activas en tensión.",
+                "Contacto indirecto: Contacto de personas con masas puestas accidentalmente en tensión debido a un fallo de aislamiento."
+            ),
+            trap = "Diferencia crítica en test: Contacto Directo = parte activa. Contacto Indirecto = masa que normalmente no tiene tensión.",
+            keyConcept = "Masa (potencialmente peligrosa). Contacto Directo (partes activas) vs Indirecto (masas con defecto).",
+            examReference = "ITC-BT-01 Definiciones"
+        ),
+        UnderliningItcItem(
+            id = "itc-02",
+            code = "ITC-BT-02",
+            title = "Normas de Referencia en el REBT",
+            category = "Administrativas",
+            freq = "Media",
+            page = "ITC-02",
+            redUnderline = listOf(
+                "Listado oficial de normas UNE, EN e IEC de obligado cumplimiento citadas en el reglamento.",
+                "Resoluciones de actualización del Ministerio de Industria adaptan las versiones de normas UNE sin necesidad de reformar el RD."
+            ),
+            greenUnderline = listOf(
+                "Principio de equivalencia técnica: Se admiten productos conformes a normas de otros Estados miembros de la UE si garantizan igual nivel de seguridad."
+            ),
+            trap = "¿Las normas UNE son siempre voluntarias? No; en el ámbito del REBT, las normas UNE citadas en la ITC-BT-02 son de OBLIGADO cumplimiento.",
+            keyConcept = "Normas UNE citadas en ITC-02 son obligatorias. Actualizaciones periódicas por el Ministerio.",
+            examReference = "ITC-BT-02 §1"
         ),
         UnderliningItcItem(
             id = "itc-03",
@@ -144,6 +242,108 @@ object Content {
             examReference = "ITC-BT-04 Tabla 1"
         ),
         UnderliningItcItem(
+            id = "itc-05",
+            code = "ITC-BT-05",
+            title = "Verificaciones e Inspecciones Oficiales (OCA)",
+            category = "Administrativas",
+            freq = "Crítica",
+            page = "ITC-05",
+            redUnderline = listOf(
+                "Inspección Inicial por OCA obligatoria: Locales de pública concurrencia, locales mojados > 25 kW, piscinas > 10 kW, garajes > 25 plazas, alumbrado exterior > 5 kW.",
+                "Inspección Periódica cada 5 años: Locales de pública concurrencia, garajes > 25 plazas, locales con riesgo de incendio o explosión (ATEX), piscinas > 10 kW.",
+                "Inspección Periódica cada 10 años: Zonas comunes de edificios de viviendas con potencia total instalada > 100 kW."
+            ),
+            greenUnderline = listOf(
+                "El instalador debe realizar la verificación previa con instrumental oficial antes de conectar la instalación a la red.",
+                "Acta de inspección con plazo de 6 meses improrrogables para solventar defectos condicionados."
+            ),
+            trap = "Comunidades de vecinos: Las zonas comunes de un edificio de viviendas de más de 100 kW se inspeccionan cada 10 AÑOS, no cada 5 años.",
+            keyConcept = "Inspección inicial OCA: Pública concurrencia, garajes > 25 plazas. Periódicas: 5 años (LPC, ATEX) / 10 años (Edificios > 100 kW).",
+            examReference = "ITC-BT-05 §4 y §5"
+        ),
+        UnderliningItcItem(
+            id = "itc-06",
+            code = "ITC-BT-06",
+            title = "Redes Aéreas para Distribución en BT",
+            category = "Distribución",
+            freq = "Alta",
+            page = "ITC-06",
+            redUnderline = listOf(
+                "Conductores trenzados en haz (RZ) posados sobre fachada o tensados sobre apoyos con neutro fiador.",
+                "Sección mínima en redes aéreas: 16 mm² en aluminio (haz Al/XLPE) o 10 mm² en cobre.",
+                "Altura mínima sobre el suelo en pasos de calles o carreteras: 6 metros.",
+                "Altura mínima en aceras o zonas no accesibles a vehículos: 2,5 metros (posado) y 4 metros (tensado)."
+            ),
+            greenUnderline = listOf(
+                "Resistencia mecánica mínima a la tracción del haz cableado trenzado de 1.000 daN en el neutro fiador Almelec.",
+                "Distancia de seguridad a ventanas, balcones y huecos practicables: Mínimo 1 metro."
+            ),
+            trap = "Altura de paso sobre carreteras para cables aéreos: La altura libre mínima obligatoria es 6 metros en el punto de máxima flecha a 50°C.",
+            keyConcept = "Haz trenzado RZ. Min 16 mm² Al. Alturas: 6m sobre calzada, 2,5m sobre fachada. Distancia a ventanas 1m.",
+            examReference = "ITC-BT-06 §2 y §3"
+        ),
+        UnderliningItcItem(
+            id = "itc-07",
+            code = "ITC-BT-07",
+            title = "Redes Subterráneas para Distribución en BT",
+            category = "Distribución",
+            freq = "Alta",
+            page = "ITC-07",
+            redUnderline = listOf(
+                "Profundidad mínima de enterramiento en zanja: 0,60 m en aceras y 0,80 m en calzadas transitables.",
+                "Sección mínima de conductores subterráneos de distribución: 25 mm² de aluminio o 16 mm² de cobre.",
+                "Tendido bajo arena de río, cinta de señalización de advertencia a 0,20 m sobre el tubo y rasilla o placa de protección mecánica."
+            ),
+            greenUnderline = listOf(
+                "Distancias de cruzamiento y paralelismo: 0,20 m con cables de telecomunicación y agua, 0,50 m con tuberías de gas.",
+                "Cables tipo RV-K o XZ1 (aislamiento XLPE) aptos para inmersión temporal."
+            ),
+            trap = "Profundidad de zanja: En calzada transitable por vehículos pesados la profundidad mínima reglamentaria es 0,80 metros (no 0,60 m).",
+            keyConcept = "Profundidad: 0.60m en acera / 0.80m en calzada. Min 25 mm² Al. Cinta señalizadora y cruzamiento gas 0.50m.",
+            examReference = "ITC-BT-07 §2 y §3"
+        ),
+        UnderliningItcItem(
+            id = "itc-08",
+            code = "ITC-BT-08",
+            title = "Sistemas de Conexión del Neutro y de las Masas",
+            category = "Distribución",
+            freq = "Crítica",
+            page = "ITC-08",
+            redUnderline = listOf(
+                "Esquema TT: Neutro de la fuente a tierra y masas de la instalación a toma de tierra independiente (obligatorio en redes públicas de distribución BT en España).",
+                "Esquema TN: Neutro puesto a tierra y masas conectadas al neutro (TN-S separado, TN-C común PEN).",
+                "Esquema IT: Neutro aislado de tierra o impedante y masas a tierra; garantiza continuidad de servicio ante el primer defecto a masa."
+            ),
+            greenUnderline = listOf(
+                "En esquema TT, la protección contra contactos indirectos se realiza obligatoriamente mediante interruptores diferenciales.",
+                "En esquema TN-C, queda prohibido colocar elementos de corte en el conductor neutro/PEN."
+            ),
+            trap = "¿Cuál es el esquema de conexión estándar y preceptivo para el suministro público en España? El esquema TT. Los esquemas TN e IT se reservan a industrias con transformador propio.",
+            keyConcept = "Esquema TT = estándar en España (diferenciales obligatorios). TN-S (PE y N separados). IT (aislado, primer defecto no desconecta).",
+            examReference = "ITC-BT-08 §1 y §2"
+        ),
+        UnderliningItcItem(
+            id = "itc-09",
+            code = "ITC-BT-09",
+            title = "Instalaciones de Alumbrado Exterior",
+            category = "Distribución",
+            freq = "Alta",
+            page = "ITC-09",
+            redUnderline = listOf(
+                "Caída de tensión máxima admisible en líneas de alumbrado exterior: 3% desde el cuadro de mando.",
+                "Toma de tierra independiente con electrodo en la base de cada soporte o báculo, interconectados mediante conductor de cobre desnudo de 35 mm².",
+                "Resistencia de puesta a tierra: ≤ 30 Ω en báculos metálicos accesibles al público.",
+                "Cables subterráneos con aislamiento mínimo de 0,6/1 kV (tipo RV-K o XZ1)."
+            ),
+            greenUnderline = listOf(
+                "Protección magnetotérmica y diferencial (máximo 300 mA con selectividad o 30 mA en cuadros accesibles).",
+                "Interruptores horarios astronómicos o células fotoeléctricas para eficiencia energética obligatoria."
+            ),
+            trap = "¿Cuál es la caída de tensión máxima en alumbrado público? Es del 3% (más exigente que en interiores debido a las grandes longitudes de tirada).",
+            keyConcept = "Caída máx 3%. Tierra báculos ≤ 30 Ω con Cu 35 mm². Tensión aislamiento 0,6/1 kV. Reloj astronómico.",
+            examReference = "ITC-BT-09 §3 y §5"
+        ),
+        UnderliningItcItem(
             id = "itc-10",
             code = "ITC-BT-10",
             title = "Previsión de Cargas y Electrificación",
@@ -162,6 +362,64 @@ object Content {
             trap = "En el examen te pedirán calcular la previsión de carga de una comunidad de vecinos de 25 viviendas. Muchos usan erróneamente la tabla de viviendas simples. Debes aplicar la fórmula obligatoria para n > 21 que da un Cs = 17,3.",
             keyConcept = "Previsión básica = 5750 W (IGA 25A). Elevada = 9200 W (IGA 40A). Locales = 100 W/m² (mín. 3.450 W).",
             examReference = "ITC-BT-10 §2 y §3"
+        ),
+        UnderliningItcItem(
+            id = "itc-11",
+            code = "ITC-BT-11",
+            title = "Redes de Distribución y Acometidas",
+            category = "Enlace",
+            freq = "Media",
+            page = "ITC-11",
+            redUnderline = listOf(
+                "La acometida conecta la red de distribución con la Caja General de Protección (CGP).",
+                "Trazado más corto posible, sin curvas pronunciadas y por espacios de dominio público.",
+                "Secciones y canalizaciones normalizadas según las normas particulares de la empresa distribuidora."
+            ),
+            greenUnderline = listOf(
+                "Protección mecánica rígida en los puntos de entrada al edificio hasta una altura mínima de 2,5 m."
+            ),
+            trap = "La acometida finaliza exactamente en los bornes de entrada de la Caja General de Protección (CGP). A partir de la CGP comienza la LGA.",
+            keyConcept = "Conexión Red-CGP. Dominio público. Protección mecánica en fachadas.",
+            examReference = "ITC-BT-11 §1"
+        ),
+        UnderliningItcItem(
+            id = "itc-12",
+            code = "ITC-BT-12",
+            title = "Esquemas para Instalaciones de Enlace",
+            category = "Enlace",
+            freq = "Alta",
+            page = "ITC-12",
+            redUnderline = listOf(
+                "Esquema 1: Para uno o dos usuarios con contadores individuales (CPM en fachada).",
+                "Esquema 2: Contadores concentrados en un único lugar (armario o local técnico).",
+                "Esquema 3: Contadores concentrados en varios lugares (módulos o armarios por plantas en edificios en altura)."
+            ),
+            greenUnderline = listOf(
+                "Elementos de la instalación de enlace: CGP, LGA, Contadores, DI, ICP/IGA y CGMP."
+            ),
+            trap = "¿Cuándo NO existe Línea General de Alimentación (LGA)? En suministros a uno o dos usuarios con Caja de Protección y Medida (CPM) unificada.",
+            keyConcept = "Esquema 1 (CPM individual sin LGA). Esquema 2 (Local único). Esquema 3 (Varios armarios por planta).",
+            examReference = "ITC-BT-12 §1 y §2"
+        ),
+        UnderliningItcItem(
+            id = "itc-13",
+            code = "ITC-BT-13",
+            title = "Cajas Generales de Protección (CGP y CPM)",
+            category = "Enlace",
+            freq = "Alta",
+            page = "ITC-13",
+            redUnderline = listOf(
+                "Ubicación obligatoria en el límite de la propiedad o fachada exterior del edificio, en zona de dominio público.",
+                "Grado de protección mínimo contra impactos: IK08 (e IK09 en zonas de acceso público rodado).",
+                "Altura de montaje: Entre 0,50 m y 2,00 m desde la rasante del suelo.",
+                "Equipadas con cortacircuitos fusibles tipo cuchilla (NH o cilindricos) de alto poder de corte (≥ 100 kA)."
+            ),
+            greenUnderline = listOf(
+                "Caja de Protección y Medida (CPM): Agrupa CGP y contador para suministros individuales de hasta 50 kW o 100 kW monofásico/trifásico."
+            ),
+            trap = "¿Dónde se coloca la CGP? Siempre en la fachada exterior o límite de la finca, accesible permanentemente a la distribuidora sin necesidad de llaves comunitarias.",
+            keyConcept = "Fachada pública. Altura 0.5-2.0m. Fusibles alto poder de corte. IK08/IK09.",
+            examReference = "ITC-BT-13 §1"
         ),
         UnderliningItcItem(
             id = "itc-14",
@@ -206,6 +464,26 @@ object Content {
             examReference = "ITC-BT-15 §2 y §3"
         ),
         UnderliningItcItem(
+            id = "itc-16",
+            code = "ITC-BT-16",
+            title = "Contadores: Ubicación y Sistemas de Instalación",
+            category = "Enlace",
+            freq = "Alta",
+            page = "ITC-16",
+            redUnderline = listOf(
+                "Local de contadores obligatorio si el número de contadores es superior a 16.",
+                "Armario de contadores permitido para hasta 16 contadores (o módulos por planta).",
+                "Dimensiones mínimas del local: Altura libre 2,30 m, pasillo de servicio mínimo 1,10 m de anchura frente a los módulos.",
+                "Ventilación directa al exterior o mediante conducto independiente, con extintor de CO2 de 5 kg junto a la puerta."
+            ),
+            greenUnderline = listOf(
+                "Puerta con apertura hacia el exterior, resistencia al fuego EI2 60-C5 y cerradura normalizada de compañía distribuidora."
+            ),
+            trap = "¿Cuándo es obligatorio local de contadores en vez de armario? A partir de MÁS DE 16 CONTADORES es obligatorio destinar un local técnico exclusivo.",
+            keyConcept = "Local exclusivo > 16 contadores. Altura 2,30m, pasillo 1,10m, puerta EI 60 hacia afuera, extintor CO2.",
+            examReference = "ITC-BT-16 §2"
+        ),
+        UnderliningItcItem(
             id = "itc-17",
             code = "ITC-BT-17",
             title = "Cuadro de Mando y Protección (CGMP)",
@@ -247,6 +525,45 @@ object Content {
             examReference = "ITC-BT-18 §3 y Tabla 1"
         ),
         UnderliningItcItem(
+            id = "itc-19",
+            code = "ITC-BT-19",
+            title = "Instalaciones Interiores: Prescripciones Generales",
+            category = "Interiores",
+            freq = "Crítica",
+            page = "ITC-19",
+            redUnderline = listOf(
+                "Sección mínima para alumbrado: 1,5 mm² de cobre.",
+                "Sección mínima para tomas de corriente generales: 2,5 mm² de cobre.",
+                "Caída de tensión máxima admisible desde el origen de la instalación interior (CGMP) hasta los puntos de utilización: 3% para alumbrado y 5% para fuerza/otros usos."
+            ),
+            greenUnderline = listOf(
+                "Colores de identificación de conductores: Fase = Marrón, Negro o Gris; Neutro = Azul claro; Conductor de protección (tierra) = Verde-Amarillo.",
+                "El conductor neutro NO podrá ser común a varios circuitos diferentes."
+            ),
+            trap = "Caídas de tensión en interiores: 3% para alumbrado y 5% para fuerza. En viviendas con contadores centralizados, sumando la DI (1,5%) y el interior (3%), la caída total acumulada máxima no puede superar el 4,5% en alumbrado.",
+            keyConcept = "Secciones mínimas: 1,5 mm² luz / 2,5 mm² fuerza. Caída máx: 3% alumbrado / 5% fuerza. Colores normalizados.",
+            examReference = "ITC-BT-19 §2.2"
+        ),
+        UnderliningItcItem(
+            id = "itc-20",
+            code = "ITC-BT-20",
+            title = "Sistemas de Instalación de Tubos, Canales y Bandejas",
+            category = "Interiores",
+            freq = "Media",
+            page = "ITC-20",
+            redUnderline = listOf(
+                "Canalizaciones fijas en superficie, empotradas en obra, aéreas o enterradas.",
+                "Bandejas perforadas o ciegas: Los conductores deben ser aislados con tensión asignada mínima de 0,6/1 kV si son accesibles.",
+                "Canales protectores con tapa desmontable solo mediante el uso de herramientas si alojan conductores unipolares sin cubierta (H07V-K)."
+            ),
+            greenUnderline = listOf(
+                "Prohibición de tender cables directamente sobre falsos techos sin tubo protector o bandeja homologada."
+            ),
+            trap = "¿Se puede meter cable H07V-K suelto en una bandeja de rejilla abierta? No, en bandejas perforadas o rejillas abiertas se exigen cables con cubierta tipo manguera (0,6/1 kV).",
+            keyConcept = "Bandejas exigen cables con cubierta (0,6/1 kV). Canales con tapa fija con útiles.",
+            examReference = "ITC-BT-20 §2"
+        ),
+        UnderliningItcItem(
             id = "itc-21",
             code = "ITC-BT-21",
             title = "Tubos y Canales Protectores",
@@ -266,6 +583,64 @@ object Content {
             trap = "Preguntan por el diámetro de tubo empotrado para 3 conductores de 2,5 mm². La tabla de la ITC-21 fija 20 mm de diámetro exterior para tubo curvable o flexible empotrado.",
             keyConcept = "Tubo empotrado: 3x1.5=16mm | 3x2.5=20mm | 3x6=25mm | DI=32mm. Sin empalmes en tubos.",
             examReference = "ITC-BT-21 Tabla 5"
+        ),
+        UnderliningItcItem(
+            id = "itc-22",
+            code = "ITC-BT-22",
+            title = "Protección contra Sobreintensidades",
+            category = "Interiores",
+            freq = "Crítica",
+            page = "ITC-22",
+            redUnderline = listOf(
+                "Protección obligatoria frente a dos fenómenos: Sobrecargas (lentas) y Cortocircuitos (instantáneos).",
+                "Condición de sobrecarga: IB ≤ In ≤ Iz (Corriente de empleo ≤ Calibre nominal del PIA ≤ Corriente máxima admisible del cable).",
+                "Segunda condición de disparo en sobrecarga: I2 ≤ 1,45 * Iz (Corriente convencional de disparo ≤ 1,45 veces Iz).",
+                "Poder de corte del interruptor automático: Debe ser superior a la corriente de cortocircuito máxima prevista en el punto de instalación."
+            ),
+            greenUnderline = listOf(
+                "Curvas de disparo magnetotérmico: Curva B (3-5 In), Curva C (5-10 In, estándar doméstico), Curva D (10-20 In, motores con alto pico de arranque)."
+            ),
+            trap = "Fórmula mágica de sobrecarga: IB ≤ In ≤ Iz y I2 ≤ 1.45*Iz. El calibre In del magnetotérmico jamás puede superar la intensidad máxima admisible Iz del cable que protege.",
+            keyConcept = "Regla de oro: IB ≤ In ≤ Iz. Curvas B, C y D. Poder de corte superior a Icc máxima.",
+            examReference = "ITC-BT-22 §1"
+        ),
+        UnderliningItcItem(
+            id = "itc-23",
+            code = "ITC-BT-23",
+            title = "Protección contra Sobretensiones",
+            category = "Interiores",
+            freq = "Alta",
+            page = "ITC-23",
+            redUnderline = listOf(
+                "Sobretensiones transitorias: Debidas a descargas atmosféricas (rayos) o conmutaciones de red. Protegidas con descargadores DPS Tipo 1, Tipo 2 o Tipo 3.",
+                "Sobretensiones permanentes: Debidas a rotura o desconexión del neutro en redes trifásicas (hace subir la tensión hasta 400 V). Protegidas con bobina de disparo asociada al IGA.",
+                "Obligatorio en edificios alimentados por red aérea o en zonas con nivel ceráunico elevado (Nk > 20 días de tormenta al año)."
+            ),
+            greenUnderline = listOf(
+                "Nivel de tensión soportada a impulsos según categoría de sobretensión: Cat IV (6 kV origen), Cat III (4 kV cuadros), Cat II (2,5 kV electrodomésticos), Cat I (1,5 kV electrónica)."
+            ),
+            trap = "Diferencia entre transitorias y permanentes: El protector transitorio deriva la onda a tierra mediante varistores/descargadores de gas sin abrir el IGA; el permanente provoca la apertura mecánica del IGA para aislar los receptores.",
+            keyConcept = "Transitorias (varistores a tierra). Permanentes (disparo de IGA por rotura de neutro). Categorías I a IV.",
+            examReference = "ITC-BT-23 §1 y §3"
+        ),
+        UnderliningItcItem(
+            id = "itc-24",
+            code = "ITC-BT-24",
+            title = "Protección contra Contactos Directos e Indirectos",
+            category = "Interiores",
+            freq = "Crítica",
+            page = "ITC-24",
+            redUnderline = listOf(
+                "Protección contra contactos directos: Aislamiento de partes activas, barreras o envolventes (IP2X mínimo), y protección complementaria mediante interruptor diferencial de alta sensibilidad (≤ 30 mA).",
+                "Protección contra contactos indirectos: Desconexión automática de la alimentación coordinando la toma de tierra (Ra) con el diferencial: Ra * IΔn ≤ Ul (donde Ul = 50 V o 24 V).",
+                "Uso de Muy Baja Tensión de Seguridad (MBTS) sin puesta a tierra a ≤ 12V en inmersión o ≤ 50V."
+            ),
+            greenUnderline = listOf(
+                "Doble aislamiento (Clase II) o separación eléctrica por transformador de aislamiento galvánico de relación 1:1."
+            ),
+            trap = "Un diferencial de 30 mA NO evita el contacto directo, solo actúa como protección COMPLEMENTARIA reduciendo el tiempo de paso de corriente por el cuerpo humano a milisegundos.",
+            keyConcept = "Contacto directo (IP2X, aislamiento). Contacto indirecto (Ra * IΔn ≤ 50V con ID ≤ 30mA). MBTS.",
+            examReference = "ITC-BT-24 §1 y §2"
         ),
         UnderliningItcItem(
             id = "itc-25",
@@ -288,6 +663,25 @@ object Content {
             trap = "¡Ojo al desdoblar el C4! Si eliges desdoblarlo en 3 ramales, se deben colocar 3 magnetotérmicos de 16 A independientes para lavadora, lavavajillas y termo, reduciendo la sección a 2,5 mm² bajo tubos individuales. No puedes dejar un único PIA de 20 A con ramales de 2,5 mm².",
             keyConcept = "C1 = 10A (1,5mm²). C2 = 16A (2,5mm²). C3 = 25A (6mm²). C4 = 20A (4mm²). C5 = 16A (2,5mm² - máx 6 tomas).",
             examReference = "ITC-BT-25 Tabla 1"
+        ),
+        UnderliningItcItem(
+            id = "itc-26",
+            code = "ITC-BT-26",
+            title = "Prescripciones de Montaje en Viviendas",
+            category = "Interiores",
+            freq = "Media",
+            page = "ITC-26",
+            redUnderline = listOf(
+                "Tomas de corriente con toma de tierra incorporada tipo Schuko de 16 A con obturadores de seguridad infantil.",
+                "Puntos de luz: Todo punto de luz en techo debe incorporar conductor de protección PE (amarillo-verde) aunque la luminaria sea provisional.",
+                "Altura de tomas generales: Mínimo 30 cm sobre el pavimento acabado (excepto en cocinas sobre encimera a 1,10 m)."
+            ),
+            greenUnderline = listOf(
+                "Interruptores de alumbrado situados a una altura comprendida entre 0,90 m y 1,20 m junto al marco de acceso."
+            ),
+            trap = "¿Es obligatorio llevar el hilo de tierra a un punto de luz de techo de bombilla simple? SÍ, la ITC-26 obliga a llevar conductor de protección a todos los puntos de utilización sin excepción.",
+            keyConcept = "Obturadores infantiles en tomas. Tierra en todos los puntos de luz. Alturas: enchufes 30cm, luz 0.9-1.2m.",
+            examReference = "ITC-BT-26 §2"
         ),
         UnderliningItcItem(
             id = "itc-27",
@@ -330,6 +724,455 @@ object Content {
             examReference = "ITC-BT-28 §2 y §4"
         ),
         UnderliningItcItem(
+            id = "itc-29",
+            code = "ITC-BT-29",
+            title = "Locales con Riesgo de Incendio o Explosión (ATEX)",
+            category = "Especiales",
+            freq = "Crítica",
+            page = "ITC-29",
+            redUnderline = listOf(
+                "Clasificación de zonas con gases/vapores: Zona 0 (presencia continua), Zona 1 (probable en servicio normal), Zona 2 (improbable y corta duración).",
+                "Clasificación de zonas con polvos inflamables: Zona 20, Zona 21 y Zona 22.",
+                "Material eléctrico con marcado Ex antideflagrante, seguridad aumentada (Exe) o seguridad intrínseca (Exi).",
+                "Instalación exclusiva por Instalador de Categoría Especialista (IBTE)."
+            ),
+            greenUnderline = listOf(
+                "Sellado de tubos con cortafuegos en los pasos de frontera entre zonas clasificadas y no clasificadas."
+            ),
+            trap = "Los garajes de más de 5 plazas son considerados locales con riesgo de desprendimiento de gases inflamables (clasificados Zona 2 hasta una altura de 0,60 m del suelo).",
+            keyConcept = "Zonas 0/1/2 (gases) y 20/21/22 (polvos). Marcado Ex. IBTE Especialista. Sellado de canalizaciones.",
+            examReference = "ITC-BT-29 §3 y §5"
+        ),
+        UnderliningItcItem(
+            id = "itc-30",
+            code = "ITC-BT-30",
+            title = "Locales de Características Especiales",
+            category = "Especiales",
+            freq = "Alta",
+            page = "ITC-30",
+            redUnderline = listOf(
+                "Locales húmedos: Grado de protección IPX1 mínimo; canalizaciones estancas.",
+                "Locales mojados: Grado de protección IPX4 mínimo; mecanismos estancos; tensión de contacto límite 24 V.",
+                "Locales polvorientos: Grado de protección IP5X mínimo (o IP6X si el polvo es conductor).",
+                "Locales a temperatura muy elevada (> 40°C): Cables con aislamiento especial de silicona o termoestable a 90°C."
+            ),
+            greenUnderline = listOf(
+                "Distancia de separación de luminarias a materiales fácilmente combustibles: Mínimo 0,5 metros."
+            ),
+            trap = "Diferencia entre local húmedo y mojado: En local húmedo el vapor no condensa en gotas en paredes (IPX1); en mojado el agua forma regueros y gotas continuas (IPX4, límite 24 V).",
+            keyConcept = "Húmedo (IPX1). Mojado (IPX4, 24V). Polvoriento (IP5X/IP6X). Aislamientos térmicos especiales.",
+            examReference = "ITC-BT-30 §1 a §4"
+        ),
+        UnderliningItcItem(
+            id = "itc-31",
+            code = "ITC-BT-31",
+            title = "Instalaciones en Piscinas y Fuentes",
+            category = "Especiales",
+            freq = "Alta",
+            page = "ITC-31",
+            redUnderline = listOf(
+                "Volumen 0: Interior del vaso de la piscina. Grado de protección IPX8. Alimentación exclusiva a MBTS ≤ 12 V CA.",
+                "Volumen 1: Franja de 2 metros alrededor del vaso y hasta 2,5 m de altura. Grado IPX5 (o IPX4 en interiores). Prohibidas tomas de corriente.",
+                "Volumen 2: Franja de 1,5 m a continuación del volumen 1. Tomas permitidas protegidas por diferencial de 30 mA o MBTS a 12V.",
+                "Unión equipotencial suplementaria obligatoria conectando escaleras metálicas, barandillas y armaduras de hormigón."
+            ),
+            greenUnderline = listOf(
+                "Transformadores de seguridad para focos sumergidos situados fuera de los volúmenes 0 y 1."
+            ),
+            trap = "Focos sumergidos en el vaso de la piscina: Tensión máxima permitida 12 V en CA (MBTS) con transformador de seguridad fuera de los volúmenes 0 y 1.",
+            keyConcept = "Volumen 0 (IPX8, MBTS ≤ 12V). Volumen 1 (2m, IPX5). Volumen 2 (1.5m, ID 30mA). Equipotencialidad obligatoria.",
+            examReference = "ITC-BT-31 §2"
+        ),
+        UnderliningItcItem(
+            id = "itc-32",
+            code = "ITC-BT-32",
+            title = "Máquinas de Elevación y Transporte",
+            category = "Especiales",
+            freq = "Media",
+            page = "ITC-32",
+            redUnderline = listOf(
+                "Acometida independiente con interruptor de corte omnipolar con bloqueo por candado en el cuarto de máquinas.",
+                "Circuito de alumbrado de cabina y hueco de ascensor independiente del circuito de fuerza motriz del motor.",
+                "Cables manguera flexibles colgantes con armadura textil resistente a la tracción y torsión continuada."
+            ),
+            greenUnderline = listOf(
+                "Dispositivo de socorro de parada de emergencia en foso y techo de cabina."
+            ),
+            trap = "El alumbrado de cabina del ascensor NO puede desconectarse cuando se corta el interruptor principal del motor de tracción para mantenimiento.",
+            keyConcept = "Línea independiente motor/luz. Interruptor bloqueable. Mangueras flexibles suspendidas.",
+            examReference = "ITC-BT-32 §2 y §3"
+        ),
+        UnderliningItcItem(
+            id = "itc-33",
+            code = "ITC-BT-33",
+            title = "Instalaciones Provisionales y de Obra",
+            category = "Especiales",
+            freq = "Alta",
+            page = "ITC-33",
+            redUnderline = listOf(
+                "Cuadros de obra con grado de protección IP44 mínimo e IK08 contra impactos mecánicos.",
+                "Protección diferencial obligatoria de alta sensibilidad (≤ 30 mA) en todas las tomas de corriente.",
+                "Cables con cubierta de policloropreno resistente al agua y a la abrasión (tipo H07RN-F).",
+                "Requiere proyecto si la potencia instalada supera los 50 kW."
+            ),
+            greenUnderline = listOf(
+                "Puesta a tierra de obra con electrodo independiente y revisión mensual registrada."
+            ),
+            trap = "¿Qué tipo de cable se exige para tender por el suelo en una obra? Manguera de goma pesada tipo H07RN-F. Queda prohibido el cable de PVC doméstico.",
+            keyConcept = "Cuadros IP44/IK08. Diferenciales 30mA en todas las tomas. Cable H07RN-F. Proyecto si > 50 kW.",
+            examReference = "ITC-BT-33 §2 y §4"
+        ),
+        UnderliningItcItem(
+            id = "itc-34",
+            code = "ITC-BT-34",
+            title = "Instalaciones en Ferias y Stands",
+            category = "Especiales",
+            freq = "Media",
+            page = "ITC-34",
+            redUnderline = listOf(
+                "Instalaciones temporales en recintos feriales con cuadros generales equipados con parada de emergencia visible.",
+                "Cables no propagadores de la llama libres de halógenos en zonas de concurrencia pública.",
+                "Todas las masas metálicas de casetas y atracciones unidas a la red de tierra general con conductor continuo."
+            ),
+            greenUnderline = listOf(
+                "Inspección previa por OCA antes de la inauguración oficial si la potencia total es > 50 kW."
+            ),
+            trap = "En ferias y atracciones, la protección diferencial de 30 mA es obligatoria para cada atracción o caseta individualizada.",
+            keyConcept = "Cuadros de feria con seta de emergencia. Diferenciales 30mA. Equipotencialidad de atracciones.",
+            examReference = "ITC-BT-34 §3"
+        ),
+        UnderliningItcItem(
+            id = "itc-35",
+            code = "ITC-BT-35",
+            title = "Establecimientos Agrícolas y Hortícolas",
+            category = "Especiales",
+            freq = "Media",
+            page = "ITC-35",
+            redUnderline = listOf(
+                "Locales con presencia de animales de granja: Tensión de contacto límite reducida a 24 V (o 12 V en zonas muy mojadas).",
+                "Red de equipotencialidad en el suelo para evitar tensiones de paso peligrosas para el ganado.",
+                "Grado de protección IP54 mínimo para polvo y salpicaduras de purines/amoníaco."
+            ),
+            greenUnderline = listOf(
+                "Diferenciales con IΔn ≤ 30 mA para circuitos de tomas y ≤ 300 mA selectivos contra riesgo de incendio."
+            ),
+            trap = "Los animales son extremadamente sensibles a la tensión eléctrica; por ello la tensión límite de seguridad es 24 V y se exige mallazo equipotencial en el suelo.",
+            keyConcept = "Tensión límite 24V. IP54. Mallazo en suelo para evitar tensión de paso en ganado.",
+            examReference = "ITC-BT-35 §2 y §3"
+        ),
+        UnderliningItcItem(
+            id = "itc-36",
+            code = "ITC-BT-36",
+            title = "Instalaciones a Muy Baja Tensión (MBT)",
+            category = "Especiales",
+            freq = "Media",
+            page = "ITC-36",
+            redUnderline = listOf(
+                "MBTS (Muy Baja Tensión de Seguridad): Circuito aislado de tierra con fuente de seguridad (transformador de aislamiento EN 61558-2-6).",
+                "MBTP (Muy Baja Tensión de Protección): Circuito con puesta a tierra deliberada.",
+                "Límites de tensión: ≤ 50 V en CA eficaz y ≤ 75 V en CC sin ondulación."
+            ),
+            greenUnderline = listOf(
+                "Las clavijas y bases de enchufe de MBT no deben poder penetrar en tomas de 230V convencionales."
+            ),
+            trap = "¿Pueden conectarse las masas de un circuito MBTS a la toma de tierra del edificio? NO, en MBTS las masas están terminantemente aisladas de tierra.",
+            keyConcept = "MBTS (sin tierra, aislada). MBTP (con tierra). Límites: CA ≤ 50V / CC ≤ 75V.",
+            examReference = "ITC-BT-36 §1"
+        ),
+        UnderliningItcItem(
+            id = "itc-37",
+            code = "ITC-BT-37",
+            title = "Instalaciones a Tensiones Especiales y Rótulos",
+            category = "Especiales",
+            freq = "Baja",
+            page = "ITC-37",
+            redUnderline = listOf(
+                "Rótulos luminosos de descarga de alta tensión (tubos de neón > 1.000 V).",
+                "Interruptor de corte para bomberos exterior visible y accesible con indicación clara de desconexión.",
+                "Cables de alta tensión resistentes al ozono con pantallas protectoras puestas a tierra."
+            ),
+            greenUnderline = listOf(
+                "Transformadores de neón con protección contra circuito abierto y corriente de fuga."
+            ),
+            trap = "Todo rótulo luminoso de alta tensión en fachada debe disponer de un interruptor de corte general de bomberos operable con pértiga desde la calle.",
+            keyConcept = "Rótulos de neón. Interruptor de corte de bomberos en fachada. Cables anti-ozono.",
+            examReference = "ITC-BT-37 §2"
+        ),
+        UnderliningItcItem(
+            id = "itc-38",
+            code = "ITC-BT-38",
+            title = "Quirófanos y Salas de Intervención",
+            category = "Especiales",
+            freq = "Crítica",
+            page = "ITC-38",
+            redUnderline = listOf(
+                "Esquema IT Médico obligatorio para equipos electromédicos de soporte vital dentro de la zona del paciente.",
+                "Transformador de aislamiento galvánico monofásico de potencia entre 0,5 kVA y 10 kVA con vigilancia continua de aislamiento (VMA).",
+                "Suministro especial complementario: Entrada en servicio en menos de 0,5 segundos (corte breve Clase 0,5) con autonomía mínima de 2 horas.",
+                "Suelo antielectrostático con resistencia entre 50 kΩ y 1 MΩ para evitar chispas inflamables de anestésicos."
+            ),
+            greenUnderline = listOf(
+                "Embarrado de equipotencialidad (EE) exclusivo en cada quirófano uniendo masas de equipos y tomas de tierra con cables de 16 mm².",
+                "Diferenciales Clase A o B con sensibilidad de 30 mA para circuitos fuera de la zona de soporte vital."
+            ),
+            trap = "¿Por qué se usa el esquema IT en quirófanos? Porque ante un primer defecto a masa, el sistema NO corta la corriente, manteniendo en marcha los respiradores y monitores de quirófano.",
+            keyConcept = "Esquema IT Médico obligatorio. Transformador 0.5-10 kVA con VMA. Suministro socorro < 0.5s (2h). Suelo conductor 50kΩ-1MΩ.",
+            examReference = "ITC-BT-38 §2 y §3"
+        ),
+        UnderliningItcItem(
+            id = "itc-39",
+            code = "ITC-BT-39",
+            title = "Instalaciones de Cercas Eléctricas para Ganado",
+            category = "Especiales",
+            freq = "Baja",
+            page = "ITC-39",
+            redUnderline = listOf(
+                "Alimentadas mediante electrificadores homologados que emiten impulsos de corta duración (≤ 0,1 s a intervalos ≥ 1 s).",
+                "Toma de tierra del electrificador separada al menos 10 metros de cualquier otra toma de tierra de edificios o líneas eléctricas.",
+                "Carteles de aviso de peligro triangulares amarillos cada 50 metros en caminos públicos."
+            ),
+            greenUnderline = listOf(
+                "Prohibición de conectar cercas a más de un electrificador simultáneamente."
+            ),
+            trap = "Distancia de la toma de tierra de la cerca eléctrica a la tierra de una vivienda: Mínimo 10 metros de separación para evitar inducir pulsos en la red doméstica.",
+            keyConcept = "Impulsos homologados. Tierra de cerca separada ≥ 10m. Carteles cada 50m.",
+            examReference = "ITC-BT-39 §2"
+        ),
+        UnderliningItcItem(
+            id = "itc-40",
+            code = "ITC-BT-40",
+            title = "Instalaciones Generadoras de Baja Tensión",
+            category = "Especiales",
+            freq = "Crítica",
+            page = "ITC-40",
+            redUnderline = listOf(
+                "Grupos electrógenos y sistemas fotovoltaicos en autoconsumo con o sin excedentes.",
+                "Enclavamiento mecánico y eléctrico obligatorio para impedir la interconexión involuntaria o retorno de tensión hacia la red pública durante cortes.",
+                "Protección de desacoplamiento con vigilancia de tensión (±10%) y frecuencia (±1 Hz) con desconexión en menos de 0,5 s.",
+                "Sección del conductor neutro de generadores dimensionada al 100% de la fase por presencia de armónicos."
+            ),
+            greenUnderline = listOf(
+                "Instalación de generadores interconectados reservada a Instalador Autorizado Especialista (IBTE)."
+            ),
+            trap = "¿Qué exige la norma para evitar alimentar la red pública cuando hay una avería en el transformador? Relé de protección de desacoplamiento automático y conmutador con enclavamiento mecánico.",
+            keyConcept = "Autoconsumo y grupos. Enclavamiento mecánico obligatorio. Relé de desacoplamiento V/F. IBTE Especialista.",
+            examReference = "ITC-BT-40 §3 y §5"
+        ),
+        UnderliningItcItem(
+            id = "itc-41",
+            code = "ITC-BT-41",
+            title = "Caravanas y Parques de Caravanas",
+            category = "Especiales",
+            freq = "Media",
+            page = "ITC-41",
+            redUnderline = listOf(
+                "Cada parcela de camping o parque debe contar con toma de corriente individual con su propio interruptor diferencial de 30 mA y PIA de 16 A.",
+                "Bases de enchufe industriales tipo CETAC azules (2P+T 16A 230V) con grado de estanqueidad IP44 mínimo.",
+                "Altura de las tomas: Entre 0,50 m y 1,50 m sobre el terreno para evitar inundaciones."
+            ),
+            greenUnderline = listOf(
+                "Máximo de 4 bases de enchufe agrupadas por pedestal de distribución."
+            ),
+            trap = "En campings, cada toma de corriente para caravana debe tener su propio diferencial individual de 30 mA; no se permite compartir un diferencial para varias tomas de parcelas.",
+            keyConcept = "1 diferencial 30mA y 1 PIA por cada toma. Base CETAC azul IP44. Altura 0.5-1.5m.",
+            examReference = "ITC-BT-41 §3"
+        ),
+        UnderliningItcItem(
+            id = "itc-42",
+            code = "ITC-BT-42",
+            title = "Puertos y Marinas para Barcos de Recreo",
+            category = "Especiales",
+            freq = "Media",
+            page = "ITC-42",
+            redUnderline = listOf(
+                "Torretas de pantalán con grado de protección IP56 mínimo contra chorros potentes de agua salada y corrosión marina.",
+                "Tomas de corriente industriales (2P+T o 3P+N+T) con enclavamiento mecánico que impida conectar o desconectar bajo carga.",
+                "Cada toma protegida individualmente por diferencial de 30 mA y magnetotérmico.",
+                "Separación galvánica o aislamiento para prevenir corrosión galvánica de los cascos de embarcaciones."
+            ),
+            greenUnderline = listOf(
+                "Cables submarinos o sobre pasarelas flotantes con resistencia química y mecánica al hidrocarburo."
+            ),
+            trap = "Grado de protección en torretas de pantalán en puertos deportivos: Mínimo IP56 (muy superior al IP44 ordinario debido al oleaje y salitre).",
+            keyConcept = "Torretas IP56 en pantalán. Diferencial 30mA por toma con enclavamiento. Protección anticorrosión.",
+            examReference = "ITC-BT-42 §3 y §4"
+        ),
+        UnderliningItcItem(
+            id = "itc-43",
+            code = "ITC-BT-43",
+            title = "Receptores: Prescripciones Generales",
+            category = "Receptores",
+            freq = "Media",
+            page = "ITC-43",
+            redUnderline = listOf(
+                "Clasificación de receptores por protección contra choques: Clase 0 (prohibidos en BT), Clase I (toma de tierra), Clase II (doble aislamiento), Clase III (MBTS).",
+                "Todo receptor debe llevar placa de características con tensión, potencia, corriente asignada y Marcado CE.",
+                "Poder de conexión y desconexión adecuado a la naturaleza inductiva o resistiva de la carga."
+            ),
+            greenUnderline = listOf(
+                "Separación y refrigeración de receptores que disipen calor respecto a superficies inflamables."
+            ),
+            trap = "¿Están permitidos los aparatos eléctricos de Clase 0 (sin tierra ni doble aislamiento)? NO, en España los aparatos de Clase 0 están expresamente prohibidos.",
+            keyConcept = "Clases de aislamiento I (tierra), II (doble capa), III (MBTS). Clase 0 prohibida.",
+            examReference = "ITC-BT-43 §1 y §2"
+        ),
+        UnderliningItcItem(
+            id = "itc-44",
+            code = "ITC-BT-44",
+            title = "Receptores de Alumbrado e Iluminación",
+            category = "Receptores",
+            freq = "Alta",
+            page = "ITC-44",
+            redUnderline = listOf(
+                "Luminarias fluorescentes o de descarga: La potencia de cálculo debe multiplicarse por un factor mínimo de 1,8 para tener en cuenta balastros y armónicos.",
+                "Compensación individual o en bloque del factor de potencia para alcanzar cos φ ≥ 0,90.",
+                "Conexión a tierra de partes metálicas de luminarias Clase I mediante borna señalizada."
+            ),
+            greenUnderline = listOf(
+                "Portalámparas: El casquillo roscado exterior debe conectarse obligatoriamente al conductor neutro, y el borne central de fondo a la fase."
+            ),
+            trap = "Cálculo de potencia para tubos fluorescentes y lámparas de descarga: Se multiplica la potencia en vatios por 1,8 (ej. 4x18W = 72W * 1,8 = 129,6 W a prever).",
+            keyConcept = "Factor 1,8 para lámparas de descarga. Casquillo neutro / contacto central fase. Cos φ ≥ 0,90.",
+            examReference = "ITC-BT-44 §2 y §3"
+        ),
+        UnderliningItcItem(
+            id = "itc-45",
+            code = "ITC-BT-45",
+            title = "Receptores de Calefacción y Termos",
+            category = "Receptores",
+            freq = "Media",
+            page = "ITC-45",
+            redUnderline = listOf(
+                "Aparatos de calefacción de potencia > 3 kW deben conectarse mediante circuito independiente y conexión fija directa sin clavija de enchufe ordinaria.",
+                "Termostato de control acompañado obligatoriamente de un limitador térmico de seguridad no rearmable automáticamente (corte térmico).",
+                "Calefacción por suelo radiante: Malla metálica conectada a tierra sobre los cables calefactores."
+            ),
+            greenUnderline = listOf(
+                "Cables resistentes al calor tipo silicona en las proximidades inmediatas de las resistencias calefactoras."
+            ),
+            trap = "Los termos y calderas eléctricas deben incorporar doble protección térmica: termostato de regulación y limitador de seguridad independiente de rearme manual.",
+            keyConcept = "Potencia > 3 kW conexión fija. Limitador térmico de seguridad obligatorio. Suelo radiante con tierra.",
+            examReference = "ITC-BT-45 §2"
+        ),
+        UnderliningItcItem(
+            id = "itc-46",
+            code = "ITC-BT-46",
+            title = "Receptores: Motores Eléctricos",
+            category = "Receptores",
+            freq = "Crítica",
+            page = "ITC-46",
+            redUnderline = listOf(
+                "Limitación de corriente de arranque para motores de más de 0,75 kW: La relación Iarranque/Inominal no puede superar los valores de la tabla reglamentaria.",
+                "Arranque estrella-triángulo (Y-Δ), arrancadores suaves o variadores de frecuencia obligatorios para potencias elevadas.",
+                "Los conductores de alimentación de un solo motor deben dimensionarse para una intensidad mínima del 125% de la corriente nominal a plena carga (In * 1,25).",
+                "Para varios motores, el cable se calcula para el 125% del motor de mayor potencia más el 100% de la suma de los restantes."
+            ),
+            greenUnderline = listOf(
+                "Protección térmica contra sobrecargas mediante relé térmico o guardamotor calibrado a la In del motor.",
+                "Protección contra falta de fase para evitar el quemado de devanados en motores trifásicos."
+            ),
+            trap = "¿Cómo se calcula la sección del cable para alimentar un motor de 10 A? Se calcula para 12,5 A (10 A * 1,25) para absorber el calentamiento durante los arranques repetidos.",
+            keyConcept = "Cable motor único = 125% In. Varios motores = 125% mayor + suma restantes. Guardamotor. Arranque estrella-triángulo.",
+            examReference = "ITC-BT-46 §3 y §4"
+        ),
+        UnderliningItcItem(
+            id = "itc-47",
+            code = "ITC-BT-47",
+            title = "Transformadores, Reactancias y Autotransformadores",
+            category = "Receptores",
+            freq = "Media",
+            page = "ITC-47",
+            redUnderline = listOf(
+                "Transformadores de aislamiento galvánico de seguridad con aislamiento doble o reforzado entre primario y secundario.",
+                "Autotransformadores prohibidos para alimentar circuitos MBTS de seguridad porque no existe separación galvánica.",
+                "Protección en primario y secundario contra cortocircuitos y sobrecargas mediante fusibles o disyuntores coordinados."
+            ),
+            greenUnderline = listOf(
+                "Refrigeración adecuada y envolventes con ventilación para disipar pérdidas en el hierro y cobre."
+            ),
+            trap = "¿Se puede usar un autotransformador para una instalación a 24V de seguridad? ¡NO! El autotransformador tiene bobinado común y no proporciona aislamiento galvánico.",
+            keyConcept = "Transformador de aislamiento (primario y secundario separados). Autotransformador prohibido en MBTS.",
+            examReference = "ITC-BT-47 §2"
+        ),
+        UnderliningItcItem(
+            id = "itc-48",
+            code = "ITC-BT-48",
+            title = "Condensadores y Corrección del Factor de Potencia",
+            category = "Receptores",
+            freq = "Media",
+            page = "ITC-48",
+            redUnderline = listOf(
+                "Baterías de condensadores para elevar el factor de potencia (cos φ ≥ 0,95) y evitar penalizaciones por energía reactiva.",
+                "Descargadores de resistencia automáticos en bornes para reducir la tensión remanente a menos de 50 V en menos de 1 minuto tras desconexión.",
+                "Conductores dimensionados para un mínimo del 150% (1,5 veces) de la corriente nominal asignada del condensador debido a corrientes de cierre y armónicos."
+            ),
+            greenUnderline = listOf(
+                "Interruptores automáticos con contactores específicos para cargas capacitivas provistos de resistencias de pre-inserción."
+            ),
+            trap = "Sección de cable para baterías de condensadores: Debe dimensionarse para el 150% de la corriente nominal (In * 1,5), no para el 100%.",
+            keyConcept = "Compensación cos φ. Conductores = 150% In. Resistencia de descarga rápida a < 50V en 1 min.",
+            examReference = "ITC-BT-48 §2 y §3"
+        ),
+        UnderliningItcItem(
+            id = "itc-49",
+            code = "ITC-BT-49",
+            title = "Instalaciones Eléctricas en Muebles",
+            category = "Interiores",
+            freq = "Baja",
+            page = "ITC-49",
+            redUnderline = listOf(
+                "Muebles de cocina, baño o expositores con cableado incorporado.",
+                "Cables con cubierta protectora tipo manguera (H05VV-F) guiados por canales o grapados sin riesgo de pellizco en cajones o bisagras.",
+                "Luminarias montadas en muebles con marcado de inflamabilidad (símbolo F) o LED de baja emisión térmica."
+            ),
+            greenUnderline = listOf(
+                "Cajas de empalme estancas y mecanismos con fijación mecánica sólida al cuerpo del mueble."
+            ),
+            trap = "Queda prohibido utilizar cable unipolar simple suelto sin tubo en el interior de muebles de madera; siempre manguera con doble cubierta.",
+            keyConcept = "Cables manguera H05VV-F. Símbolo F en luminarias. Protección contra pellizcos en partes móviles.",
+            examReference = "ITC-BT-49 §1"
+        ),
+        UnderliningItcItem(
+            id = "itc-50",
+            code = "ITC-BT-50",
+            title = "Instalaciones de Saunas",
+            category = "Especiales",
+            freq = "Media",
+            page = "ITC-50",
+            redUnderline = listOf(
+                "Volumen 1: Zona del calentador (solo el propio calefactor).",
+                "Volumen 2: Sin prescripción especial de resistencia térmica pero grado IP24.",
+                "Volumen 3: Zona superior a 1 m del suelo; cables con aislamiento de silicona resistente a 170°C.",
+                "Volumen 4: Zona del techo (a menos de 0,5 m del techo); solo aparatos de mando del calentador o sensores térmicos.",
+                "Prohibido instalar tomas de corriente en todo el recinto de la sauna."
+            ),
+            greenUnderline = listOf(
+                "Protección por interruptor diferencial de 30 mA para todos los circuitos de la sauna."
+            ),
+            trap = "¿Se pueden colocar enchufes dentro de una cabina de sauna? ¡NO, en ningún volumen de la sauna se admiten tomas de corriente!",
+            keyConcept = "Volúmenes 1 a 4. Cables de silicona resistentes a 170°C en zonas altas. Prohibidas tomas de corriente.",
+            examReference = "ITC-BT-50 §2 y §3"
+        ),
+        UnderliningItcItem(
+            id = "itc-51",
+            code = "ITC-BT-51",
+            title = "Domótica y Gestión Técnica de la Energía",
+            category = "Interiores",
+            freq = "Alta",
+            page = "ITC-51",
+            redUnderline = listOf(
+                "Sistemas de automatización, monitorización energética, confort y seguridad en edificios inteligentes.",
+                "Separación física y dieléctrica entre cables de bus de datos (KNX, LonWorks, etc.) y cables de potencia de 230V/400V (separación mínima o aislamiento 4 kV).",
+                "Topologías en estrella, bus lineal o árbol con protección contra sobretensiones en líneas de datos exteriores."
+            ),
+            greenUnderline = listOf(
+                "En caso de caída de suministro auxiliar, los actuadores deben adoptar una posición de seguridad predeterminada (fail-safe)."
+            ),
+            trap = "¿Pueden compartir el mismo tubo un cable de bus domótico y los cables de fuerza de 230V? Solo si el cable de bus cuenta con aislamiento dieléctrico equivalente para la máxima tensión presente (aislamiento para 400V/1000V).",
+            keyConcept = "Domótica KNX/Bus. Aislamiento dieléctrico y separación de fuerza. Estado seguro por fallo de bus.",
+            examReference = "ITC-BT-51 §2"
+        ),
+        UnderliningItcItem(
             id = "itc-52",
             code = "ITC-BT-52",
             title = "Recarga de Vehículos Eléctricos (IRVE)",
@@ -338,16 +1181,17 @@ object Content {
             page = "ITC-52",
             redUnderline = listOf(
                 "Instalación de recarga de vehículos eléctricos reservada exclusivamente a Instalador de Categoría Especialista (IBTE).",
-                "Protección diferencial obligatoria: Tipo A de 30 mA como mínimo (para detectar componentes pulsantes y fugas en continua).",
+                "Protección diferencial obligatoria: Tipo A de 30 mA con detección de fugas en continua de 6 mA (o Tipo B).",
                 "Esquema 2: Troncal colectiva con contadores principales centralizados y contadores secundarios modulares en plazas de garaje.",
-                "Sección mínima de cable para punto de recarga: 2,5 mm² (mando/fuerza básica) o recomendada 4 mm² para minimizar caídas térmicas continuas."
+                "Esquema 3a/3b: Derivación individual desde el contador principal de la vivienda hasta la plaza de garaje.",
+                "Sección mínima de cable para punto de recarga: 2,5 mm² (mando/fuerza básica) o recomendada 4/6 mm² para régimen continuo de 32 A."
             ),
             greenUnderline = listOf(
                 "Caída de tensión máxima admisible para el circuito terminal del punto de recarga: 5% a intensidad máxima de régimen continuo.",
                 "Obligatoriedad de incluir dispositivo de corte o rearme automático y protección contra sobretensiones transitorias y permanentes."
             ),
-            trap = "¿Sirve un diferencial estándar Tipo AC para una toma de vehículo eléctrico? ¡NO! La norma ITC-BT-52 exige diferencial Clase A o Clase B porque las baterías generan componentes continuas que ciegan a los Tipo AC.",
-            keyConcept = "IBTE obligatorio. Diferencial Tipo A 30mA. Esquemas 1 a 4. Caída máx 5%. Sobretensiones obligatorias.",
+            trap = "¿Sirve un diferencial estándar Tipo AC para una toma de vehículo eléctrico? ¡NO! La norma ITC-BT-52 exige diferencial Clase A con RDC-DD o Clase B porque las baterías generan componentes continuas que ciegan a los Tipo AC.",
+            keyConcept = "IBTE obligatorio. Diferencial Tipo A 30mA + 6mA DC. Esquemas 1 a 4. Caída máx 5%. Sobretensiones obligatorias.",
             examReference = "ITC-BT-52 §5 y §6"
         )
     )

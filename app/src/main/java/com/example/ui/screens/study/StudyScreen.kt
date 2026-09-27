@@ -50,7 +50,7 @@ fun StudyScreen(viewModel: MainViewModel) {
     val reminderMinute = dailyActivity?.dailyStudyReminderMinute ?: 0
     val formattedReminderTime = String.format("%02d:%02d", reminderHour, reminderMinute)
 
-    val categories = listOf("Todos", "Articulado", "Administrativas", "Enlace", "Interiores")
+    val categories = listOf("Todos", "Articulado", "Administrativas", "Distribución", "Enlace", "Interiores", "Especiales", "Receptores")
 
     val filteredItems = Content.SYLLABUS.filter { item ->
         val matchesCategory = selectedCategory == "Todos" || item.category.equals(selectedCategory, ignoreCase = true)
@@ -79,7 +79,7 @@ fun StudyScreen(viewModel: MainViewModel) {
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = "Temario oficial subrayado con puntos críticos, trampas de examen y esquemas técnicos interactivos.",
+                    text = "Catálogo oficial completo (${Content.SYLLABUS.size} Artículos e ITCs) con puntos críticos subrayados, trampas de examen y esquemas.",
                     fontSize = 13.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -259,10 +259,12 @@ fun StudyScreen(viewModel: MainViewModel) {
                     // Map syllabus id to a question pool
                     val mappedKey = when {
                         item.id.startsWith("art") -> "articulado"
-                        item.id in listOf("itc-03", "itc-04", "itc-05") -> "empresas"
-                        item.id in listOf("itc-10", "itc-14", "itc-15", "itc-17") -> "enlace"
-                        item.id in listOf("itc-18", "itc-21") -> "tierra"
-                        item.id in listOf("itc-25", "itc-27") -> "interiores"
+                        item.id in listOf("itc-01", "itc-02", "itc-03", "itc-04", "itc-05") -> "empresas"
+                        item.id in listOf("itc-06", "itc-07", "itc-08", "itc-09") -> "redes"
+                        item.id in listOf("itc-10", "itc-11", "itc-12", "itc-13", "itc-14", "itc-15", "itc-16", "itc-17", "itc-52") -> "enlace"
+                        item.id in listOf("itc-18", "itc-22", "itc-23", "itc-24") -> "tierra"
+                        item.id in listOf("itc-19", "itc-20", "itc-21", "itc-25", "itc-26", "itc-27") -> "interiores"
+                        item.id in listOf("itc-43", "itc-44", "itc-45", "itc-46", "itc-47", "itc-48", "itc-49") -> "calculos"
                         else -> "especiales"
                     }
                     viewModel.startTopicPractice(mappedKey)
