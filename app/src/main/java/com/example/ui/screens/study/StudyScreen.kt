@@ -36,6 +36,7 @@ fun StudyScreen(viewModel: MainViewModel) {
     var selectedCategory by remember { mutableStateOf("Todos") }
     var searchQuery by remember { mutableStateOf("") }
     var expandedVisualId by remember { mutableStateOf<String?>(null) }
+    var expandAllVisuals by remember { mutableStateOf(false) }
     val dailyActivity by viewModel.dailyActivityFlow.collectAsState()
 
     val todayDate = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault()).format(java.util.Date())
@@ -220,22 +221,67 @@ fun StudyScreen(viewModel: MainViewModel) {
             )
         }
 
-        // Category Filter Chips
+        // Category Filter Chips & Infographics Global Toggle
         item {
-            LazyRow(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                items(categories) { cat ->
-                    FilterChip(
-                        selected = selectedCategory == cat,
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                LazyRow(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    items(categories) { cat ->
+                        FilterChip(
+                            selected = selectedCategory == cat,
+                            onClick = {
+                                FeedbackManager.playClick(context)
+                                selectedCategory = cat
+                            },
+                            label = { Text(cat, fontSize = 12.sp) },
+                            modifier = Modifier.testTag("study_filter_$cat")
+                        )
+                    }
+                }
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "${filteredItems.size} ${if (filteredItems.size == 1) "norma disponible" else "normas disponibles"}",
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+
+                    FilledTonalButton(
                         onClick = {
                             FeedbackManager.playClick(context)
-                            selectedCategory = cat
+                            expandAllVisuals = !expandAllVisuals
                         },
-                        label = { Text(cat, fontSize = 12.sp) },
-                        modifier = Modifier.testTag("study_filter_$cat")
-                    )
+                        shape = RoundedCornerShape(10.dp),
+                        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp),
+                        colors = ButtonDefaults.filledTonalButtonColors(
+                            containerColor = if (expandAllVisuals) {
+                                if (viewModel.isDarkTheme) Color(0xFF1F6FEB).copy(alpha = 0.3f) else Color(0xFFDDF4FF)
+                            } else {
+                                MaterialTheme.colorScheme.surfaceVariant
+                            }
+                        )
+                    ) {
+                        Icon(
+                            imageVector = if (expandAllVisuals) Icons.Default.VisibilityOff else Icons.Default.AutoAwesome,
+                            contentDescription = null,
+                            modifier = Modifier.size(16.dp),
+                            tint = if (viewModel.isDarkTheme) Color(0xFF58A6FF) else Color(0xFF0969DA)
+                        )
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Text(
+                            text = if (expandAllVisuals) "Contraer Infografías" else "Ver Todas las Infografías",
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = if (viewModel.isDarkTheme) Color(0xFF58A6FF) else Color(0xFF0969DA)
+                        )
+                    }
                 }
             }
         }
@@ -243,15 +289,21 @@ fun StudyScreen(viewModel: MainViewModel) {
         // Syllabus Cards
         items(filteredItems, key = { it.id }) { item ->
             val isItemStudiedToday = studiedItcsList.contains(item.code)
+            val isVisExpanded = expandAllVisuals || expandedVisualId == item.id
             StudyItemCard(
                 item = item,
                 isDark = viewModel.isDarkTheme,
-                isVisualExpanded = expandedVisualId == item.id,
+                isVisualExpanded = isVisExpanded,
                 isStudiedToday = isItemStudiedToday,
                 onToggleVisual = {
                     FeedbackManager.playClick(context)
                     viewModel.recordItcStudy(item.code)
-                    expandedVisualId = if (expandedVisualId == item.id) null else item.id
+                    if (expandAllVisuals) {
+                        expandAllVisuals = false
+                        expandedVisualId = null
+                    } else {
+                        expandedVisualId = if (expandedVisualId == item.id) null else item.id
+                    }
                 },
                 onStartPractice = {
                     FeedbackManager.playClick(context)
@@ -460,73 +512,189 @@ fun StudyItemCard(
                 }
             }
 
-            // Interactive Visual Aid (if expanded)
+            // Prominent Infografía & Technical Diagram Section
+            Spacer(modifier = Modifier.height(10.dp))
+            Surface(
+                shape = RoundedCornerShape(12.dp),
+                color = if (isDark) Color(0xFF0F172A) else Color(0xFFF1F5F9),
+                border = BorderStroke(
+                    1.dp,
+                    if (isVisualExpanded) {
+                        if (isDark) Color(0xFF38BDF8) else Color(0xFF0284C7)
+                    } else {
+                        if (isDark) Color(0xFF334155) else Color(0xFFCBD5E1)
+                    }
+                ),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { onToggleVisual() }
+            ) {
+                Row(
+                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 10.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
+                        Icon(
+                            imageVector = Icons.Default.AutoAwesome,
+                            contentDescription = null,
+                            tint = if (isDark) Color(0xFF38BDF8) else Color(0xFF0284C7),
+                            modifier = Modifier.size(18.dp)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Column {
+                            Text(
+                                text = "Infografía y Esquema Técnico REBT",
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 12.sp,
+                                color = if (isDark) Color(0xFFE2E8F0) else Color(0xFF0F172A)
+                            )
+                            Text(
+                                text = if (isVisualExpanded) "Toca para ocultar esquema gráfico" else "Toca para ver diagramas, fórmulas y esquemas",
+                                fontSize = 10.sp,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
+
+                    Icon(
+                        imageVector = if (isVisualExpanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
+                        contentDescription = if (isVisualExpanded) "Ocultar" else "Mostrar",
+                        tint = if (isDark) Color(0xFF38BDF8) else Color(0xFF0284C7)
+                    )
+                }
+            }
+
+            // Interactive Visual Aid (Infografía completa)
             AnimatedVisibility(visible = isVisualExpanded) {
-                Column(modifier = Modifier.padding(top = 12.dp)) {
-                    SyllabusVisualAid(item.id)
+                Column(modifier = Modifier.padding(top = 8.dp)) {
+                    SyllabusVisualAid(item.id, isDark = isDark)
                 }
             }
 
             Spacer(modifier = Modifier.height(14.dp))
 
-            // Action Buttons
-            Row(
+            // Action Buttons: Symmetrical and well-proportioned
+            Column(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically
+                verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
+                // Primary Action Button (Prominent & Elegantly Aligned)
                 Button(
                     onClick = onStartPractice,
-                    modifier = Modifier.weight(1f),
-                    shape = RoundedCornerShape(10.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(44.dp)
+                        .testTag("study_practice_${item.id}"),
+                    shape = RoundedCornerShape(12.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = if (isDark) Color(0xFF238636) else Color(0xFF1F883D)
-                    )
-                ) {
-                    Icon(Icons.Default.Quiz, contentDescription = null, modifier = Modifier.size(16.dp))
-                    Spacer(modifier = Modifier.width(6.dp))
-                    Text("Practicar", fontSize = 12.sp, fontWeight = FontWeight.Bold)
-                }
-
-                OutlinedButton(
-                    onClick = onToggleVisual,
-                    shape = RoundedCornerShape(10.dp)
+                        containerColor = if (isDark) Color(0xFF238636) else Color(0xFF1F883D),
+                        contentColor = Color.White
+                    ),
+                    elevation = ButtonDefaults.buttonElevation(defaultElevation = 2.dp)
                 ) {
                     Icon(
-                        imageVector = if (isVisualExpanded) Icons.Default.VisibilityOff else Icons.Default.Visibility,
+                        imageVector = Icons.Default.Quiz,
                         contentDescription = null,
-                        modifier = Modifier.size(16.dp)
+                        modifier = Modifier.size(18.dp)
                     )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text(if (isVisualExpanded) "Ocultar" else "Esquema", fontSize = 12.sp)
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = "Practicar Test de ${item.code}",
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.Bold
+                    )
                 }
 
-                OutlinedButton(
-                    onClick = onMarkStudied,
-                    shape = RoundedCornerShape(10.dp),
-                    colors = ButtonDefaults.outlinedButtonColors(
-                        contentColor = if (isStudiedToday) Color(0xFF3FB950) else MaterialTheme.colorScheme.primary
-                    )
+                // Secondary Action Row
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Icon(
-                        imageVector = if (isStudiedToday) Icons.Default.CheckCircle else Icons.Default.Check,
-                        contentDescription = null,
-                        modifier = Modifier.size(16.dp)
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text(if (isStudiedToday) "Leída" else "Leída", fontSize = 12.sp)
-                }
+                    // Toggle Infographic Button
+                    OutlinedButton(
+                        onClick = onToggleVisual,
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(38.dp),
+                        shape = RoundedCornerShape(10.dp),
+                        colors = ButtonDefaults.outlinedButtonColors(
+                            containerColor = if (isVisualExpanded) {
+                                if (isDark) Color(0xFF38BDF8).copy(alpha = 0.12f) else Color(0xFFE0F2FE)
+                            } else Color.Transparent,
+                            contentColor = if (isVisualExpanded) {
+                                if (isDark) Color(0xFF38BDF8) else Color(0xFF0284C7)
+                            } else MaterialTheme.colorScheme.onSurface
+                        ),
+                        border = BorderStroke(
+                            1.dp,
+                            if (isVisualExpanded) {
+                                if (isDark) Color(0xFF38BDF8) else Color(0xFF0284C7)
+                            } else MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
+                        ),
+                        contentPadding = PaddingValues(horizontal = 8.dp)
+                    ) {
+                        Icon(
+                            imageVector = if (isVisualExpanded) Icons.Default.VisibilityOff else Icons.Default.Visibility,
+                            contentDescription = null,
+                            modifier = Modifier.size(15.dp)
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text(
+                            text = if (isVisualExpanded) "Ocultar" else "Infografía",
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                    }
 
-                IconButton(
-                    onClick = onAddReminder,
-                    modifier = Modifier.size(40.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.NotificationAdd,
-                        contentDescription = "Crear Recordatorio para esta ITC",
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(20.dp)
-                    )
+                    // Mark as Studied Button
+                    OutlinedButton(
+                        onClick = onMarkStudied,
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(38.dp),
+                        shape = RoundedCornerShape(10.dp),
+                        colors = ButtonDefaults.outlinedButtonColors(
+                            containerColor = if (isStudiedToday) Color(0xFF3FB950).copy(alpha = 0.15f) else Color.Transparent,
+                            contentColor = if (isStudiedToday) {
+                                if (isDark) Color(0xFF7EE787) else Color(0xFF1A7F37)
+                            } else MaterialTheme.colorScheme.primary
+                        ),
+                        border = BorderStroke(
+                            1.dp,
+                            if (isStudiedToday) Color(0xFF3FB950) else MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
+                        ),
+                        contentPadding = PaddingValues(horizontal = 8.dp)
+                    ) {
+                        Icon(
+                            imageVector = if (isStudiedToday) Icons.Default.CheckCircle else Icons.Default.Check,
+                            contentDescription = null,
+                            modifier = Modifier.size(15.dp),
+                            tint = if (isStudiedToday) (if (isDark) Color(0xFF7EE787) else Color(0xFF1A7F37)) else MaterialTheme.colorScheme.primary
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text(
+                            text = if (isStudiedToday) "Leída ✓" else "Marcar leída",
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                    }
+
+                    // Notification Reminder Button
+                    OutlinedIconButton(
+                        onClick = onAddReminder,
+                        modifier = Modifier.size(38.dp),
+                        shape = RoundedCornerShape(10.dp),
+                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.5f))
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.NotificationAdd,
+                            contentDescription = "Crear Recordatorio para esta ITC",
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(18.dp)
+                        )
+                    }
                 }
             }
         }

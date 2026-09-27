@@ -21,13 +21,18 @@ import androidx.compose.ui.unit.sp
 import kotlin.math.roundToInt
 
 @Composable
-fun SyllabusVisualAid(itcId: String) {
+fun SyllabusVisualAid(itcId: String, isDark: Boolean = true) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 12.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF0F141C)),
-        border = BorderStroke(1.dp, Color(0xFF21262D))
+            .padding(vertical = 8.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = if (isDark) Color(0xFF0F141C) else Color(0xFFF1F5F9)
+        ),
+        border = BorderStroke(
+            1.dp,
+            if (isDark) Color(0xFF21262D) else Color(0xFFCBD5E1)
+        )
     ) {
         Column(modifier = Modifier.padding(14.dp)) {
             Row(
@@ -37,40 +42,60 @@ fun SyllabusVisualAid(itcId: String) {
                 Icon(
                     imageVector = Icons.Default.AutoAwesome,
                     contentDescription = "Infografía Interactiva",
-                    tint = Color(0xFFFFD2D2),
+                    tint = if (isDark) Color(0xFFFFD2D2) else Color(0xFFD97706),
                     modifier = Modifier.size(16.dp)
                 )
                 Spacer(modifier = Modifier.width(6.dp))
                 Text(
-                    text = "INFOGRAFÍA ACTIVA Y MATERIAL GRÁFICO (REBT)",
+                    text = "INFOGRAFÍA ACTIVA Y ESQUEMA TÉCNICO (REBT)",
                     fontSize = 11.sp,
                     fontWeight = FontWeight.ExtraBold,
-                    color = Color(0xFF8B949E),
+                    color = if (isDark) Color(0xFF8B949E) else Color(0xFF475569),
                     letterSpacing = 1.sp
                 )
             }
 
             when (itcId) {
                 "art-1-5" -> Art1To5MindMap()
-                "art-6-15" -> Art6To15PowerCalculator()
-                "art-16-29" -> Art16To29SilencioFlow()
+                "art-6-13", "art-6-15" -> Art6To15PowerCalculator()
+                "art-14-22", "art-16-29", "art-23-29" -> Art16To29SilencioFlow()
                 "itc-01" -> Itc01SafetyVoltages()
+                "itc-02" -> Itc02NormasInfographic()
                 "itc-03" -> Itc03InstallerComparison()
                 "itc-04" -> Itc04GarageDecisionTree()
                 "itc-05" -> Itc05OcaInspections()
+                "itc-06" -> Itc06AereasInfographic()
                 "itc-07" -> Itc07TrenchCanvas()
+                "itc-08" -> Itc08EsquemasNeutro()
+                "itc-09" -> Itc09AlumbradoInfographic()
                 "itc-10" -> Itc10ElectrificationPlanner()
-                "itc-14" -> Itc14EnlaceSchematic()
+                "itc-11", "itc-12", "itc-14" -> Itc14EnlaceSchematic()
+                "itc-13" -> Itc13CgpInfographic()
+                "itc-15" -> Itc15DerivacionInfographic()
+                "itc-16" -> Itc16ContadoresInfographic()
                 "itc-17" -> Itc17DinRailPanel()
                 "itc-18" -> Itc18EarthPitInfographic()
+                "itc-19", "itc-20" -> Itc19ColoresSeccionesInfographic()
+                "itc-21" -> Itc21TubosMatrix()
+                "itc-22" -> Itc22CurvasDisparo()
+                "itc-23" -> Itc23Sobretensiones()
+                "itc-24" -> Itc24ContactosIndirectos()
                 "itc-25" -> Itc25CircuitMatrix()
-                else -> {
-                    Text(
-                        "Gráfico resumen de apoyo disponible para este capítulo reglamentario.",
-                        fontSize = 12.sp,
-                        color = Color.LightGray
-                    )
-                }
+                "itc-26" -> Itc26MontajeVivienda()
+                "itc-27" -> Itc27BanosVolumenes()
+                "itc-28" -> Itc28PublicaConcurrencia()
+                "itc-29" -> Itc29AtexZonas()
+                "itc-30" -> Itc30LocalesEspeciales()
+                "itc-31" -> Itc31PiscinasVolumenes()
+                "itc-32", "itc-33", "itc-34", "itc-35" -> Itc33ObrasSeguridad()
+                "itc-36", "itc-37", "itc-39" -> Itc36MbtsInfographic()
+                "itc-38" -> Itc38QuirofanosItMedico()
+                "itc-40" -> Itc40AutoconsumoGeneradores()
+                "itc-41", "itc-42" -> Itc41CampingsMarinas()
+                "itc-43", "itc-44", "itc-45", "itc-46", "itc-47", "itc-48", "itc-49", "itc-50" -> Itc46MotoresCondensadores()
+                "itc-51" -> Itc51DomoticaInfographic()
+                "itc-52" -> Itc52CargaVeInfographic()
+                else -> GenericItcTechnicalInfographic(itcId)
             }
         }
     }
@@ -1202,3 +1227,535 @@ data class CircuitRowData(
     val section: String,
     val limit: String
 )
+
+// 14. ITC-02: Reference Norms Infographic
+@Composable
+fun Itc02NormasInfographic() {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Text("Jerarquía Normativa y Homologaciones (ITC-02)", fontWeight = FontWeight.Bold, fontSize = 13.sp, color = Color.White)
+        Spacer(modifier = Modifier.height(8.dp))
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            NormaBadge("UNE / EN", "Obligadas por REBT", Color(0xFF58A6FF), Modifier.weight(1f))
+            NormaBadge("Marcado CE", "Libre Circulación UE", Color(0xFF2ECC71), Modifier.weight(1f))
+            NormaBadge("Resoluciones", "Actualizaciones BOE", Color(0xFFF39C12), Modifier.weight(1f))
+        }
+        Spacer(modifier = Modifier.height(8.dp))
+        Text("• Las normas UNE citadas en el REBT tienen carácter OBLIGATORIO.", fontSize = 11.sp, color = Color.LightGray)
+        Text("• El Ministerio de Industria actualiza el listado periódicamente mediante Resoluciones oficiales.", fontSize = 11.sp, color = Color.LightGray)
+    }
+}
+
+@Composable
+private fun NormaBadge(title: String, subtitle: String, color: Color, modifier: Modifier) {
+    Card(modifier = modifier, colors = CardDefaults.cardColors(containerColor = Color(0xFF161B22)), border = BorderStroke(1.dp, color)) {
+        Column(modifier = Modifier.padding(8.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(title, fontWeight = FontWeight.Bold, fontSize = 11.sp, color = color)
+            Text(subtitle, fontSize = 9.sp, color = Color.LightGray, textAlign = TextAlign.Center)
+        }
+    }
+}
+
+// 15. ITC-06: Aerial Lines Infographic
+@Composable
+fun Itc06AereasInfographic() {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Text("Redes Aéreas de Distribución en BT (ITC-06)", fontWeight = FontWeight.Bold, fontSize = 13.sp, color = Color.White)
+        Spacer(modifier = Modifier.height(8.dp))
+        Card(colors = CardDefaults.cardColors(containerColor = Color(0xFF161B22)), border = BorderStroke(1.dp, Color(0xFF30363D))) {
+            Column(modifier = Modifier.padding(10.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                Text("📐 Alturas Mínimas Reglamentarias sobre el Terreno:", fontWeight = FontWeight.Bold, fontSize = 11.sp, color = Color(0xFF58A6FF))
+                Text("• Pasos de calles, avenidas y carreteras: 6,00 metros.", fontSize = 11.sp, color = Color.White)
+                Text("• Zonas peatonales y aceras: 4,00 m (tensado) / 2,50 m (posado sobre fachada).", fontSize = 11.sp, color = Color.LightGray)
+                Text("• Distancia a ventanas y balcones practicables: Mínimo 1,00 metro.", fontSize = 11.sp, color = Color(0xFFF39C12))
+                Text("• Haz trenzado tipo RZ (Aluminio mín. 16 mm² con fiador Almelec).", fontSize = 11.sp, color = Color(0xFF2ECC71))
+            }
+        }
+    }
+}
+
+// 16. ITC-08: Neutral & Earthing Systems (TT, TN, IT)
+@Composable
+fun Itc08EsquemasNeutro() {
+    var selectedSchema by remember { mutableStateOf("TT") }
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Text("Esquemas de Conexión de Neutro y Masas (ITC-08)", fontWeight = FontWeight.Bold, fontSize = 13.sp, color = Color.White)
+        Spacer(modifier = Modifier.height(8.dp))
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Button(
+                onClick = { selectedSchema = "TT" },
+                modifier = Modifier.weight(1f),
+                colors = ButtonDefaults.buttonColors(containerColor = if (selectedSchema == "TT") Color(0xFF58A6FF) else Color(0xFF161B22))
+            ) { Text("Esquema TT", fontSize = 11.sp, fontWeight = FontWeight.Bold) }
+            Button(
+                onClick = { selectedSchema = "TN" },
+                modifier = Modifier.weight(1f),
+                colors = ButtonDefaults.buttonColors(containerColor = if (selectedSchema == "TN") Color(0xFF2ECC71) else Color(0xFF161B22))
+            ) { Text("Esquema TN", fontSize = 11.sp, fontWeight = FontWeight.Bold) }
+            Button(
+                onClick = { selectedSchema = "IT" },
+                modifier = Modifier.weight(1f),
+                colors = ButtonDefaults.buttonColors(containerColor = if (selectedSchema == "IT") Color(0xFFF39C12) else Color(0xFF161B22))
+            ) { Text("Esquema IT", fontSize = 11.sp, fontWeight = FontWeight.Bold) }
+        }
+        Spacer(modifier = Modifier.height(8.dp))
+        Card(colors = CardDefaults.cardColors(containerColor = Color(0xFF161B22)), border = BorderStroke(1.dp, Color(0xFF30363D))) {
+            Column(modifier = Modifier.padding(10.dp)) {
+                when (selectedSchema) {
+                    "TT" -> {
+                        Text("⚡ Esquema TT (Obligatorio en Redes Públicas Españolas):", fontWeight = FontWeight.Bold, fontSize = 11.sp, color = Color(0xFF58A6FF))
+                        Text("• Neutro de la fuente a tierra (T) y masas de la instalación a tierra independiente (T).", fontSize = 11.sp, color = Color.LightGray)
+                        Text("• Protección OBLIGATORIA mediante Interruptores Diferenciales (RCD ≤ 30mA).", fontSize = 11.sp, color = Color(0xFF2ECC71))
+                    }
+                    "TN" -> {
+                        Text("⚡ Esquema TN (Neutro a tierra, Masas al neutro):", fontWeight = FontWeight.Bold, fontSize = 11.sp, color = Color(0xFF2ECC71))
+                        Text("• TN-S: Conductor neutro (N) y de protección (PE) separados en toda la instalación.", fontSize = 11.sp, color = Color.LightGray)
+                        Text("• TN-C: Conductor PEN unificado (prohibido cortar el PEN).", fontSize = 11.sp, color = Color.LightGray)
+                    }
+                    "IT" -> {
+                        Text("⚡ Esquema IT (Neutro aislado, Masas a tierra):", fontWeight = FontWeight.Bold, fontSize = 11.sp, color = Color(0xFFF39C12))
+                        Text("• Máxima continuidad de servicio: El primer defecto a masa NO provoca disparo.", fontSize = 11.sp, color = Color.LightGray)
+                        Text("• Obligatorio en Quirófanos y procesos industriales críticos con vigilador VMA.", fontSize = 11.sp, color = Color(0xFFFFD2D2))
+                    }
+                }
+            }
+        }
+    }
+}
+
+// 17. ITC-09: Outdoor Lighting
+@Composable
+fun Itc09AlumbradoInfographic() {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Text("Alumbrado Exterior y Viales (ITC-09)", fontWeight = FontWeight.Bold, fontSize = 13.sp, color = Color.White)
+        Spacer(modifier = Modifier.height(6.dp))
+        Card(colors = CardDefaults.cardColors(containerColor = Color(0xFF161B22)), border = BorderStroke(1.dp, Color(0xFF30363D))) {
+            Column(modifier = Modifier.padding(10.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                Text("• Caída de tensión máxima admisible: 3,0% desde el cuadro de mando.", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = Color(0xFFF39C12))
+                Text("• Toma de tierra en báculos: Resistencia ≤ 30 Ω interconectada con Cu desnudo 35 mm².", fontSize = 11.sp, color = Color.White)
+                Text("• Aislamiento de cables subterráneos: Mínimo 0,6/1 kV (RV-K o XZ1).", fontSize = 11.sp, color = Color.LightGray)
+                Text("• Control horario con reloj astronómico para ahorro energético.", fontSize = 11.sp, color = Color(0xFF2ECC71))
+            }
+        }
+    }
+}
+
+// 18. ITC-13: CGP & CPM
+@Composable
+fun Itc13CgpInfographic() {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Text("Cajas Generales de Protección CGP / CPM (ITC-13)", fontWeight = FontWeight.Bold, fontSize = 13.sp, color = Color.White)
+        Spacer(modifier = Modifier.height(6.dp))
+        Card(colors = CardDefaults.cardColors(containerColor = Color(0xFF161B22)), border = BorderStroke(1.dp, Color(0xFF30363D))) {
+            Column(modifier = Modifier.padding(10.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                Text("• Ubicación: Fachada exterior o límite de la finca en zona de libre acceso público.", fontSize = 11.sp, color = Color.White)
+                Text("• Altura reglamentaria: Entre 0,50 m y 2,00 m desde la rasante del suelo.", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = Color(0xFF58A6FF))
+                Text("• Resistencia a impactos: Grado IK08 mínimo (IK09 en zonas de tráfico rodado).", fontSize = 11.sp, color = Color(0xFFF39C12))
+                Text("• Fusibles de cuchilla NH de alto poder de corte (≥ 100 kA).", fontSize = 11.sp, color = Color.LightGray)
+            }
+        }
+    }
+}
+
+// 19. ITC-15: Derivación Individual
+@Composable
+fun Itc15DerivacionInfographic() {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Text("Derivaciones Individuales DI (ITC-15)", fontWeight = FontWeight.Bold, fontSize = 13.sp, color = Color.White)
+        Spacer(modifier = Modifier.height(6.dp))
+        Card(colors = CardDefaults.cardColors(containerColor = Color(0xFF161B22)), border = BorderStroke(1.dp, Color(0xFF30363D))) {
+            Column(modifier = Modifier.padding(10.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                Text("• Sección mínima de cobre: 6 mm² (con cable de mando rojo 1,5 mm²).", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = Color(0xFF2ECC71))
+                Text("• Diámetro exterior mínimo del tubo protector: 32 mm.", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = Color(0xFF58A6FF))
+                Text("• Caída de tensión máxima: 1,5% (contadores centralizados) / 0,5% (individual).", fontSize = 11.sp, color = Color(0xFFF39C12))
+                Text("• Cables de Alta Seguridad (AS) no propagadores de llama ni emisión de halógenos.", fontSize = 11.sp, color = Color.LightGray)
+            }
+        }
+    }
+}
+
+// 20. ITC-16: Meter Rooms
+@Composable
+fun Itc16ContadoresInfographic() {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Text("Centralización de Contadores (ITC-16)", fontWeight = FontWeight.Bold, fontSize = 13.sp, color = Color.White)
+        Spacer(modifier = Modifier.height(6.dp))
+        Card(colors = CardDefaults.cardColors(containerColor = Color(0xFF161B22)), border = BorderStroke(1.dp, Color(0xFF30363D))) {
+            Column(modifier = Modifier.padding(10.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                Text("• Local técnico exclusivo obligatorio: A partir de > 16 contadores.", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = Color(0xFF58A6FF))
+                Text("• Altura libre del local: 2,30 m con pasillo frontal de mínimo 1,10 m.", fontSize = 11.sp, color = Color.White)
+                Text("• Puerta corta-fuegos EI2 60-C5 con apertura hacia afuera.", fontSize = 11.sp, color = Color(0xFFF39C12))
+                Text("• Extintor de CO2 de 5 kg y alumbrado de emergencia de 5 lux en cuadros.", fontSize = 11.sp, color = Color.LightGray)
+            }
+        }
+    }
+}
+
+// 21. ITC-19: Colors & Voltage Drops
+@Composable
+fun Itc19ColoresSeccionesInfographic() {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Text("Código de Colores y Caídas de Tensión (ITC-19)", fontWeight = FontWeight.Bold, fontSize = 13.sp, color = Color.White)
+        Spacer(modifier = Modifier.height(6.dp))
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+            ColorChipWidget("Fases", "Marrón/Negro/Gris", Color(0xFF8D6E63), Modifier.weight(1f))
+            ColorChipWidget("Neutro", "Azul Claro", Color(0xFF42A5F5), Modifier.weight(1f))
+            ColorChipWidget("Tierra", "Verde-Amarillo", Color(0xFF66BB6A), Modifier.weight(1f))
+        }
+        Spacer(modifier = Modifier.height(8.dp))
+        Card(colors = CardDefaults.cardColors(containerColor = Color(0xFF161B22)), border = BorderStroke(1.dp, Color(0xFF30363D))) {
+            Column(modifier = Modifier.padding(8.dp)) {
+                Text("• Caída máxima en interiores: 3,0% (Alumbrado) y 5,0% (Fuerza/Otros usos).", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = Color(0xFFF39C12))
+                Text("• Sección mínima obligatoria: 1,5 mm² en iluminación / 2,5 mm² en tomas.", fontSize = 11.sp, color = Color.White)
+            }
+        }
+    }
+}
+
+@Composable
+private fun ColorChipWidget(name: String, label: String, color: Color, modifier: Modifier) {
+    Card(modifier = modifier, colors = CardDefaults.cardColors(containerColor = Color(0xFF161B22)), border = BorderStroke(1.dp, color)) {
+        Column(modifier = Modifier.padding(6.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+            Box(modifier = Modifier.size(14.dp).background(color, CircleShape))
+            Text(name, fontWeight = FontWeight.Bold, fontSize = 10.sp, color = Color.White)
+            Text(label, fontSize = 8.sp, color = Color.LightGray, textAlign = TextAlign.Center)
+        }
+    }
+}
+
+// 22. ITC-21: Conduit Tubes Matrix
+@Composable
+fun Itc21TubosMatrix() {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Text("Diámetros Exteriores de Tubos Empotrados (ITC-21)", fontWeight = FontWeight.Bold, fontSize = 13.sp, color = Color.White)
+        Spacer(modifier = Modifier.height(6.dp))
+        Card(colors = CardDefaults.cardColors(containerColor = Color(0xFF161B22)), border = BorderStroke(1.dp, Color(0xFF30363D))) {
+            Column(modifier = Modifier.padding(10.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                Text("• 3 conductores de 1,5 mm²: Tubo mínimo Ø 16 mm.", fontSize = 11.sp, color = Color.White)
+                Text("• 3 conductores de 2,5 mm²: Tubo mínimo Ø 20 mm.", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = Color(0xFF58A6FF))
+                Text("• 3 conductores de 6,0 mm²: Tubo mínimo Ø 25 mm.", fontSize = 11.sp, color = Color.White)
+                Text("• Derivación Individual (DI): Tubo mínimo Ø 32 mm.", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = Color(0xFFF39C12))
+                Text("⚠️ Prohibido realizar empalmes dentro de los tubos protectores.", fontSize = 10.sp, color = Color(0xFFFFD2D2))
+            }
+        }
+    }
+}
+
+// 23. ITC-22: Breaker Curves
+@Composable
+fun Itc22CurvasDisparo() {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Text("Curvas de Disparo Magnetotérmico (ITC-22)", fontWeight = FontWeight.Bold, fontSize = 13.sp, color = Color.White)
+        Spacer(modifier = Modifier.height(6.dp))
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+            CurvaCard("Curva B", "3 a 5 In", "Líneas largas y generadores", Color(0xFF58A6FF), Modifier.weight(1f))
+            CurvaCard("Curva C", "5 a 10 In", "Estándar doméstico / terciario", Color(0xFF2ECC71), Modifier.weight(1f))
+            CurvaCard("Curva D", "10 a 20 In", "Motores y picos arranque", Color(0xFFF39C12), Modifier.weight(1f))
+        }
+        Spacer(modifier = Modifier.height(6.dp))
+        Text("Regla de oro de sobrecarga: IB ≤ In ≤ Iz  y  I2 ≤ 1,45 · Iz", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = Color(0xFF58A6FF))
+    }
+}
+
+@Composable
+private fun CurvaCard(curva: String, rango: String, uso: String, color: Color, modifier: Modifier) {
+    Card(modifier = modifier, colors = CardDefaults.cardColors(containerColor = Color(0xFF161B22)), border = BorderStroke(1.dp, color)) {
+        Column(modifier = Modifier.padding(6.dp)) {
+            Text(curva, fontWeight = FontWeight.Bold, fontSize = 11.sp, color = color)
+            Text(rango, fontWeight = FontWeight.ExtraBold, fontSize = 10.sp, color = Color.White)
+            Text(uso, fontSize = 8.sp, color = Color.LightGray)
+        }
+    }
+}
+
+// 24. ITC-23: Surge Protections
+@Composable
+fun Itc23Sobretensiones() {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Text("Protección contra Sobretensiones (ITC-23)", fontWeight = FontWeight.Bold, fontSize = 13.sp, color = Color.White)
+        Spacer(modifier = Modifier.height(6.dp))
+        Card(colors = CardDefaults.cardColors(containerColor = Color(0xFF161B22)), border = BorderStroke(1.dp, Color(0xFF30363D))) {
+            Column(modifier = Modifier.padding(10.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                Text("⚡ Transitorias (DPS / Descargadores):", fontWeight = FontWeight.Bold, fontSize = 11.sp, color = Color(0xFF58A6FF))
+                Text("• Derivan las ondas de rayo a tierra mediante varistores sin cortar el suministro.", fontSize = 10.sp, color = Color.LightGray)
+                Text("⚡ Permanentes (Rotura de Neutro a 400V):", fontWeight = FontWeight.Bold, fontSize = 11.sp, color = Color(0xFFF39C12))
+                Text("• Disparan mecánicamente el IGA general para proteger los electrodomésticos.", fontSize = 10.sp, color = Color.LightGray)
+            }
+        }
+    }
+}
+
+// 25. ITC-24: Direct / Indirect Contacts
+@Composable
+fun Itc24ContactosIndirectos() {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Text("Protección contra Choques Eléctricos (ITC-24)", fontWeight = FontWeight.Bold, fontSize = 13.sp, color = Color.White)
+        Spacer(modifier = Modifier.height(6.dp))
+        Card(colors = CardDefaults.cardColors(containerColor = Color(0xFF161B22)), border = BorderStroke(1.dp, Color(0xFF30363D))) {
+            Column(modifier = Modifier.padding(10.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                Text("• Contacto Directo: Partes activas. Barreras IP2X y diferencial ≤ 30 mA.", fontSize = 11.sp, color = Color.White)
+                Text("• Contacto Indirecto: Masas con defecto. Coordinación RA · IΔn ≤ 50 V (seco) / 24 V (húmedo).", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = Color(0xFF58A6FF))
+                Text("• MBTS: Muy Baja Tensión de Seguridad aislada sin tierra a ≤ 12 V o ≤ 50 V.", fontSize = 11.sp, color = Color(0xFF2ECC71))
+            }
+        }
+    }
+}
+
+// 26. ITC-26: Domestic Mounting
+@Composable
+fun Itc26MontajeVivienda() {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Text("Prescripciones de Montaje en Viviendas (ITC-26)", fontWeight = FontWeight.Bold, fontSize = 13.sp, color = Color.White)
+        Spacer(modifier = Modifier.height(6.dp))
+        Card(colors = CardDefaults.cardColors(containerColor = Color(0xFF161B22)), border = BorderStroke(1.dp, Color(0xFF30363D))) {
+            Column(modifier = Modifier.padding(10.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                Text("• Altura de tomas generales: Mínimo 30 cm sobre suelo terminado.", fontSize = 11.sp, color = Color.White)
+                Text("• Altura sobre encimera en cocinas: Mínimo 1,10 m.", fontSize = 11.sp, color = Color.White)
+                Text("• Tomas con obturadores de seguridad infantil tipo Schuko 16A.", fontSize = 11.sp, color = Color(0xFF2ECC71))
+                Text("• Obligatorio llevar conductor de tierra (PE) a todos los puntos de luz.", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = Color(0xFFF39C12))
+            }
+        }
+    }
+}
+
+// 27. ITC-27: Bathrooms Volumes
+@Composable
+fun Itc27BanosVolumenes() {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Text("Volúmenes de Seguridad en Baños (ITC-27)", fontWeight = FontWeight.Bold, fontSize = 13.sp, color = Color.White)
+        Spacer(modifier = Modifier.height(6.dp))
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+            VolumenCard("Vol 0", "Interior Bañera", "IPX7\nMBTS 12V", Color(0xFFE74C3C), Modifier.weight(1f))
+            VolumenCard("Vol 1", "Hasta 2,25m", "IPX4\nSin tomas", Color(0xFFF39C12), Modifier.weight(1f))
+            VolumenCard("Vol 2", "Franja 0,6m", "IPX4\nAfeitadora", Color(0xFFF1C40F), Modifier.weight(1f))
+            VolumenCard("Vol 3", "Franja 2,4m", "ID 30mA\nTomas OK", Color(0xFF2ECC71), Modifier.weight(1f))
+        }
+        Spacer(modifier = Modifier.height(6.dp))
+        Text("• Unión equipotencial suplementaria obligatoria en tuberías metálicas.", fontSize = 10.sp, color = Color.LightGray)
+    }
+}
+
+@Composable
+private fun VolumenCard(vol: String, desc: String, req: String, color: Color, modifier: Modifier) {
+    Card(modifier = modifier, colors = CardDefaults.cardColors(containerColor = Color(0xFF161B22)), border = BorderStroke(1.dp, color)) {
+        Column(modifier = Modifier.padding(4.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(vol, fontWeight = FontWeight.Bold, fontSize = 10.sp, color = color)
+            Text(desc, fontSize = 8.sp, color = Color.White, textAlign = TextAlign.Center)
+            Text(req, fontSize = 8.sp, color = Color.LightGray, textAlign = TextAlign.Center)
+        }
+    }
+}
+
+// 28. ITC-28: Public Premises
+@Composable
+fun Itc28PublicaConcurrencia() {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Text("Locales de Pública Concurrencia LPC (ITC-28)", fontWeight = FontWeight.Bold, fontSize = 13.sp, color = Color.White)
+        Spacer(modifier = Modifier.height(6.dp))
+        Card(colors = CardDefaults.cardColors(containerColor = Color(0xFF161B22)), border = BorderStroke(1.dp, Color(0xFF30363D))) {
+            Column(modifier = Modifier.padding(10.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                Text("• Cables de Alta Seguridad (AS): Libres de halógenos Cca-s1b,d1,a1 obligatorios.", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = Color(0xFFE74C3C))
+                Text("• Alumbrado de emergencia: 1 lux en suelo de evacuación / 5 lux en cuadros y botiquín.", fontSize = 11.sp, color = Color.White)
+                Text("• Autonomía mínima de luces de emergencia: 1 hora.", fontSize = 11.sp, color = Color(0xFF58A6FF))
+                Text("• Suministro de socorro: Mínimo 15% de la potencia total contratada.", fontSize = 11.sp, color = Color(0xFFF39C12))
+            }
+        }
+    }
+}
+
+// 29. ITC-29: ATEX Hazardous Areas
+@Composable
+fun Itc29AtexZonas() {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Text("Atmósferas Explosivas ATEX (ITC-29)", fontWeight = FontWeight.Bold, fontSize = 13.sp, color = Color.White)
+        Spacer(modifier = Modifier.height(6.dp))
+        Card(colors = CardDefaults.cardColors(containerColor = Color(0xFF161B22)), border = BorderStroke(1.dp, Color(0xFF30363D))) {
+            Column(modifier = Modifier.padding(10.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                Text("• Gases/Vapores: Zona 0 (continua) | Zona 1 (probable) | Zona 2 (improbable).", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = Color(0xFFF39C12))
+                Text("• Polvos Combustibles: Zona 20 | Zona 21 | Zona 22.", fontSize = 11.sp, color = Color.White)
+                Text("• Instalación reservada exclusivamente a Instalador Especialista (IBTE).", fontSize = 11.sp, color = Color(0xFF2ECC71))
+                Text("• Sellado de cortafuegos obligatorio en pasos de canalizaciones.", fontSize = 11.sp, color = Color.LightGray)
+            }
+        }
+    }
+}
+
+// 30. ITC-30: Special Characteristic Rooms
+@Composable
+fun Itc30LocalesEspeciales() {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Text("Locales Especiales (ITC-30)", fontWeight = FontWeight.Bold, fontSize = 13.sp, color = Color.White)
+        Spacer(modifier = Modifier.height(6.dp))
+        Card(colors = CardDefaults.cardColors(containerColor = Color(0xFF161B22)), border = BorderStroke(1.dp, Color(0xFF30363D))) {
+            Column(modifier = Modifier.padding(10.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                Text("• Locales Húmedos: Grado IPX1 mínimo.", fontSize = 11.sp, color = Color.White)
+                Text("• Locales Mojados: Grado IPX4 mínimo y tensión límite 24 V.", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = Color(0xFF58A6FF))
+                Text("• Locales Polvorientos: Grado IP5X (o IP6X si el polvo es conductor).", fontSize = 11.sp, color = Color(0xFFF39C12))
+                Text("• Altas temperaturas (> 40°C): Cables de silicona o termoestables.", fontSize = 11.sp, color = Color.LightGray)
+            }
+        }
+    }
+}
+
+// 31. ITC-31: Swimming Pools
+@Composable
+fun Itc31PiscinasVolumenes() {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Text("Piscinas y Fuentes (ITC-31)", fontWeight = FontWeight.Bold, fontSize = 13.sp, color = Color.White)
+        Spacer(modifier = Modifier.height(6.dp))
+        Card(colors = CardDefaults.cardColors(containerColor = Color(0xFF161B22)), border = BorderStroke(1.dp, Color(0xFF30363D))) {
+            Column(modifier = Modifier.padding(10.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                Text("• Volumen 0 (Interior del vaso): Grado IPX8 y alimentación exclusiva MBTS ≤ 12 V CA.", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = Color(0xFFE74C3C))
+                Text("• Volumen 1 (Franja de 2 m y hasta 2,5 m altura): Grado IPX5 sin tomas de enchufe.", fontSize = 11.sp, color = Color(0xFFF39C12))
+                Text("• Volumen 2 (Franja de 1,5 m adicional): Tomas con diferencial 30 mA o MBTS.", fontSize = 11.sp, color = Color(0xFF2ECC71))
+                Text("• Unión equipotencial de escaleras, barandillas y armaduras metálicas.", fontSize = 10.sp, color = Color.LightGray)
+            }
+        }
+    }
+}
+
+// 32. ITC-33: Works & Temporary
+@Composable
+fun Itc33ObrasSeguridad() {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Text("Instalaciones de Obra y Provisionales (ITC-33)", fontWeight = FontWeight.Bold, fontSize = 13.sp, color = Color.White)
+        Spacer(modifier = Modifier.height(6.dp))
+        Card(colors = CardDefaults.cardColors(containerColor = Color(0xFF161B22)), border = BorderStroke(1.dp, Color(0xFF30363D))) {
+            Column(modifier = Modifier.padding(10.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                Text("• Cuadros de obra estancos: Grado IP44 e impacto IK08.", fontSize = 11.sp, color = Color.White)
+                Text("• Mangueras pesadas de goma resistentes al agua tipo H07RN-F.", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = Color(0xFF58A6FF))
+                Text("• Diferenciales individuales de ≤ 30 mA en todas las bases de enchufe.", fontSize = 11.sp, color = Color(0xFF2ECC71))
+                Text("• Requiere proyecto técnico si la potencia instalada supera los 50 kW.", fontSize = 11.sp, color = Color(0xFFF39C12))
+            }
+        }
+    }
+}
+
+// 33. ITC-36: MBTS / MBTP
+@Composable
+fun Itc36MbtsInfographic() {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Text("Muy Baja Tensión MBTS y MBTP (ITC-36)", fontWeight = FontWeight.Bold, fontSize = 13.sp, color = Color.White)
+        Spacer(modifier = Modifier.height(6.dp))
+        Card(colors = CardDefaults.cardColors(containerColor = Color(0xFF161B22)), border = BorderStroke(1.dp, Color(0xFF30363D))) {
+            Column(modifier = Modifier.padding(10.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                Text("• MBTS: Aislada de tierra mediante transformador de seguridad (EN 61558-2-6).", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = Color(0xFF2ECC71))
+                Text("• MBTP: Con puesta a tierra de protección.", fontSize = 11.sp, color = Color.LightGray)
+                Text("• Límites: CA ≤ 50 V eficaces | CC ≤ 75 V sin ondulación.", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = Color(0xFF58A6FF))
+            }
+        }
+    }
+}
+
+// 34. ITC-38: Operating Theatres
+@Composable
+fun Itc38QuirofanosItMedico() {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Text("Quirófanos y Esquema IT Médico (ITC-38)", fontWeight = FontWeight.Bold, fontSize = 13.sp, color = Color.White)
+        Spacer(modifier = Modifier.height(6.dp))
+        Card(colors = CardDefaults.cardColors(containerColor = Color(0xFF161B22)), border = BorderStroke(1.dp, Color(0xFF30363D))) {
+            Column(modifier = Modifier.padding(10.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                Text("• Esquema IT Médico: Transformador de aislamiento 0,5 a 10 kVA con VMA.", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = Color(0xFF58A6FF))
+                Text("• Suelo antielectrostático disipativo: Resistencia entre 50 kΩ y 1 MΩ.", fontSize = 11.sp, color = Color.White)
+                Text("• Suministro especial complementario: Entrada en < 0,5 segundos (autonomía 2h).", fontSize = 11.sp, color = Color(0xFF2ECC71))
+                Text("• Embarrado de equipotencialidad (EE) exclusivo en cada quirófano.", fontSize = 10.sp, color = Color.LightGray)
+            }
+        }
+    }
+}
+
+// 35. ITC-40: Generators & PV
+@Composable
+fun Itc40AutoconsumoGeneradores() {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Text("Instalaciones Generadoras y Autoconsumo (ITC-40)", fontWeight = FontWeight.Bold, fontSize = 13.sp, color = Color.White)
+        Spacer(modifier = Modifier.height(6.dp))
+        Card(colors = CardDefaults.cardColors(containerColor = Color(0xFF161B22)), border = BorderStroke(1.dp, Color(0xFF30363D))) {
+            Column(modifier = Modifier.padding(10.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                Text("• Enclavamiento mecánico y eléctrico para evitar retorno a red pública.", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = Color(0xFFE74C3C))
+                Text("• Relé de protección de desacoplamiento automático por tensión y frecuencia.", fontSize = 11.sp, color = Color(0xFF58A6FF))
+                Text("• Conductor neutro dimensionado al 100% por presencia de armónicos.", fontSize = 11.sp, color = Color.LightGray)
+            }
+        }
+    }
+}
+
+// 36. ITC-41 / 42: Campings & Marinas
+@Composable
+fun Itc41CampingsMarinas() {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Text("Caravanas, Campings y Puertos (ITC-41/42)", fontWeight = FontWeight.Bold, fontSize = 13.sp, color = Color.White)
+        Spacer(modifier = Modifier.height(6.dp))
+        Card(colors = CardDefaults.cardColors(containerColor = Color(0xFF161B22)), border = BorderStroke(1.dp, Color(0xFF30363D))) {
+            Column(modifier = Modifier.padding(10.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                Text("• 1 interruptor diferencial de 30 mA y 1 PIA individual por cada toma.", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = Color(0xFF2ECC71))
+                Text("• Bases industriales tipo CETAC azules IP44 (campings) / IP56 (marinas).", fontSize = 11.sp, color = Color(0xFF58A6FF))
+                Text("• Altura de tomas: Entre 0,50 m y 1,50 m sobre rasante.", fontSize = 10.sp, color = Color.LightGray)
+            }
+        }
+    }
+}
+
+// 37. ITC-46 / 48: Motors & Capacitors
+@Composable
+fun Itc46MotoresCondensadores() {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Text("Receptores: Motores y Baterías de Condensadores (ITC-46/48)", fontWeight = FontWeight.Bold, fontSize = 13.sp, color = Color.White)
+        Spacer(modifier = Modifier.height(6.dp))
+        Card(colors = CardDefaults.cardColors(containerColor = Color(0xFF161B22)), border = BorderStroke(1.dp, Color(0xFF30363D))) {
+            Column(modifier = Modifier.padding(10.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                Text("• Cable para motor único: Dimensionar al 125% de In (In · 1,25).", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = Color(0xFF58A6FF))
+                Text("• Cable para batería de condensadores: Dimensionar al 150% de In (In · 1,50).", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = Color(0xFFF39C12))
+                Text("• Resistencia de descarga rápida en condensadores: Reducir a < 50V en < 1 min.", fontSize = 11.sp, color = Color.LightGray)
+            }
+        }
+    }
+}
+
+// 38. ITC-51: Home Automation KNX
+@Composable
+fun Itc51DomoticaInfographic() {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Text("Domótica y Gestión de Energía (ITC-51)", fontWeight = FontWeight.Bold, fontSize = 13.sp, color = Color.White)
+        Spacer(modifier = Modifier.height(6.dp))
+        Card(colors = CardDefaults.cardColors(containerColor = Color(0xFF161B22)), border = BorderStroke(1.dp, Color(0xFF30363D))) {
+            Column(modifier = Modifier.padding(10.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                Text("• Separación física entre bus de datos y cables de fuerza de 230V/400V.", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = Color(0xFF58A6FF))
+                Text("• En caso de fallo de alimentación auxiliar, los actuadores adoptan posición segura (fail-safe).", fontSize = 11.sp, color = Color.White)
+            }
+        }
+    }
+}
+
+// 39. ITC-52: Electric Vehicle Charging
+@Composable
+fun Itc52CargaVeInfographic() {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Text("Recarga de Vehículos Eléctricos IRVE (ITC-52)", fontWeight = FontWeight.Bold, fontSize = 13.sp, color = Color.White)
+        Spacer(modifier = Modifier.height(6.dp))
+        Card(colors = CardDefaults.cardColors(containerColor = Color(0xFF161B22)), border = BorderStroke(1.dp, Color(0xFF30363D))) {
+            Column(modifier = Modifier.padding(10.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                Text("• Diferencial obligatorio: Tipo A 30 mA con detección continua 6 mA (RDC-DD) o Tipo B.", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = Color(0xFFE74C3C))
+                Text("• Caída de tensión máxima admisible: 5,0% en régimen continuo.", fontSize = 11.sp, color = Color(0xFF58A6FF))
+                Text("• Exclusivo para Instalador Autorizado Especialista (IBTE).", fontSize = 11.sp, color = Color(0xFF2ECC71))
+                Text("• Esquemas 1 a 4 según sea contador principal o secundario en garaje.", fontSize = 10.sp, color = Color.LightGray)
+            }
+        }
+    }
+}
+
+// 40. Generic Technical Infographic Fallback for any other ITC
+@Composable
+fun GenericItcTechnicalInfographic(itcId: String) {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Text("Esquema y Parámetros Técnicos REBT: $itcId", fontWeight = FontWeight.Bold, fontSize = 13.sp, color = Color.White)
+        Spacer(modifier = Modifier.height(6.dp))
+        Card(colors = CardDefaults.cardColors(containerColor = Color(0xFF161B22)), border = BorderStroke(1.dp, Color(0xFF30363D))) {
+            Column(modifier = Modifier.padding(10.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                Text("• Prescripciones de montaje, verificación y cálculo conforme al Real Decreto 842/2002.", fontSize = 11.sp, color = Color.White)
+                Text("• Conductor de protección (PE) y aislamiento reglamentario.", fontSize = 11.sp, color = Color(0xFF58A6FF))
+                Text("• Protección coordinada contra sobreintensidades y contactos indirectos.", fontSize = 11.sp, color = Color(0xFF2ECC71))
+            }
+        }
+    }
+}
+
