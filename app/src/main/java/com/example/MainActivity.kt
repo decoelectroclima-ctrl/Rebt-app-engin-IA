@@ -1,6 +1,8 @@
 package com.example
 
+import android.app.Activity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
@@ -29,6 +31,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -110,13 +113,82 @@ fun MainAppLayout(viewModel: MainViewModel) {
     val remindersList by viewModel.remindersFlow.collectAsState()
     val pendingReminders = remindersList.count { it.status == "Pendiente" || (it.status != "Completado" && it.dueDate < System.currentTimeMillis()) }
 
-    // Handle back button: if inside active exam, prompt before exiting; otherwise return to dashboard
+    var lastBackPressTime by remember { mutableLongStateOf(0L) }
+    var showExitConfirmationDialog by remember { mutableStateOf(false) }
+
+    // Handle back button:
+    // 1. If inside active exam, prompt before exiting exam
+    // 2. If inside sub-screens, return to dashboard
+    // 3. If on dashboard: double tap within 2s to exit directly, or show confirmation dialog
     BackHandler {
         if (viewModel.activeExamModule != null) {
             viewModel.exitActiveExam()
         } else if (viewModel.activeTab != "dashboard") {
             viewModel.activeTab = "dashboard"
+        } else {
+            val currentTime = System.currentTimeMillis()
+            if (currentTime - lastBackPressTime < 2000L) {
+                (context as? Activity)?.finish()
+            } else {
+                lastBackPressTime = currentTime
+                Toast.makeText(context, "Presiona de nuevo para salir", Toast.LENGTH_SHORT).show()
+                showExitConfirmationDialog = true
+            }
         }
+    }
+
+    // Exit application confirmation dialog
+    if (showExitConfirmationDialog) {
+        AlertDialog(
+            onDismissRequest = { showExitConfirmationDialog = false },
+            icon = {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ExitToApp,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(28.dp)
+                )
+            },
+            title = {
+                Text(
+                    text = "¿Seguro que quieres salir?",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center
+                )
+            },
+            text = {
+                Text(
+                    text = "¿Estás seguro de que deseas salir de EnginIA REBT? Tu progreso y estadísticas se guardan automáticamente.",
+                    fontSize = 13.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = TextAlign.Center
+                )
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        showExitConfirmationDialog = false
+                        (context as? Activity)?.finish()
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.error,
+                        contentColor = MaterialTheme.colorScheme.onError
+                    ),
+                    modifier = Modifier.testTag("confirm_exit_app_button")
+                ) {
+                    Text("Salir")
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = { showExitConfirmationDialog = false },
+                    modifier = Modifier.testTag("cancel_exit_app_button")
+                ) {
+                    Text("Cancelar")
+                }
+            }
+        )
     }
 
     // User authentication simulation dialog

@@ -31,6 +31,26 @@ fun SettingsScreen(viewModel: MainViewModel) {
     val currentPlan = subscription?.plan ?: "gratuito"
 
     var showClearHistoryDialog by remember { mutableStateOf(false) }
+    val dailyActivity by viewModel.dailyActivityFlow.collectAsState()
+    val reminderEnabled = dailyActivity?.dailyStudyReminderEnabled ?: true
+    val reminderHour = dailyActivity?.dailyStudyReminderHour ?: 20
+    val reminderMinute = dailyActivity?.dailyStudyReminderMinute ?: 0
+    val formattedTime = String.format("%02d:%02d", reminderHour, reminderMinute)
+
+    var showTimePickerDialog by remember { mutableStateOf(false) }
+    if (showTimePickerDialog) {
+        android.app.TimePickerDialog(
+            context,
+            { _, hourOfDay, minute ->
+                viewModel.updateDailyStudyReminderSettings(reminderEnabled, hourOfDay, minute)
+                showTimePickerDialog = false
+            },
+            reminderHour,
+            reminderMinute,
+            true
+        ).show()
+        showTimePickerDialog = false
+    }
 
     if (showClearHistoryDialog) {
         AlertDialog(
@@ -214,6 +234,117 @@ fun SettingsScreen(viewModel: MainViewModel) {
                             tint = Color.Gray,
                             modifier = Modifier.size(18.dp)
                         )
+                    }
+                }
+            }
+        }
+
+        // 3.5. Daily Study Reminder Card
+        item {
+            Card(
+                shape = RoundedCornerShape(16.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = if (viewModel.isDarkTheme) Color(0xFF161B22) else Color.White
+                ),
+                border = BorderStroke(1.dp, if (viewModel.isDarkTheme) Color(0xFF30363D) else Color(0xFFE1E4E8))
+            ) {
+                Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Box(
+                                modifier = Modifier
+                                    .size(36.dp)
+                                    .clip(CircleShape)
+                                    .background(Color(0xFF58A6FF).copy(alpha = 0.15f)),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.MenuBook,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.primary,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                            }
+                            Spacer(modifier = Modifier.width(10.dp))
+                            Column {
+                                Text(
+                                    text = "Recordatorio Diario de Estudio",
+                                    fontSize = 15.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
+                                Text(
+                                    text = "Aviso si no has estudiado ninguna ITC hoy",
+                                    fontSize = 11.sp,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                        }
+
+                        Switch(
+                            checked = reminderEnabled,
+                            onCheckedChange = { isChecked ->
+                                FeedbackManager.playClick(context)
+                                viewModel.updateDailyStudyReminderSettings(
+                                    enabled = isChecked,
+                                    hour = reminderHour,
+                                    minute = reminderMinute
+                                )
+                            },
+                            modifier = Modifier.testTag("settings_daily_study_switch")
+                        )
+                    }
+
+                    if (reminderEnabled) {
+                        HorizontalDivider(color = if (viewModel.isDarkTheme) Color(0xFF30363D) else Color(0xFFE1E4E8))
+
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Column {
+                                Text(
+                                    text = "Hora de la Notificación",
+                                    fontSize = 13.sp,
+                                    fontWeight = FontWeight.Medium
+                                )
+                                Text(
+                                    text = "Se enviará a las $formattedTime si aún no has entrado a estudiar",
+                                    fontSize = 11.sp,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+
+                            FilledTonalButton(
+                                onClick = {
+                                    FeedbackManager.playClick(context)
+                                    showTimePickerDialog = true
+                                },
+                                shape = RoundedCornerShape(10.dp)
+                            ) {
+                                Icon(Icons.Default.AccessTime, contentDescription = null, modifier = Modifier.size(16.dp))
+                                Spacer(modifier = Modifier.width(6.dp))
+                                Text(formattedTime, fontWeight = FontWeight.Bold, fontSize = 13.sp)
+                            }
+                        }
+
+                        OutlinedButton(
+                            onClick = {
+                                FeedbackManager.playClick(context)
+                                viewModel.sendTestDailyStudyNotification()
+                            },
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(10.dp)
+                        ) {
+                            Icon(Icons.Default.NotificationsActive, contentDescription = null, modifier = Modifier.size(16.dp))
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text("Probar Notificación de Estudio Diario", fontSize = 12.sp)
+                        }
                     }
                 }
             }

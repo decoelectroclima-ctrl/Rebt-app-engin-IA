@@ -44,6 +44,15 @@ import java.util.Calendar
 fun RemindersScreen(viewModel: MainViewModel) {
     val context = LocalContext.current
     val allReminders by viewModel.remindersFlow.collectAsState()
+    val dailyActivity by viewModel.dailyActivityFlow.collectAsState()
+
+    val todayDate = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault()).format(java.util.Date())
+    val isToday = dailyActivity?.lastActiveDate == todayDate
+    val hasStudiedToday = isToday && ((dailyActivity?.studiedItcsToday?.isNotBlank() == true) || (dailyActivity?.questionsAnswered ?: 0) > 0)
+    val studyReminderEnabled = dailyActivity?.dailyStudyReminderEnabled ?: true
+    val studyReminderHour = dailyActivity?.dailyStudyReminderHour ?: 20
+    val studyReminderMinute = dailyActivity?.dailyStudyReminderMinute ?: 0
+    val formattedStudyTime = String.format("%02d:%02d", studyReminderHour, studyReminderMinute)
 
     // Notification permission launcher for Android 13+
     var hasNotificationPermission by remember {
@@ -244,6 +253,92 @@ fun RemindersScreen(viewModel: MainViewModel) {
                         color = Color(0xFF3FB950),
                         isDark = viewModel.isDarkTheme
                     )
+                }
+            }
+
+            // Automated Daily Study Reminder Banner
+            item {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .testTag("reminder_daily_study_banner"),
+                    shape = RoundedCornerShape(14.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = if (viewModel.isDarkTheme) Color(0xFF161B22) else Color(0xFFF0F6FC)
+                    ),
+                    border = BorderStroke(1.dp, if (viewModel.isDarkTheme) Color(0xFF30363D) else Color(0xFFD0D7DE))
+                ) {
+                    Row(
+                        modifier = Modifier.padding(14.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(40.dp)
+                                .clip(CircleShape)
+                                .background(
+                                    if (hasStudiedToday) Color(0xFF3FB950).copy(alpha = 0.2f) else Color(0xFF58A6FF).copy(alpha = 0.2f)
+                                ),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = if (hasStudiedToday) Icons.Default.CheckCircle else Icons.Default.MenuBook,
+                                contentDescription = null,
+                                tint = if (hasStudiedToday) Color(0xFF3FB950) else Color(0xFF58A6FF),
+                                modifier = Modifier.size(22.dp)
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.width(12.dp))
+
+                        Column(modifier = Modifier.weight(1f)) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Text(
+                                    text = "Recordatorio Diario de Estudio",
+                                    fontSize = 13.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
+                                Spacer(modifier = Modifier.width(6.dp))
+                                Surface(
+                                    shape = RoundedCornerShape(4.dp),
+                                    color = if (studyReminderEnabled) Color(0xFF3FB950).copy(alpha = 0.2f) else Color.Gray.copy(alpha = 0.2f)
+                                ) {
+                                    Text(
+                                        text = if (studyReminderEnabled) "Activo ($formattedStudyTime)" else "Desactivado",
+                                        fontSize = 10.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = if (studyReminderEnabled) (if (viewModel.isDarkTheme) Color(0xFF7EE787) else Color(0xFF1A7F37)) else Color.Gray,
+                                        modifier = Modifier.padding(horizontal = 4.dp, vertical = 1.dp)
+                                    )
+                                }
+                            }
+                            Spacer(modifier = Modifier.height(2.dp))
+                            Text(
+                                text = if (hasStudiedToday) {
+                                    "✓ Meta diaria de hoy cumplida. ¡Excelente trabajo!"
+                                } else {
+                                    "Avisa a las $formattedStudyTime si no has repasado ninguna ITC hoy."
+                                },
+                                fontSize = 11.sp,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+
+                        IconButton(
+                            onClick = {
+                                FeedbackManager.playClick(context)
+                                viewModel.sendTestDailyStudyNotification()
+                            }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.NotificationsActive,
+                                contentDescription = "Probar Recordatorio Diario",
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(20.dp)
+                            )
+                        }
+                    }
                 }
             }
 

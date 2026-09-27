@@ -19,7 +19,7 @@ import androidx.room.RoomDatabase
         QuestionReviewEntity::class,
         ReminderEntity::class
     ],
-    version = 5,
+    version = 6,
     exportSchema = false
 )
 abstract class EnigmaDatabase : RoomDatabase() {

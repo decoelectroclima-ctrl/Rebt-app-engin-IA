@@ -10,12 +10,12 @@ android {
   namespace = "com.example"
   compileSdk { version = release(36) { minorApiLevel = 1 } }
 
-  defaultConfig {
+    defaultConfig {
     applicationId = "com.aistudio.enginia.pwtvzc"
     minSdk = 24
     targetSdk = 36
-    versionCode = 12
-    versionName = "12.0"
+    versionCode = 14
+    versionName = "14.0"
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   }

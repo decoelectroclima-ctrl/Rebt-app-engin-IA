@@ -30,7 +30,12 @@ data class DailyActivityEntity(
     val schemasExplored: Int = 0,
     val streakDays: Int = 0,
     val lastActiveDate: String? = null, // YYYY-MM-DD
-    val unlockedAchievements: String = "" // JSON or comma-separated list
+    val unlockedAchievements: String = "", // JSON or comma-separated list
+    val studiedItcsToday: String = "", // Comma-separated ITC codes e.g. "ITC-BT-05, ITC-BT-18"
+    val lastStudyTimestamp: Long = 0L,
+    val dailyStudyReminderEnabled: Boolean = true,
+    val dailyStudyReminderHour: Int = 20, // 20:00 (8:00 PM) default
+    val dailyStudyReminderMinute: Int = 0
 )
 
 @Entity(tableName = "subscription_record")

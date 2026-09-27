@@ -99,6 +99,68 @@ class EnigmaRepository(private val context: Context) {
         dao.insertDailyActivity(activity.copy(schemasExplored = activity.schemasExplored + 1))
     }
 
+    suspend fun recordItcStudy(itcCode: String) {
+        val today = getTodayDateString()
+        val activity = dao.getDailyActivityDirect() ?: DailyActivityEntity(
+            streakDays = 1,
+            lastActiveDate = today,
+            studiedItcsToday = itcCode,
+            lastStudyTimestamp = System.currentTimeMillis()
+        )
+
+        var currentStreak = activity.streakDays
+        val updatedStudiedItcs = if (activity.lastActiveDate == today) {
+            val existing = activity.studiedItcsToday.split(",").map { it.trim() }.filter { it.isNotEmpty() }.toMutableSet()
+            existing.add(itcCode)
+            existing.joinToString(", ")
+        } else {
+            currentStreak = if (activity.lastActiveDate == getYesterdayDateString()) currentStreak + 1 else 1
+            itcCode
+        }
+
+        val updatedActivity = activity.copy(
+            lastActiveDate = today,
+            streakDays = currentStreak,
+            studiedItcsToday = updatedStudiedItcs,
+            lastStudyTimestamp = System.currentTimeMillis()
+        )
+        dao.insertDailyActivity(updatedActivity)
+    }
+
+    suspend fun updateDailyStudyReminderSettings(enabled: Boolean, hour: Int, minute: Int) {
+        val activity = dao.getDailyActivityDirect() ?: DailyActivityEntity(
+            streakDays = 0,
+            lastActiveDate = getTodayDateString()
+        )
+        val updated = activity.copy(
+            dailyStudyReminderEnabled = enabled,
+            dailyStudyReminderHour = hour,
+            dailyStudyReminderMinute = minute
+        )
+        dao.insertDailyActivity(updated)
+        DailyStudyNotificationManager.scheduleDailyStudyAlarm(
+            context = context,
+            hour = hour,
+            minute = minute,
+            enabled = enabled
+        )
+    }
+
+    suspend fun initDailyStudyReminder() {
+        DailyStudyNotificationManager.ensureDailyStudyChannel(context)
+        val activity = dao.getDailyActivityDirect()
+        val enabled = activity?.dailyStudyReminderEnabled ?: true
+        val hour = activity?.dailyStudyReminderHour ?: 20
+        val minute = activity?.dailyStudyReminderMinute ?: 0
+
+        DailyStudyNotificationManager.scheduleDailyStudyAlarm(
+            context = context,
+            hour = hour,
+            minute = minute,
+            enabled = enabled
+        )
+    }
+
     private suspend fun incrementQuestionsCount(count: Int) {
         val activity = dao.getDailyActivityDirect() ?: DailyActivityEntity(
             streakDays = 1,
@@ -114,7 +176,8 @@ class EnigmaRepository(private val context: Context) {
             activity.copy(
                 questionsAnswered = activity.questionsAnswered + count,
                 streakDays = currentStreak,
-                lastActiveDate = today
+                lastActiveDate = today,
+                lastStudyTimestamp = System.currentTimeMillis()
             )
         )
     }

@@ -36,6 +36,16 @@
         <receiver
             android:name=".data.ReminderNotificationReceiver"
             android:exported="false" />
+
+        <receiver
+            android:name=".data.DailyStudyReminderReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+                <action android:name="com.example.ACTION_TRIGGER_DAILY_STUDY_REMINDER" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

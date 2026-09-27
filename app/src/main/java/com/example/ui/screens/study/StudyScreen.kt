@@ -36,7 +36,19 @@ fun StudyScreen(viewModel: MainViewModel) {
     var selectedCategory by remember { mutableStateOf("Todos") }
     var searchQuery by remember { mutableStateOf("") }
     var expandedVisualId by remember { mutableStateOf<String?>(null) }
+    val dailyActivity by viewModel.dailyActivityFlow.collectAsState()
 
+    val todayDate = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault()).format(java.util.Date())
+    val isToday = dailyActivity?.lastActiveDate == todayDate
+    val studiedItcsList = if (isToday) {
+        dailyActivity?.studiedItcsToday?.split(",")?.map { it.trim() }?.filter { it.isNotEmpty() } ?: emptyList()
+    } else {
+        emptyList()
+    }
+    val hasStudiedToday = isToday && (studiedItcsList.isNotEmpty() || (dailyActivity?.questionsAnswered ?: 0) > 0)
+    val reminderHour = dailyActivity?.dailyStudyReminderHour ?: 20
+    val reminderMinute = dailyActivity?.dailyStudyReminderMinute ?: 0
+    val formattedReminderTime = String.format("%02d:%02d", reminderHour, reminderMinute)
 
     val categories = listOf("Todos", "Articulado", "Administrativas", "Enlace", "Interiores")
 
@@ -71,6 +83,118 @@ fun StudyScreen(viewModel: MainViewModel) {
                     fontSize = 13.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
+            }
+        }
+
+        // Daily Study Goal & Reminder Card
+        item {
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag("study_daily_goal_card"),
+                shape = RoundedCornerShape(16.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = if (hasStudiedToday) {
+                        if (viewModel.isDarkTheme) Color(0xFF13231B) else Color(0xFFE6F4EA)
+                    } else {
+                        if (viewModel.isDarkTheme) Color(0xFF261D13) else Color(0xFFFEF3E2)
+                    }
+                ),
+                border = BorderStroke(
+                    1.dp,
+                    if (hasStudiedToday) Color(0xFF3FB950).copy(alpha = 0.5f) else Color(0xFFF59E0B).copy(alpha = 0.5f)
+                )
+            ) {
+                Column(modifier = Modifier.padding(14.dp)) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Box(
+                                modifier = Modifier
+                                    .size(36.dp)
+                                    .clip(CircleShape)
+                                    .background(
+                                        if (hasStudiedToday) Color(0xFF3FB950).copy(alpha = 0.2f) else Color(0xFFF59E0B).copy(alpha = 0.2f)
+                                    ),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    imageVector = if (hasStudiedToday) Icons.Default.CheckCircle else Icons.Default.Alarm,
+                                    contentDescription = null,
+                                    tint = if (hasStudiedToday) Color(0xFF3FB950) else Color(0xFFD97706),
+                                    modifier = Modifier.size(20.dp)
+                                )
+                            }
+                            Spacer(modifier = Modifier.width(10.dp))
+                            Column {
+                                Text(
+                                    text = if (hasStudiedToday) "¡Meta de Estudio Cumplida Hoy! 🎉" else "Meta de Estudio Diaria Pendiente",
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 14.sp,
+                                    color = if (hasStudiedToday) {
+                                        if (viewModel.isDarkTheme) Color(0xFF7EE787) else Color(0xFF1A7F37)
+                                    } else {
+                                        if (viewModel.isDarkTheme) Color(0xFFFBBF24) else Color(0xFFB45309)
+                                    }
+                                )
+                                Text(
+                                    text = if (hasStudiedToday) {
+                                        "Has repasado ${studiedItcsList.size} ${if (studiedItcsList.size == 1) "ITC" else "ITCs"} hoy."
+                                    } else {
+                                        "Aviso automático programado a las $formattedReminderTime si no estudias."
+                                    },
+                                    fontSize = 12.sp,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                        }
+
+                        IconButton(
+                            onClick = {
+                                FeedbackManager.playClick(context)
+                                viewModel.sendTestDailyStudyNotification()
+                            }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.NotificationsActive,
+                                contentDescription = "Probar Recordatorio Diario",
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(20.dp)
+                            )
+                        }
+                    }
+
+                    if (studiedItcsList.isNotEmpty()) {
+                        Spacer(modifier = Modifier.height(10.dp))
+                        Text(
+                            text = "ITCs estudiadas hoy:",
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        LazyRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                            items(studiedItcsList) { itc ->
+                                Surface(
+                                    shape = RoundedCornerShape(6.dp),
+                                    color = Color(0xFF3FB950).copy(alpha = 0.2f),
+                                    border = BorderStroke(1.dp, Color(0xFF3FB950).copy(alpha = 0.4f))
+                                ) {
+                                    Text(
+                                        text = "✓ $itc",
+                                        fontSize = 11.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = if (viewModel.isDarkTheme) Color(0xFF7EE787) else Color(0xFF1A7F37),
+                                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -118,16 +242,20 @@ fun StudyScreen(viewModel: MainViewModel) {
 
         // Syllabus Cards
         items(filteredItems, key = { it.id }) { item ->
+            val isItemStudiedToday = studiedItcsList.contains(item.code)
             StudyItemCard(
                 item = item,
                 isDark = viewModel.isDarkTheme,
                 isVisualExpanded = expandedVisualId == item.id,
+                isStudiedToday = isItemStudiedToday,
                 onToggleVisual = {
                     FeedbackManager.playClick(context)
+                    viewModel.recordItcStudy(item.code)
                     expandedVisualId = if (expandedVisualId == item.id) null else item.id
                 },
                 onStartPractice = {
                     FeedbackManager.playClick(context)
+                    viewModel.recordItcStudy(item.code)
                     // Map syllabus id to a question pool
                     val mappedKey = when {
                         item.id.startsWith("art") -> "articulado"
@@ -138,6 +266,10 @@ fun StudyScreen(viewModel: MainViewModel) {
                         else -> "especiales"
                     }
                     viewModel.startTopicPractice(mappedKey)
+                },
+                onMarkStudied = {
+                    FeedbackManager.playClick(context)
+                    viewModel.recordItcStudy(item.code)
                 },
                 onAddReminder = {
                     FeedbackManager.playClick(context)
@@ -154,8 +286,10 @@ fun StudyItemCard(
     item: UnderliningItcItem,
     isDark: Boolean,
     isVisualExpanded: Boolean,
+    isStudiedToday: Boolean = false,
     onToggleVisual: () -> Unit,
     onStartPractice: () -> Unit,
+    onMarkStudied: () -> Unit,
     onAddReminder: () -> Unit
 ) {
     Card(
@@ -166,7 +300,10 @@ fun StudyItemCard(
         colors = CardDefaults.cardColors(
             containerColor = if (isDark) Color(0xFF161B22) else Color.White
         ),
-        border = BorderStroke(1.dp, if (isDark) Color(0xFF30363D) else Color(0xFFE1E4E8))
+        border = BorderStroke(
+            1.dp,
+            if (isStudiedToday) Color(0xFF3FB950).copy(alpha = 0.6f) else if (isDark) Color(0xFF30363D) else Color(0xFFE1E4E8)
+        )
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             // Header Row
@@ -178,13 +315,17 @@ fun StudyItemCard(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Surface(
                         shape = RoundedCornerShape(8.dp),
-                        color = Color(0xFF58A6FF).copy(alpha = 0.15f)
+                        color = if (isStudiedToday) Color(0xFF3FB950).copy(alpha = 0.2f) else Color(0xFF58A6FF).copy(alpha = 0.15f)
                     ) {
                         Text(
-                            text = item.code,
+                            text = if (isStudiedToday) "✓ ${item.code}" else item.code,
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Bold,
-                            color = if (isDark) Color(0xFF58A6FF) else Color(0xFF0969DA),
+                            color = if (isStudiedToday) {
+                                if (isDark) Color(0xFF7EE787) else Color(0xFF1A7F37)
+                            } else {
+                                if (isDark) Color(0xFF58A6FF) else Color(0xFF0969DA)
+                            },
                             modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                         )
                     }
@@ -196,25 +337,42 @@ fun StudyItemCard(
                     )
                 }
 
-                Surface(
-                    shape = RoundedCornerShape(8.dp),
-                    color = when (item.freq) {
-                        "Crítica" -> Color(0xFFF85149).copy(alpha = 0.15f)
-                        "Alta" -> Color(0xFFE67E22).copy(alpha = 0.15f)
-                        else -> Color(0xFF3FB950).copy(alpha = 0.15f)
+                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                    if (isStudiedToday) {
+                        Surface(
+                            shape = RoundedCornerShape(8.dp),
+                            color = Color(0xFF3FB950).copy(alpha = 0.15f)
+                        ) {
+                            Text(
+                                text = "Estudiada hoy",
+                                fontSize = 10.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = if (isDark) Color(0xFF7EE787) else Color(0xFF1A7F37),
+                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                            )
+                        }
                     }
-                ) {
-                    Text(
-                        text = "Frecuencia: ${item.freq}",
-                        fontSize = 10.sp,
-                        fontWeight = FontWeight.Bold,
+
+                    Surface(
+                        shape = RoundedCornerShape(8.dp),
                         color = when (item.freq) {
-                            "Crítica" -> Color(0xFFF85149)
-                            "Alta" -> Color(0xFFE67E22)
-                            else -> Color(0xFF3FB950)
-                        },
-                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
-                    )
+                            "Crítica" -> Color(0xFFF85149).copy(alpha = 0.15f)
+                            "Alta" -> Color(0xFFE67E22).copy(alpha = 0.15f)
+                            else -> Color(0xFF3FB950).copy(alpha = 0.15f)
+                        }
+                    ) {
+                        Text(
+                            text = "Frecuencia: ${item.freq}",
+                            fontSize = 10.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = when (item.freq) {
+                                "Crítica" -> Color(0xFFF85149)
+                                "Alta" -> Color(0xFFE67E22)
+                                else -> Color(0xFF3FB950)
+                            },
+                            modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                        )
+                    }
                 }
             }
 
@@ -312,7 +470,8 @@ fun StudyItemCard(
             // Action Buttons
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Button(
                     onClick = onStartPractice,
@@ -340,6 +499,22 @@ fun StudyItemCard(
                     Text(if (isVisualExpanded) "Ocultar" else "Esquema", fontSize = 12.sp)
                 }
 
+                OutlinedButton(
+                    onClick = onMarkStudied,
+                    shape = RoundedCornerShape(10.dp),
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        contentColor = if (isStudiedToday) Color(0xFF3FB950) else MaterialTheme.colorScheme.primary
+                    )
+                ) {
+                    Icon(
+                        imageVector = if (isStudiedToday) Icons.Default.CheckCircle else Icons.Default.Check,
+                        contentDescription = null,
+                        modifier = Modifier.size(16.dp)
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(if (isStudiedToday) "Leída" else "Leída", fontSize = 12.sp)
+                }
+
                 IconButton(
                     onClick = onAddReminder,
                     modifier = Modifier.size(40.dp)
@@ -351,7 +526,6 @@ fun StudyItemCard(
                         modifier = Modifier.size(20.dp)
                     )
                 }
-
             }
         }
     }

@@ -137,8 +137,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     init {
         billingManager.queryActivePurchases()
         ReminderNotificationManager.ensureNotificationChannel(application)
+        DailyStudyNotificationManager.ensureDailyStudyChannel(application)
         viewModelScope.launch {
             repository.seedDefaultRemindersIfEmpty()
+            repository.initDailyStudyReminder()
         }
         runLaboratoryCalculation()
         runBuildingForecastingCalculation()
@@ -578,6 +580,22 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             description = description,
             article = article
         )
+    }
+
+    fun recordItcStudy(itcCode: String) {
+        viewModelScope.launch {
+            repository.recordItcStudy(itcCode)
+        }
+    }
+
+    fun updateDailyStudyReminderSettings(enabled: Boolean, hour: Int, minute: Int) {
+        viewModelScope.launch {
+            repository.updateDailyStudyReminderSettings(enabled, hour, minute)
+        }
+    }
+
+    fun sendTestDailyStudyNotification() {
+        DailyStudyNotificationManager.sendTestDailyStudyNotification(getApplication())
     }
 }
 

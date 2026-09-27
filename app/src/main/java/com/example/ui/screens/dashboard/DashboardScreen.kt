@@ -57,6 +57,12 @@ fun DashboardScreen(viewModel: MainViewModel) {
     }
 
     val streak = dailyActivity?.streakDays ?: 1
+    val todayDate = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault()).format(java.util.Date())
+    val isToday = dailyActivity?.lastActiveDate == todayDate
+    val hasStudiedToday = isToday && ((dailyActivity?.studiedItcsToday?.isNotBlank() == true) || (dailyActivity?.questionsAnswered ?: 0) > 0)
+    val studyReminderHour = dailyActivity?.dailyStudyReminderHour ?: 20
+    val studyReminderMinute = dailyActivity?.dailyStudyReminderMinute ?: 0
+    val formattedStudyTime = String.format("%02d:%02d", studyReminderHour, studyReminderMinute)
 
     LazyColumn(
         modifier = Modifier
@@ -115,30 +121,63 @@ fun DashboardScreen(viewModel: MainViewModel) {
                                 )
                             }
 
-                            // Streak Badge
-                            Surface(
-                                shape = RoundedCornerShape(12.dp),
-                                color = Color(0xFFF39C12).copy(alpha = 0.15f),
-                                border = BorderStroke(1.dp, Color(0xFFF39C12).copy(alpha = 0.4f)),
-                                modifier = Modifier.testTag("dashboard_streak_badge")
-                            ) {
-                                Row(
-                                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
-                                    verticalAlignment = Alignment.CenterVertically
+                            Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
+                                // Daily Goal Chip
+                                Surface(
+                                    shape = RoundedCornerShape(12.dp),
+                                    color = if (hasStudiedToday) Color(0xFF3FB950).copy(alpha = 0.15f) else Color(0xFF58A6FF).copy(alpha = 0.15f),
+                                    border = BorderStroke(1.dp, if (hasStudiedToday) Color(0xFF3FB950).copy(alpha = 0.4f) else Color(0xFF58A6FF).copy(alpha = 0.4f)),
+                                    modifier = Modifier.testTag("dashboard_daily_goal_badge")
                                 ) {
-                                    Icon(
-                                        imageVector = Icons.Default.LocalFireDepartment,
-                                        contentDescription = "Racha",
-                                        tint = Color(0xFFE67E22),
-                                        modifier = Modifier.size(18.dp)
-                                    )
-                                    Spacer(modifier = Modifier.width(4.dp))
-                                    Text(
-                                        text = "$streak días",
-                                        fontSize = 13.sp,
-                                        fontWeight = FontWeight.Bold,
-                                        color = Color(0xFFE67E22)
-                                    )
+                                    Row(
+                                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 6.dp),
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Icon(
+                                            imageVector = if (hasStudiedToday) Icons.Default.CheckCircle else Icons.Default.MenuBook,
+                                            contentDescription = null,
+                                            tint = if (hasStudiedToday) Color(0xFF3FB950) else Color(0xFF58A6FF),
+                                            modifier = Modifier.size(16.dp)
+                                        )
+                                        Spacer(modifier = Modifier.width(4.dp))
+                                        Text(
+                                            text = if (hasStudiedToday) "Meta Hoy ✓" else "Aviso $formattedStudyTime",
+                                            fontSize = 12.sp,
+                                            fontWeight = FontWeight.Bold,
+                                            color = if (hasStudiedToday) {
+                                                if (viewModel.isDarkTheme) Color(0xFF7EE787) else Color(0xFF1A7F37)
+                                            } else {
+                                                if (viewModel.isDarkTheme) Color(0xFF58A6FF) else Color(0xFF0969DA)
+                                            }
+                                        )
+                                    }
+                                }
+
+                                // Streak Badge
+                                Surface(
+                                    shape = RoundedCornerShape(12.dp),
+                                    color = Color(0xFFF39C12).copy(alpha = 0.15f),
+                                    border = BorderStroke(1.dp, Color(0xFFF39C12).copy(alpha = 0.4f)),
+                                    modifier = Modifier.testTag("dashboard_streak_badge")
+                                ) {
+                                    Row(
+                                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Default.LocalFireDepartment,
+                                            contentDescription = "Racha",
+                                            tint = Color(0xFFE67E22),
+                                            modifier = Modifier.size(18.dp)
+                                        )
+                                        Spacer(modifier = Modifier.width(4.dp))
+                                        Text(
+                                            text = "$streak d",
+                                            fontSize = 13.sp,
+                                            fontWeight = FontWeight.Bold,
+                                            color = Color(0xFFE67E22)
+                                        )
+                                    }
                                 }
                             }
                         }
