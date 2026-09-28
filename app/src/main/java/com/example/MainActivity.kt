@@ -47,6 +47,7 @@ import com.example.ui.screens.study.StudyScreen
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        com.example.data.QuestionValidator.validateOnDebugStartup()
         enableEdgeToEdge()
         val navigateTarget = intent?.getStringExtra("navigate_to")
         setContent {

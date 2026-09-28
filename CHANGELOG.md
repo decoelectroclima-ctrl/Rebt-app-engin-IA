@@ -1,5 +1,62 @@
 # Changelog
 
+## v21.0 - 28 Septiembre 2026
+
+### Exámenes y Simulacros
+- Formato oficial consolidado: Simulacro Oficial de 40 preguntas y 90 minutos con selección estratificada real (~25% Articulado y ~75% ITCs de Categoría Básica).
+- Eliminado completamente el formato descartado de 80 preguntas.
+- Nuevo modo **Test por ITC**: selector completo de Articulado y de las 52 ITCs reglamentarias en bloques de 20 preguntas y 60 minutos con indicador de acierto previo y badge "Solo especialista".
+- Configuración centralizada única en `ExamConfig.kt` (sin números mágicos dispersos en código).
+- Desglose pedagógico por bloques (Articulado / ITCs) y nota sobre 10 en la pantalla de resultados del examen.
+
+### Ámbito Normativo
+- Delimitación del ámbito de Categoría Básica (IBTB): exclusión automática de ITCs exclusivas de especialista (`SPECIALIST_ONLY_ITC`: 6, 7, 38, 51) en los simulacros oficiales.
+
+### Calidad y Validación
+- Nuevo `QuestionValidator` con validación estricta de 4 opciones únicas, 'a' en 0..3, campos no vacíos, referencias canónicas parseables y unicidad de enunciados en todo el banco.
+- Ejecución automática de validación en tests unitarios (`testDebugUnitTest`) y en `DEBUG` durante el arranque de la app.
+- Extensión parseadora canónica de referencias: `Question.itcNumber()` y `Question.isArticulado()`.
+
+### Corrección de Errores
+- Corrección de `startMistakesReview`: eliminada la generación de opciones ficticias ("Opción revisada A/B/C/D"). Las preguntas obsoletas se omiten limpiamente.
+
+### Contenido y Posits
+- Incorporación de nuevas chuletas técnicas clave (previsión de cargas ITC-10, caídas de tensión ITC-14/15/19, volúmenes de baños ITC-27, tubos empotrados ITC-21, motores y descarga ITC-44/46).
+- Nuevos lotes de preguntas normativas 100 % originales para ITCs prioritarias sin cobertura.
+
+---
+
+## v20.0 - 27 Septiembre 2026
+- Reestructuración de pestañas de examen: Simulacros, Por Tema, Mis Errores e Historial.
+- Consolidación del banco a 192 preguntas iniciales con referencias normativas normalizadas.
+- Historial de sesiones y cálculo de porcentaje de aciertos.
+
+## v19.0 - 27 Septiembre 2026
+- Recordatorios técnicos periódicos con AlarmManager para estudio del REBT.
+- Sistema de repaso espaciado para preguntas falladas.
+
+## v18.0 - 27 Septiembre 2026
+- Ampliación de cálculos de laboratorio electrotécnico (dimensionado de tubos ITC-BT-21 y puestas a tierra ITC-BT-18).
+- Notificaciones locales de estudio diario.
+
+## v17.0 - 27 Septiembre 2026
+- Previsión de cargas en edificios según ITC-BT-10.
+- Soporte para exportación de apuntes técnicos en posits.
+
+## v16.0 - 27 Septiembre 2026
+- Esquemas técnicos y cálculo de intensidades admisibles según UNE-HD 60364-5-52.
+
+## v15.0 - 27 Septiembre 2026
+- Integración de correlación normativa de artículos y guías técnicas BT.
+
+## v14.0 - 27 Septiembre 2026
+- Optimización de temas M3 oscuro/claro y persistencia Room de preferencias.
+
+## v13.0 - 27 Septiembre 2026
+- Calculadora de sección de conductores por caída de tensión e intensidad admisible Iz.
+
+---
+
 ## v12.0 - 27 Septiembre 2026 (Google Play Release)
 
 ### Play Billing Library 8.0.0
@@ -16,16 +73,16 @@
 - Fallback de Billing restringido a BuildConfig.DEBUG
 
 ### Contenido
-- Recuperadas/recreadas 50+ preguntas (Suministro, Tuberías)
-- Total preguntas: 130+
-- Explicaciones mejoradas
+- Corrección de auditoría: en este punto el banco contaba con 86 preguntas activas.
+- Recuperadas preguntas de Suministro y Tuberías.
+- Explicaciones normativas mejoradas.
 
 ### Limpieza
 - Removidas dependencias muertas (OkHttp, Retrofit)
 
 ### Bugs Corregidos
 - Premium gratis en error de network ✓
-- Backup editável ✓
+- Backup editable ✓
 - APK decompilable ✓
 
 ## v11.0 - 27 Septiembre 2026

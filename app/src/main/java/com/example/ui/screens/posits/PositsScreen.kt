@@ -106,12 +106,17 @@ fun PositsScreen(viewModel: MainViewModel) {
                     IconButton(
                         onClick = {
                             FeedbackManager.playClick(context)
-                            viewModel.seedDefaultPostItsIfEmpty()
+                            viewModel.seedDefaultPostItsIfEmpty(forceAddMissing = true)
+                            android.widget.Toast.makeText(
+                                context,
+                                "Chuletas oficiales REBT sincronizadas",
+                                android.widget.Toast.LENGTH_SHORT
+                            ).show()
                         }
                     ) {
                         Icon(
                             imageVector = Icons.Default.Refresh,
-                            contentDescription = "Restaurar Notas Modelo"
+                            contentDescription = "Restaurar Chuletas Modelo"
                         )
                     }
                 },

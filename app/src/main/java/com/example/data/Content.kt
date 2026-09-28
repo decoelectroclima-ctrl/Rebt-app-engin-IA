@@ -3540,6 +3540,462 @@ object Content {
                     ref = "ITC-BT-07 e ITC-BT-21"
                 )
             )
+        ),
+        "itc_01" to ModuleDefinition(
+            id = "itc_01",
+            label = "ITC-BT-01 Terminología Reglamentaria",
+            icon = "📖",
+            color = "#40c463",
+            questions = listOf(
+                Question(
+                    q = "¿Qué se entiende reglamentariamente por 'Masa' según la ITC-BT-01?",
+                    opts = listOf(
+                        "Cualquier estructura metálica del edificio conectada voluntariamente a tierra",
+                        "Parte conductora de un equipo eléctrico susceptible de ser tocada y que normalmente no está bajo tensión, pero que puede ponerse bajo tensión en caso de fallo",
+                        "El borne de puesta a tierra principal situado en el cuadro general de distribución",
+                        "Todo conductor activo perteneciente al circuito de potencia que transporte corriente de retorno"
+                    ),
+                    a = 1,
+                    exp = "La ITC-BT-01 define 'Masa' como la parte conductora de un material eléctrico susceptible de ser tocada por una persona, que normalmente no está bajo tensión pero que puede ponerse bajo tensión cuando falla el aislamiento principal. No deben confundirse las masas con los elementos conductores ajenos a la instalación.",
+                    ref = "ITC-BT-01"
+                ),
+                Question(
+                    q = "Según las definiciones de la ITC-BT-01, ¿qué es un 'Elemento conductor'?",
+                    opts = listOf(
+                        "Un cable aislado destinado al transporte exclusivo de energía eléctrica",
+                        "El electrodo enterrado de cobre desnudo destinado a disipar corrientes de defecto",
+                        "Estructura o parte metálica susceptible de propagar un potencial que no forma parte de la instalación eléctrica",
+                        "El embarrado de cobre situado en el interior de la caja general de protección"
+                    ),
+                    a = 2,
+                    exp = "Conforme a la ITC-BT-01, un elemento conductor es toda parte conductora que no forma parte de la instalación eléctrica y que es susceptible de introducir un potencial, generalmente el de tierra. Ejemplos típicos son las tuberías metálicas de agua o gas, armaduras de hormigón y vigas de acero estructurales.",
+                    ref = "ITC-BT-01"
+                ),
+                Question(
+                    q = "¿Cómo define la ITC-BT-01 la 'Tensión de defecto' en una instalación eléctrica?",
+                    opts = listOf(
+                        "Tensión que aparece a causa de un defecto de aislamiento entre dos masas, o entre una masa y un punto de tierra de referencia", // VERIFICAR-BOE
+                        "La caída de tensión porcentual producida en bornes del receptor más alejado del cuadro",
+                        "La sobretensión transitoria provocada por descargas atmosféricas en la red de distribución",
+                        "La diferencia de potencial nominal existente entre la fase activa y el conductor neutro"
+                    ),
+                    a = 0,
+                    exp = "La ITC-BT-01 establece que la tensión de defecto es la diferencia de potencial que aparece a causa de un fallo o defecto de aislamiento entre dos masas, entre una masa y un elemento conductor, o entre una masa y una tierra de referencia. Es el valor básico para coordinar la desconexión automática.",
+                    ref = "ITC-BT-01"
+                ),
+                Question(
+                    q = "¿Qué caracteriza a un 'Corte omnipolar' según las definiciones de la ITC-BT-01?",
+                    opts = listOf(
+                        "El disparo exclusivo del polo del conductor neutro ante corrientes armónicas de tercer orden",
+                        "La desconexión secuencial en la que el neutro se desconecta siempre antes que las fases activas",
+                        "El seccionamiento del conductor de protección de tierra para realizar mediciones de aislamiento",
+                        "La apertura simultánea o casi simultánea de todos los conductores activos que alimentan el circuito"
+                    ),
+                    a = 3,
+                    exp = "Según la ITC-BT-01, el corte omnipolar es aquel corte en el que se interrumpe la corriente en todos los conductores activos (todas las fases y el conductor neutro si existe). En los dispositivos tetrapolares o bipolares con corte omnipolar, el neutro no debe abrirse antes que las fases ni cerrarse después.",
+                    ref = "ITC-BT-01"
+                ),
+                Question(
+                    q = "¿Cuál es la misión principal del 'Conductor de protección (CP o PE)' definido en la ITC-BT-01?",
+                    opts = listOf(
+                        "Transportar permanentemente la corriente desequilibrada producida por los receptores monofásicos",
+                        "Garantizar la protección contra choques eléctricos uniendo las masas metálicas a la toma de tierra",
+                        "Servir de soporte mecánico para el tendido de los cables activos en bandejas perforadas",
+                        "Disipar las pérdidas por efecto Joule producidas por las sobrecargas en las líneas generales"
+                    ),
+                    a = 1,
+                    exp = "La ITC-BT-01 define el conductor de protección como aquel conductor prescrito para ciertas medidas de protección contra choques eléctricos y destinado a conectar eléctricamente masas de los equipos entre sí, con otros elementos conductores o con el borne principal de tierra.",
+                    ref = "ITC-BT-01"
+                ),
+                Question(
+                    q = "En el contexto del REBT y la ITC-BT-01, ¿qué constituye un 'Contacto directo'?",
+                    opts = listOf(
+                        "El contacto de personas o animales domésticos con partes habitualmente bajo tensión de la instalación",
+                        "El contacto con la carcasa metálica de un electrodoméstico que ha perdido su aislamiento interno",
+                        "La unión equipotencial principal establecida entre las tuberías metálicas de agua y la tierra",
+                        "El cebado de un arco eléctrico entre dos barras del cuadro general de distribución"
+                    ),
+                    a = 0,
+                    exp = "La ITC-BT-01 define contacto directo como el contacto de personas o animales con partes activas de los materiales y circuitos eléctricos que se encuentran habitualmente bajo tensión en servicio normal. La protección se logra por aislamiento, barreras, envolventes o alejamiento.",
+                    ref = "ITC-BT-01"
+                ),
+                Question(
+                    q = "¿Cómo se define reglamentariamente el 'Contacto indirecto' en la ITC-BT-01?",
+                    opts = listOf(
+                        "El contacto accidental con conductores aéreos desnudos de baja tensión durante trabajos de poda",
+                        "La inducción electromagnética en cables de telecomunicaciones tendidos junto a líneas de fuerza",
+                        "El contacto de personas o animales con masas que han quedado bajo tensión debido a un fallo de aislamiento",
+                        "La aproximación a una distancia menor de 30 centímetros de un embarrado de baja tensión"
+                    ),
+                    a = 2,
+                    exp = "El contacto indirecto es definido en la ITC-BT-01 como el contacto de personas o animales domésticos con masas que se han puesto accidentalmente bajo tensión a consecuencia de un defecto en el aislamiento de las partes activas. Su protección básica es la desconexión por interruptor diferencial coordinado con la tierra.",
+                    ref = "ITC-BT-01"
+                ),
+                Question(
+                    q = "Según la ITC-BT-01, ¿qué es la 'Corriente de fuga' en una instalación eléctrica?",
+                    opts = listOf(
+                        "La intensidad máxima de cortocircuito en bornes secundarios del transformador de distribución",
+                        "La corriente que circula por el neutro debida exclusivamente a la distorsión armónica de las cargas",
+                        "La corriente transitoria absorbida por los motores de inducción durante el proceso de arranque",
+                        "La corriente que fluye a tierra o a elementos conductores en un circuito eléctricamente sano en ausencia de defectos" // VERIFICAR-BOE
+                    ),
+                    a = 3,
+                    exp = "La ITC-BT-01 define corriente de fuga como la corriente que, en ausencia de defectos de aislamiento, se transmite desde las partes activas de la instalación hacia la tierra o hacia elementos conductores a través del dieléctrico o capacidades parásitas. No debe confundirse con la corriente de defecto franco.",
+                    ref = "ITC-BT-01"
+                ),
+                Question(
+                    q = "¿Qué se entiende por 'Defecto franco' según la terminología de la ITC-BT-01?",
+                    opts = listOf(
+                        "Una fuga lenta y progresiva a través del polvo acumulado en la superficie de un aislador",
+                        "Un fallo de aislamiento cuya impedancia entre dos puntos con potencial diferente es prácticamente despreciable",
+                        "La desconexión indebida de un interruptor diferencial producida por perturbaciones de alta frecuencia",
+                        "El corte fortuito del suministro eléctrico por apertura del disyuntor en cabecera de la red"
+                    ),
+                    a = 1,
+                    exp = "La ITC-BT-01 define defecto franco como la unión accidental de impedancia prácticamente nula producida entre dos puntos de diferente potencial. En caso de defecto franco entre fase y neutro o entre dos fases, se originan las máximas corrientes de cortocircuito admisibles por la instalación.",
+                    ref = "ITC-BT-01"
+                ),
+                Question(
+                    q = "¿Cómo define la ITC-BT-01 una 'Canalización eléctrica'?",
+                    opts = listOf(
+                        "El conjunto constituido por uno o varios conductores y los elementos que aseguran su fijación y su protección mecánica",
+                        "Únicamente el tubo rígido de PVC empotrado en las rozas practicadas en tabiquería de ladrillo",
+                        "La zanja excavada en el terreno natural donde se alojan directamente los cables subterráneos",
+                        "El pozo vertical de registro utilizado en edificios residenciales para las derivaciones individuales"
+                    ),
+                    a = 0,
+                    exp = "En la ITC-BT-01, canalización eléctrica es el conjunto formado por uno o varios conductores eléctricos y por los elementos que aseguran su fijación y, en su caso, su protección mecánica (tubos, canales protectores, bandejas, molduras o conductos). Es un concepto amplio que abarca tanto el cable como su envolvente protectora.",
+                    ref = "ITC-BT-01"
+                ),
+                Question(
+                    q = "En el marco de la ITC-BT-01, ¿qué distingue a una 'Sobrecarga' de un cortocircuito?",
+                    opts = listOf(
+                        "La sobrecarga se produce siempre por un defecto franco de aislamiento directo entre fase y tierra",
+                        "La sobrecarga implica corrientes miles de veces superiores a la corriente asignada del cable",
+                        "La sobrecarga es un exceso de corriente en un circuito eléctricamente sano sin presencia de defecto franco",
+                        "La sobrecarga solo tiene lugar en circuitos alimentados por corriente continua de muy baja tensión"
+                    ),
+                    a = 2,
+                    exp = "La ITC-BT-01 define sobrecarga como el régimen de funcionamiento de un circuito eléctricamente sano en el que la corriente supera a la nominal asignada debido a la conexión de excesiva carga o potencia. A diferencia del cortocircuito, no hay defecto franco ni avería dieléctrica entre conductores.",
+                    ref = "ITC-BT-01"
+                ),
+                Question(
+                    q = "¿Cuál es la definición reglamentaria de 'Tensión nominal' de una instalación según la ITC-BT-01?",
+                    opts = listOf(
+                        "El valor de cresta máximo medido durante perturbaciones transitorias de maniobra",
+                        "El valor convencional de la tensión con el que se designa una red y para el cual ha sido proyectada", // VERIFICAR-BOE
+                        "La tensión mínima por debajo de la cual los receptores térmicos deben interrumpir su servicio",
+                        "La diferencia de potencial registrada entre el electrodo de tierra y el neutro en régimen de carga"
+                    ),
+                    a = 1,
+                    exp = "La ITC-BT-01 define la tensión nominal como el valor convencional de la tensión eficaz con el que se designa un sistema o instalación y al que se refieren determinadas características de funcionamiento. En redes de BT en España, los valores normalizados son 230 V monofásica y 400 V trifásica.",
+                    ref = "ITC-BT-01"
+                )
+            )
+        ),
+        "itc_11" to ModuleDefinition(
+            id = "itc_11",
+            label = "ITC-BT-11 Cajas Generales de Protección",
+            icon = "📦",
+            color = "#3498db",
+            questions = listOf(
+                Question(
+                    q = "¿Dónde debe ubicarse reglamentariamente la Caja General de Protección (CGP) según la ITC-BT-11?",
+                    opts = listOf(
+                        "En el interior de la vivienda del presidente de la comunidad de propietarios",
+                        "En el límite de la propiedad o fachada exterior del edificio, en lugar accesible directamente desde la vía pública",
+                        "En el cuarto técnico de contadores junto a las baterías de medida individuales",
+                        "En la cubierta superior del edificio para facilitar la acometida por línea aérea"
+                    ),
+                    a = 1,
+                    exp = "La ITC-BT-11 par. 1 establece con claridad que las Cajas Generales de Protección se instalarán preferentemente en la fachada exterior del edificio, sobre la línea de fachada o en una zona común accesible permanentemente desde la vía pública por el personal de la empresa distribuidora sin necesidad de llaves de portal.",
+                    ref = "ITC-BT-11 §1"
+                ),
+                Question(
+                    q = "En montaje sobre fachada, ¿a qué altura debe situarse la parte inferior de la CGP según la ITC-BT-11?",
+                    opts = listOf(
+                        "Entre 0,50 m y 2,50 m sobre la rasante de la acera o del suelo de la vía pública", // VERIFICAR-BOE
+                        "A un mínimo estricto de 3,50 metros para evitar actos de vandalismo callejero",
+                        "A ras de suelo para facilitar la entrada directa de la acometida subterránea",
+                        "Entre 1,80 m y 3,00 m sin excepción alguna en todo el territorio nacional"
+                    ),
+                    a = 0,
+                    exp = "La ITC-BT-11 par. 2.1 prescribe que la parte inferior de la caja general de protección quedará instalada a una cota comprendida entre 0,50 m y 2,50 m del suelo de la acera. Esta distancia asegura la protección frente a humedad e impactos a la vez que permite un acceso cómodo para maniobras.",
+                    ref = "ITC-BT-11 §2.1"
+                ),
+                Question(
+                    q = "¿Qué tipo de dispositivos de protección se alojan en el interior de una CGP según la ITC-BT-11?",
+                    opts = listOf(
+                        "Interruptores automáticos magnetotérmicos de curva D con rearme manual",
+                        "Interruptores diferenciales de media sensibilidad de 300 mA con retardo selectivo",
+                        "Cortacircuitos fusibles de alto poder de ruptura (APR) de tipo cuchilla",
+                        "Descargadores de sobretensiones permanentes combinados con bobina de emisión"
+                    ),
+                    a = 2,
+                    exp = "La ITC-BT-11 par. 1.2 especifica que las CGP alojan en su interior cortacircuitos fusibles de alto poder de ruptura (fusibles tipo cuchilla NH) para proteger la línea general de alimentación frente a cortocircuitos. No se admiten magnetotérmicos en la CGP salvo en cuadros de distribución especiales.",
+                    ref = "ITC-BT-11 §1.2"
+                ),
+                Question(
+                    q = "¿Qué grados de protección mínimos (IP e IK) debe tener la envolvente de una CGP instalada en exterior según ITC-BT-11?",
+                    opts = listOf(
+                        "IP20 contra polvo e IK05 contra impactos ordinarios de personas",
+                        "IP43 contra penetración de agua e IK09 contra impactos mecánicos severos", // VERIFICAR-BOE
+                        "IP68 sumergible continua e IK02 sin exigencia de resistencia mecánica",
+                        "IP30 para ambientes secos e IK07 para envolventes plásticas ordinarias"
+                    ),
+                    a = 1,
+                    exp = "Las cajas generales de protección instaladas a la intemperie en fachadas deben poseer como mínimo un grado de protección IP43 frente a la penetración de cuerpos extraños y lluvia, y un grado de protección contra impactos mecánicos externos IK09 según las normas UNE-EN 60529 y UNE-EN 50102.",
+                    ref = "ITC-BT-11 §1.1"
+                ),
+                Question(
+                    q = "En el interior de la CGP, ¿cómo debe efectuarse la conexión del conductor neutro según la ITC-BT-11?",
+                    opts = listOf(
+                        "A través de un fusible calibrado a la mitad de la intensidad nominal de las fases",
+                        "Mediante un relé térmico diferencial provisto de rearme manual precintable",
+                        "Directamente trenzado y soldado a la estructura metálica de la fachada",
+                        "Mediante una pletina o borne seccionable sin fusible de protección interpuesto"
+                    ),
+                    a = 3,
+                    exp = "En la CGP, el conductor neutro se conecta a una pletina de conexión desmontable o borne seccionable. Está terminantemente prohibido intercalar fusibles en el neutro, dado que la fusión del neutro en una red trifásica provocaría sobretensiones destructivas en los receptores monofásicos conectados entre fase y neutro.",
+                    ref = "ITC-BT-11 §1.2"
+                ),
+                Question(
+                    q = "¿En qué caso reglamentario se autoriza instalar una Caja de Protección y Medida (CPM) unificada según ITC-BT-11 e ITC-BT-13?",
+                    opts = listOf(
+                        "Para uno o dos suministros individuales alimentados desde el mismo punto cuando la medida va en fachada",
+                        "En edificios de viviendas con más de 20 contadores centralizados en planta sótano",
+                        "Exclusivamente en industrias con potencia instalada superior a 150 kW en baja tensión",
+                        "En locales de pública concurrencia que cuenten con suministro de socorro independiente"
+                    ),
+                    a = 0,
+                    exp = "La ITC-BT-11 e ITC-BT-13 permiten la unificación de la caja de protección y la caja de medida en un solo elemento denominado CPM (Caja de Protección y Medida) cuando se trata de suministros para uno o dos usuarios alimentados desde un mismo punto (por ejemplo, viviendas unifamiliares o pequeños locales).",
+                    ref = "ITC-BT-11 e ITC-BT-13"
+                ),
+                Question(
+                    q = "Según las especificaciones de la ITC-BT-11 y normas UNE, ¿qué determinan los Esquemas normalizados de CGP (del 1 al 14)?",
+                    opts = listOf(
+                        "El color reglamentario de los cables interiores utilizados en las viviendas",
+                        "La tensión de ensayo dieléctrico de los contadores electrónicos inteligentes",
+                        "El tipo de acometida (aérea o subterránea), número de líneas de alimentación y disposición de fusibles",
+                        "El calibre del interruptor de control de potencia (ICP) instalado por el usuario"
+                    ),
+                    a = 2,
+                    exp = "La ITC-BT-11 par. 1.2 adopta los esquemas normalizados UNE para CGP (Esquemas 1 al 14). Cada esquema define si la acometida es aérea posada, aérea tensada o subterránea, si la caja alimenta a una o varias líneas generales de alimentación (LGA), y la disposición de fusibles seccionables y neutro.",
+                    ref = "ITC-BT-11 §1.2"
+                ),
+                Question(
+                    q = "¿Cómo debe realizarse el cierre y aseguramiento de la CGP según la ITC-BT-11?",
+                    opts = listOf(
+                        "Mediante cerradura con llave ordinaria de serreta disponible en ferreterías",
+                        "Mediante cierre normalizado con dispositivo homologado por la empresa distribuidora de energía eléctrica",
+                        "Mediante soldadura autógena de la tapa para impedir permanentemente su apertura",
+                        "Con candado personal aportado por el administrador de la finca del inmueble"
+                    ),
+                    a = 1,
+                    exp = "La ITC-BT-11 par. 1.1 exige que las envolventes de las CGP cuenten con un sistema de cierre normalizado y precintable según las especificaciones técnicas aprobadas de la empresa distribuidora de la zona, permitiendo la apertura exclusiva por personal autorizado para mantenimiento y sustitución de fusibles.",
+                    ref = "ITC-BT-11 §1.1"
+                ),
+                Question(
+                    q = "¿Qué características deben reunir los materiales de las envolventes de las CGP según ITC-BT-11?",
+                    opts = listOf(
+                        "Madera tratada con barniz ignífugo para exteriores de viviendas rústicas",
+                        "Chapa de hierro dulce galvanizada en caliente de espesor inferior a 0,5 mm",
+                        "Aluminio sin aislamiento interior ni conexión a tierra de protección",
+                        "Material aislante autoextinguible o metálico con aislamiento de Clase II equivalente"
+                    ),
+                    a = 3,
+                    exp = "La ITC-BT-11 exige que las envolventes de las CGP sean de material aislante autoextinguible (generalmente poliéster reforzado con fibra de vidrio), no higroscópicas y resistentes a los rayos UV, o metálicas garantizando una protección equivalente a la Clase II (doble aislamiento) para evitar contactos indirectos en fachada.",
+                    ref = "ITC-BT-11 §1.1"
+                ),
+                Question(
+                    q = "¿Quién asume la propiedad y responsabilidad de conservación de la CGP tras su puesta en servicio?",
+                    opts = listOf(
+                        "La propiedad o la comunidad de propietarios del edificio tras la conexión y recepción por la distribuidora",
+                        "El instalador autorizado de forma vitalicia durante toda la vida útil del edificio",
+                        "El ayuntamiento del municipio a través de los servicios técnicos de alumbrado",
+                        "El fabricante de la envolvente plástica en régimen de garantía perpetua"
+                    ),
+                    a = 0,
+                    exp = "Conforme a la reglamentación del REBT (Art. 18 y concordantes con ITC-BT-11), la Caja General de Protección es un elemento de la instalación de enlace que forma parte de la instalación receptora común, siendo su propiedad y mantenimiento responsabilidad del titular o comunidad del inmueble tras la cesión y conexión de acometida.",
+                    ref = "ITC-BT-11"
+                ),
+                Question(
+                    q = "¿En qué posición relativa debe disponerse el borne o cuchilla del neutro en una CGP trifásica según ITC-BT-11?",
+                    opts = listOf(
+                        "Siempre en el centro, intercalado obligatoriamente entre la fase L1 y la fase L2",
+                        "En la parte posterior de la envolvente oculto tras las pletinas de fase",
+                        "En el lateral izquierdo de las bases de fusibles de fase mirando frontalmente la caja", // VERIFICAR-BOE
+                        "En el extremo superior derecho sobre los bornes de salida de la LGA"
+                    ),
+                    a = 2,
+                    exp = "En las Cajas Generales de Protección normalizadas bajo norma UNE e ITC-BT-11, el borne seccionable de neutro se ubica de forma estándar en el lado izquierdo de las tres bases portafusibles de fase mirando de frente la caja, garantizando una disposición uniforme y segura en todas las instalaciones.",
+                    ref = "ITC-BT-11 §1.2"
+                ),
+                Question(
+                    q = "Para acometidas subterráneas conectadas a la CGP, ¿qué sección mínima de conductores suele fijar la normativa y distribuidoras?",
+                    opts = listOf(
+                        "Conductores de cobre de 2,5 mm² con aislamiento de silicona para altas temperaturas",
+                        "Conductores de aluminio de 6 mm² bajo tubo corrugado ordinario de 20 mm",
+                        "Cables trenzados de cobre sin cubierta protectora de sección 10 mm²",
+                        "Cables unipolares de cobre de al menos 16 mm² o de aluminio de 25 mm² de tensión 0,6/1 kV" // VERIFICAR-BOE
+                    ),
+                    a = 3,
+                    exp = "Las acometidas que acometen a las Cajas Generales de Protección se ejecutan con conductores aislados para 0,6/1 kV, con secciones mínimas normalizadas no inferiores a 16 mm² en cobre o 25 mm² en aluminio por motivos de resistencia mecánica y capacidad frente a corrientes de cortocircuito de la red pública.",
+                    ref = "ITC-BT-11 e ITC-BT-07"
+                )
+            )
+        ),
+        "itc_12" to ModuleDefinition(
+            id = "itc_12",
+            label = "ITC-BT-12 Esquemas de Instalaciones de Enlace",
+            icon = "📊",
+            color = "#9b59b6",
+            questions = listOf(
+                Question(
+                    q = "¿Qué define el 'Esquema 1' para instalaciones de enlace en edificios residenciales según la ITC-BT-12?",
+                    opts = listOf(
+                        "Colocación de contadores totalmente concentrados en un único local o armario",
+                        "Instalación de un contador individual en el rellano de cada vivienda alimentado por una LGA independiente",
+                        "Suministro mediante contadores descentralizados situados en el exterior del tejado del edificio",
+                        "Distribución sin contadores mediante facturación a tanto alzado por superficie construida"
+                    ),
+                    a = 0,
+                    exp = "La ITC-BT-12 par. 2.2 define el Esquema 1 para edificios de viviendas y oficinas como aquel en el que los contadores se agrupan en una única centralización (armario o local técnico) situada en la planta baja o sótano, de donde parten las derivaciones individuales hacia cada usuario.",
+                    ref = "ITC-BT-12 §2.2"
+                ),
+                Question(
+                    q = "¿A partir de cuántos contadores concentrados exige la ITC-BT-12 ubicar la centralización en un local técnico en vez de un armario?",
+                    opts = listOf(
+                        "A partir de 4 contadores en edificios de más de dos plantas",
+                        "A partir de 8 contadores concentrados en cualquier tipo de edificio",
+                        "A partir de 16 contadores concentrados en un mismo punto", // VERIFICAR-BOE
+                        "Solo es obligatorio local técnico cuando se superan los 50 contadores"
+                    ),
+                    a = 2,
+                    exp = "Conforme a la ITC-BT-12 e ITC-BT-16, cuando el número de contadores concentrados en un mismo punto supera los 16 contadores, es preceptivo ubicarlos en un local técnico independiente exclusivo para este fin. Hasta 16 contadores se permite su instalación en armario técnico empotrado o adosado.",
+                    ref = "ITC-BT-12 e ITC-BT-16"
+                ),
+                Question(
+                    q = "¿En qué consiste el 'Esquema 2' de centralización de contadores contemplado en la ITC-BT-12?",
+                    opts = listOf(
+                        "Un único contador trifásico general para todo el edificio que factura a la comunidad",
+                        "Contadores concentrados en varios puntos (centralizaciones parciales por plantas en edificios altos)",
+                        "Contadores integrados en el interior de cada cuadro general de mando y protección particular",
+                        "Instalación de contadores exclusivamente para suministros de alumbrado de emergencia y escaleras"
+                    ),
+                    a = 1,
+                    exp = "El Esquema 2 de la ITC-BT-12 se destina a edificios de gran altura o geometría compleja donde la centralización se distribuye en varios puntos (armarios o locales en plantas intermedias), alimentados por una o varias Líneas Generales de Alimentación para reducir la longitud de las derivaciones individuales.",
+                    ref = "ITC-BT-12 §2.2"
+                ),
+                Question(
+                    q = "¿Entre qué alturas deben quedar situados los cuadrantes o pantallas de lectura de los contadores según la ITC-BT-12 e ITC-BT-16?",
+                    opts = listOf(
+                        "A cualquier altura siempre que el operario pueda acceder con una escalera de tijera",
+                        "Entre 0,20 m y 1,00 m del pavimento acabado del local o pasillo",
+                        "Exactamente a 2,50 m para evitar que personas no autorizadas manipulen los aparatos",
+                        "Entre 0,50 m y 1,80 m sobre el nivel del suelo para permitir lectura visual cómoda" // VERIFICAR-BOE
+                    ),
+                    a = 3,
+                    exp = "La ITC-BT-12 e ITC-BT-16 par. 2.2 estipulan que los aparatos de medida deben montarse de manera que los cuadrantes o visores de lectura se ubiquen a una altura comprendida entre 0,50 m y 1,80 m del suelo, permitiendo la lectura directa y tareas de mantenimiento sin posturas peligrosas.",
+                    ref = "ITC-BT-12 e ITC-BT-16"
+                ),
+                Question(
+                    q = "¿Cuál es la función reglamentaria del Interruptor General de Maniobra (IGM) en una centralización de contadores (ITC-BT-12)?",
+                    opts = listOf(
+                        "Permitir el corte y seccionamiento general de la batería de contadores sin desenergizar la LGA",
+                        "Limitar automáticamente la potencia contratada por el conjunto de las viviendas del edificio",
+                        "Proteger exclusivamente contra descargas atmosféricas mediante varistores de óxido de zinc",
+                        "Interrumpir la alimentación cuando la temperatura del armario técnico supere los 40 °C"
+                    ),
+                    a = 0,
+                    exp = "La ITC-BT-12 par. 2.1 y la ITC-BT-16 exigen instalar un Interruptor General de Maniobra (IGM) en cabeza de cada concentración de contadores para permitir el corte en carga y aislamiento de toda la batería por motivos de seguridad o mantenimiento sin necesidad de retirar los fusibles de la CGP.",
+                    ref = "ITC-BT-12 e ITC-BT-16"
+                ),
+                Question(
+                    q = "¿Qué anchura mínima de pasillo libre de paso exige la ITC-BT-12 e ITC-BT-16 frente a los cuadros en locales de contadores?",
+                    opts = listOf(
+                        "0,70 metros para locales de superficie inferior a 10 metros cuadrados",
+                        "1,10 metros libres frente a los paneles de medida para permitir paso y evacuación segura", // VERIFICAR-BOE
+                        "2,00 metros en cualquier caso según la directiva de seguridad contra incendios",
+                        "No se exige pasillo mínimo si los cuadros disponen de puertas transparentes"
+                    ),
+                    a = 1,
+                    exp = "La ITC-BT-16 complementaria a los esquemas de la ITC-BT-12 prescribe que el local de contadores dispondrá de un pasillo libre de paso de al menos 1,10 metros de anchura frente a los cuadros de medida para permitir la maniobra de operarios y la evacuación rápida en caso de emergencia.",
+                    ref = "ITC-BT-12 e ITC-BT-16"
+                ),
+                Question(
+                    q = "¿Qué tipo de ventilación se requiere en un local técnico destinado a la centralización de contadores?",
+                    opts = listOf(
+                        "No precisa ventilación al tratarse de un recinto cerrado herméticamente contra el polvo",
+                        "Ventilación forzada mediante turbina eólica instalada exclusivamente en la fachada norte",
+                        "Ventilación natural directa o forzada que asegure la renovación constante de aire y disipación térmica",
+                        "Climatización continua a 21 °C con deshumidificador industrial permanente"
+                    ),
+                    a = 2,
+                    exp = "La ITC-BT-12 e ITC-BT-16 exigen que los locales de contadores cuenten con ventilación suficiente (natural o forzada con conductos independientes hacia el exterior) para asegurar la renovación de aire, evitando la acumulación de humedad y el sobrecalentamiento producido por el efecto Joule de los contadores.",
+                    ref = "ITC-BT-12 e ITC-BT-16"
+                ),
+                Question(
+                    q = "¿Qué resistencia al fuego mínima debe tener la puerta de acceso al local técnico de contadores según ITC-BT-12 e ITC-BT-16?",
+                    opts = listOf(
+                        "Puerta de madera estándar sin clasificación de resistencia al fuego",
+                        "Puerta con grado de estanqueidad IP68 sin consideración de protección térmica",
+                        "Chapa simple de acero perforada para favorecer la corriente de aire",
+                        "Puerta resistente al fuego con clasificación mínima EI2 30-C5 (o RF-30) con apertura hacia el exterior" // VERIFICAR-BOE
+                    ),
+                    a = 3,
+                    exp = "El local de contadores debe estar delimitado por paramentos y puertas resistentes al fuego. La puerta de acceso debe poseer una resistencia mínima EI2 30-C5 (antiguamente RF-30), abrir hacia el exterior del local y disponer de cerradura normalizada por la empresa distribuidora.",
+                    ref = "ITC-BT-12 e ITC-BT-16"
+                ),
+                Question(
+                    q = "¿Qué circuito auxiliar de servicio debe disponer obligatoriamente el local de contadores según ITC-BT-12 e ITC-BT-16?",
+                    opts = listOf(
+                        "Circuito independiente para alumbrado (mínimo 100 lux) y toma de corriente con su propio cuadro CGMP",
+                        "Circuito trifásico de fuerza a 400 V para maquinaria de carga de baterías de vehículos",
+                        "Circuito de calefacción por radiadores para evitar la condensación invernal",
+                        "Toma de agua corriente con desagüe directo para lavado periódico del pavimento"
+                    ),
+                    a = 0,
+                    exp = "La reglamentación exige que los locales técnicos de contadores dispongan de su propia instalación auxiliar de alumbrado (garantizando un nivel mínimo de iluminación de 100 lux a nivel de suelo), alumbrado de emergencia y una base de enchufe protegida con interruptor diferencial de 30 mA y magnetotérmico.",
+                    ref = "ITC-BT-12 e ITC-BT-16"
+                ),
+                Question(
+                    q = "Para un suministro individual aislado (vivienda unifamiliar), ¿cómo se dispone el equipo de medida según ITC-BT-12?",
+                    opts = listOf(
+                        "Obligatoriamente en el salón principal de la vivienda cerca del televisor",
+                        "En una arqueta enterrada estanca bajo la calzada frente a la parcela",
+                        "En un módulo o armario empotrado en la valla exterior accesible directamente desde la vía pública",
+                        "Suspendido directamente del poste de hormigón de la acometida aérea"
+                    ),
+                    a = 2,
+                    exp = "En suministros monofásicos o trifásicos individuales (Esquemas para 1 o 2 usuarios de la ITC-BT-12), el contador se ubica en un armario o nicho estanco en la valla o muro exterior de la propiedad, accesible permanentemente desde la vía pública para facilitar la lectura y corte de suministro por la distribuidora.",
+                    ref = "ITC-BT-12 §2.1"
+                ),
+                Question(
+                    q = "¿Qué instalaciones ajenas al servicio eléctrico tienen expresamente prohibido su paso por el local de contadores (ITC-BT-12)?",
+                    opts = listOf(
+                        "Líneas de fibra óptica de telecomunicaciones siempre que vayan bajo tubo",
+                        "Tuberías de agua, gas, calefacción, climatización o desagües residuales ajenas al local",
+                        "Conductores de puesta a tierra del propio edificio que acometen a la pica principal",
+                        "Canalizaciones de derivaciones individuales que parten de los contadores del propio local"
+                    ),
+                    a = 1,
+                    exp = "La ITC-BT-16 e ITC-BT-12 prohíben taxativamente que a través del local de contadores discurran tuberías de conducción de agua, gas, saneamiento, desagües o canalizaciones ajenas a la instalación eléctrica para prevenir inundaciones, fugas de gas o atmósferas explosivas en contacto con los cuadros de medida.",
+                    ref = "ITC-BT-12 e ITC-BT-16"
+                ),
+                Question(
+                    q = "En edificios de gran altura, ¿a partir de cuántas plantas recomienda la ITC-BT-12 la centralización por plantas (Esquema 2)?",
+                    opts = listOf(
+                        "A partir de 3 plantas en cualquier bloque de pisos",
+                        "A partir de 6 plantas en zonas rurales y 8 plantas en zonas urbanas",
+                        "No se recomienda nunca la centralización por plantas por encarecer la obra",
+                        "A partir de 12 plantas o cuando las caídas de tensión de las derivaciones individuales resulten excesivas" // VERIFICAR-BOE
+                    ),
+                    a = 3,
+                    exp = "La ITC-BT-12 par. 2.2 señala que en edificios de más de 12 plantas de altura es aconsejable distribuir los contadores en concentraciones parciales por plantas (Esquema 2), evitando así derivaciones individuales de excesiva longitud que obligarían a sobredimensionar notablemente los conductores por caída de tensión.",
+                    ref = "ITC-BT-12 §2.2"
+                )
+            )
         )
     )
 }

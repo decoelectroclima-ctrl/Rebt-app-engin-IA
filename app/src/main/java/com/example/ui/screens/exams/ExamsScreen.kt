@@ -25,8 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.ExamMode
 import com.example.MainViewModel
-import com.example.data.Content
-import com.example.data.Question
+import com.example.data.*
 import com.example.ui.FeedbackManager
 import java.text.SimpleDateFormat
 import java.util.*
@@ -207,9 +206,9 @@ fun OfficialSimulationsTab(viewModel: MainViewModel) {
         item {
             SimulationCard(
                 viewModel = viewModel,
-                title = "Simulacro Corto (20 Preguntas)",
-                questionCount = 20,
-                timeMinutes = 45,
+                title = "Simulacro Corto (${ExamConfig.SHORT_QUESTIONS} Preguntas)",
+                questionCount = ExamConfig.SHORT_QUESTIONS,
+                timeMinutes = ExamConfig.SHORT_MINUTES,
                 color = Color(0xFF3498DB),
                 testTag = "start_sim_20"
             )
@@ -217,14 +216,57 @@ fun OfficialSimulationsTab(viewModel: MainViewModel) {
 
         // 40 Questions
         item {
-            SimulationCard(
-                viewModel = viewModel,
-                title = "Simulacro Completo (40 Preguntas)",
-                questionCount = 40,
-                timeMinutes = 90,
-                color = Color(0xFF238636),
-                testTag = "start_sim_40"
-            )
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(16.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = if (viewModel.isDarkTheme) Color(0xFF161B22) else Color.White
+                ),
+                border = BorderStroke(1.dp, Color(0xFF238636))
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Simulacro Completo (${ExamConfig.OFFICIAL_QUESTIONS} Preguntas)",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 15.sp
+                        )
+                        Surface(
+                            shape = RoundedCornerShape(6.dp),
+                            color = Color(0xFF238636).copy(alpha = 0.15f)
+                        ) {
+                            Text(
+                                text = "Básica (IBTB)",
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color(0xFF3FB950),
+                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                            )
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = "Examen oficial de 40 preguntas estratificadas: 10 de Articulado y 30 de ITCs reglamentarias.",
+                        fontSize = 12.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Button(
+                        onClick = {
+                            FeedbackManager.playClick(context)
+                            viewModel.startOfficialSimulation()
+                        },
+                        modifier = Modifier.fillMaxWidth().testTag("start_sim_40"),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF238636))
+                    ) {
+                        Text("Iniciar (${ExamConfig.OFFICIAL_MINUTES} min)")
+                    }
+                }
+            }
         }
     }
 }
@@ -253,7 +295,7 @@ fun SimulationCard(
             Button(
                 onClick = {
                     FeedbackManager.playClick(context)
-                    val allQuestions = Content.QUESTIONS.values.flatMap { it.questions }.shuffled()
+                    val allQuestions = Content.QUESTIONS.values.flatMap { it.questions }.distinctBy { it.q }.shuffled()
                     val questions = allQuestions.take(questionCount)
                     
                     val module = com.example.data.ModuleDefinition(
@@ -280,8 +322,290 @@ fun SimulationCard(
 
 @Composable
 fun TopicPracticeTab(viewModel: MainViewModel) {
+    var subTab by remember { mutableStateOf(0) } // 0: Por ITC (REBT Completo), 1: Bloques Temáticos (8)
+    val progressList by viewModel.progressFlow.collectAsState()
+    val allQuestions = remember { Content.QUESTIONS.values.flatMap { it.questions }.distinctBy { it.q } }
+
+    Column(modifier = Modifier.fillMaxSize()) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 12.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            FilterChip(
+                selected = subTab == 0,
+                onClick = { subTab = 0 },
+                label = { Text("Por ITC (REBT Completo)", fontSize = 12.sp) },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.FormatListNumbered,
+                        contentDescription = null,
+                        modifier = Modifier.size(16.dp)
+                    )
+                },
+                modifier = Modifier.weight(1f)
+            )
+            FilterChip(
+                selected = subTab == 1,
+                onClick = { subTab = 1 },
+                label = { Text("Bloques Temáticos (8)", fontSize = 12.sp) },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.GridView,
+                        contentDescription = null,
+                        modifier = Modifier.size(16.dp)
+                    )
+                },
+                modifier = Modifier.weight(1f)
+            )
+        }
+
+        if (subTab == 0) {
+            ItcTestsList(viewModel, progressList, allQuestions)
+        } else {
+            ThematicModulesList(viewModel)
+        }
+    }
+}
+
+@Composable
+fun ItcTestsList(
+    viewModel: MainViewModel,
+    progressList: List<com.example.data.ModuleProgressEntity>,
+    allQuestions: List<Question>
+) {
     val context = LocalContext.current
-    val modules = Content.QUESTIONS.values.toList()
+    var itcSearchQuery by remember { mutableStateOf("") }
+    val syllabusMap = remember { Content.SYLLABUS.associateBy { it.id } }
+
+    val filteredItcs = remember(itcSearchQuery) {
+        (1..52).filter { itcNum ->
+            val itcCode = String.format("ITC-BT-%02d", itcNum)
+            val title = syllabusMap["itc-${String.format("%02d", itcNum)}"]?.title ?: "Instrucción BT-$itcNum"
+            if (itcSearchQuery.isBlank()) true
+            else itcCode.contains(itcSearchQuery, ignoreCase = true) || title.contains(itcSearchQuery, ignoreCase = true)
+        }
+    }
+
+    LazyColumn(
+        verticalArrangement = Arrangement.spacedBy(10.dp),
+        contentPadding = PaddingValues(bottom = 32.dp)
+    ) {
+        item {
+            OutlinedTextField(
+                value = itcSearchQuery,
+                onValueChange = { itcSearchQuery = it },
+                placeholder = { Text("Buscar ITC por número o temática...", fontSize = 13.sp) },
+                leadingIcon = { Icon(Icons.Default.Search, contentDescription = null, modifier = Modifier.size(18.dp)) },
+                trailingIcon = {
+                    if (itcSearchQuery.isNotEmpty()) {
+                        IconButton(onClick = { itcSearchQuery = "" }) {
+                            Icon(Icons.Default.Clear, contentDescription = "Limpiar", modifier = Modifier.size(16.dp))
+                        }
+                    }
+                },
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(12.dp),
+                singleLine = true
+            )
+        }
+
+        // Fila de Articulado REBT
+        if (itcSearchQuery.isBlank() || "articulado".contains(itcSearchQuery, ignoreCase = true) || "art".contains(itcSearchQuery, ignoreCase = true)) {
+            item {
+                val artQuestions = remember(allQuestions) { allQuestions.filter { it.isArticulado() } }
+                val artScore = viewModel.getArticuladoSuccessPct(progressList)
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            FeedbackManager.playClick(context)
+                            viewModel.startArticuladoPractice()
+                        }
+                        .testTag("itc_card_articulado"),
+                    shape = RoundedCornerShape(14.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = if (viewModel.isDarkTheme) Color(0xFF161B22) else Color.White
+                    ),
+                    border = BorderStroke(1.dp, Color(0xFFBC8CFF).copy(alpha = 0.6f))
+                ) {
+                    Row(
+                        modifier = Modifier.padding(14.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Surface(
+                            shape = CircleShape,
+                            color = Color(0xFFBC8CFF).copy(alpha = 0.15f),
+                            modifier = Modifier.size(42.dp)
+                        ) {
+                            Box(contentAlignment = Alignment.Center) {
+                                Text("⚡", fontSize = 20.sp)
+                            }
+                        }
+                        Spacer(modifier = Modifier.width(12.dp))
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = "Articulado REBT (Art. 1-29)",
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                            Spacer(modifier = Modifier.height(2.dp))
+                            Text(
+                                text = if (artQuestions.size < ExamConfig.ITC_BLOCK_QUESTIONS)
+                                    "${artQuestions.size} preguntas disponibles • ${ExamConfig.ITC_BLOCK_MINUTES} min"
+                                else
+                                    "${artQuestions.size} preguntas • ${ExamConfig.ITC_BLOCK_MINUTES} min",
+                                fontSize = 12.sp,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                        Column(horizontalAlignment = Alignment.End) {
+                            Surface(
+                                shape = RoundedCornerShape(6.dp),
+                                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.12f)
+                            ) {
+                                Text(
+                                    text = artScore,
+                                    fontSize = 12.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.primary,
+                                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                                )
+                            }
+                            Spacer(modifier = Modifier.height(2.dp))
+                            Text("Acierto", fontSize = 10.sp, color = Color.Gray)
+                        }
+                    }
+                }
+            }
+        }
+
+        // Cada una de las 52 ITCs reglamentarias
+        items(filteredItcs, key = { it }) { itcNum ->
+            val itcKey = "itc-${String.format("%02d", itcNum)}"
+            val syllabus = syllabusMap[itcKey]
+            val title = syllabus?.title ?: "Instrucción BT-${String.format("%02d", itcNum)}"
+            val isSpecialist = itcNum in ExamConfig.SPECIALIST_ONLY_ITC
+            val itcQuestions = remember(allQuestions, itcNum) { allQuestions.filter { it.itcNumber() == itcNum } }
+            val qCount = itcQuestions.size
+            val successPct = viewModel.getItcSuccessPct(itcNum, progressList)
+
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable(enabled = qCount > 0) {
+                        FeedbackManager.playClick(context)
+                        viewModel.startItcPractice(itcNum, title)
+                    }
+                    .testTag("itc_card_${itcNum}"),
+                shape = RoundedCornerShape(14.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = if (viewModel.isDarkTheme) Color(0xFF161B22) else Color.White
+                ),
+                border = BorderStroke(
+                    1.dp,
+                    if (qCount > 0) {
+                        if (isSpecialist) Color(0xFFD29922).copy(alpha = 0.4f)
+                        else if (viewModel.isDarkTheme) Color(0xFF30363D) else Color(0xFFE1E4E8)
+                    } else {
+                        Color.Gray.copy(alpha = 0.15f)
+                    }
+                )
+            ) {
+                Row(
+                    modifier = Modifier.padding(14.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Surface(
+                        shape = RoundedCornerShape(8.dp),
+                        color = if (isSpecialist) Color(0xFFD29922).copy(alpha = 0.15f) else MaterialTheme.colorScheme.primary.copy(alpha = 0.12f),
+                        modifier = Modifier.size(42.dp)
+                    ) {
+                        Box(contentAlignment = Alignment.Center) {
+                            Text(
+                                text = String.format("%02d", itcNum),
+                                fontWeight = FontWeight.Black,
+                                fontSize = 15.sp,
+                                color = if (isSpecialist) Color(0xFFD29922) else MaterialTheme.colorScheme.primary
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.width(12.dp))
+
+                    Column(modifier = Modifier.weight(1f)) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text(
+                                text = "ITC-BT-${String.format("%02d", itcNum)}",
+                                fontSize = 13.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                            if (isSpecialist) {
+                                Spacer(modifier = Modifier.width(6.dp))
+                                Surface(
+                                    shape = RoundedCornerShape(4.dp),
+                                    color = Color(0xFFD29922).copy(alpha = 0.15f)
+                                ) {
+                                    Text(
+                                        text = "Solo especialista",
+                                        fontSize = 9.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = Color(0xFFD29922),
+                                        modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp)
+                                    )
+                                }
+                            }
+                        }
+                        Spacer(modifier = Modifier.height(2.dp))
+                        Text(
+                            text = title,
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Medium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            maxLines = 1
+                        )
+                        Spacer(modifier = Modifier.height(2.dp))
+                        Text(
+                            text = when {
+                                qCount == 0 -> "0 preguntas disponibles"
+                                qCount < ExamConfig.ITC_BLOCK_QUESTIONS -> "$qCount preguntas disponibles • ${ExamConfig.ITC_BLOCK_MINUTES} min"
+                                else -> "$qCount preguntas • ${ExamConfig.ITC_BLOCK_MINUTES} min"
+                            },
+                            fontSize = 11.sp,
+                            color = if (qCount > 0) Color(0xFF3FB950) else Color.Gray
+                        )
+                    }
+
+                    Column(horizontalAlignment = Alignment.End) {
+                        Surface(
+                            shape = RoundedCornerShape(6.dp),
+                            color = if (successPct != "—") Color(0xFF3FB950).copy(alpha = 0.12f) else Color.Gray.copy(alpha = 0.1f)
+                        ) {
+                            Text(
+                                text = successPct,
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = if (successPct != "—") Color(0xFF3FB950) else Color.Gray,
+                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(2.dp))
+                        Text("Acierto", fontSize = 10.sp, color = Color.Gray)
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun ThematicModulesList(viewModel: MainViewModel) {
+    val context = LocalContext.current
+    val classicKeys = remember { setOf("articulado", "empresas", "enlace", "interiores", "tierra", "especiales", "suministro", "tubos") }
+    val modules = remember { Content.QUESTIONS.filterKeys { it in classicKeys }.values.toList() }
 
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(10.dp),
@@ -526,7 +850,7 @@ fun ExamHistoryTab(viewModel: MainViewModel, history: List<com.example.data.Exam
             }
 
             items(history, key = { it.id }) { rec ->
-                val isPassed = rec.pct >= 75
+                val isPassed = rec.pct >= (ExamConfig.PASS_THRESHOLD * 100).toInt()
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(12.dp),
@@ -890,7 +1214,11 @@ fun ExamResultsView(viewModel: MainViewModel) {
     val total = module.questions.size
     val correct = viewModel.examCorrectCount
     val pct = if (total > 0) (correct * 100 / total) else 0
-    val isPassed = pct >= 75 // Spanish official industry standard threshold
+    val isPassed = if (total > 0) (correct.toFloat() / total) >= ExamConfig.PASS_THRESHOLD else false
+    val scoreTen = String.format(Locale.US, "%.1f", if (total > 0) (correct.toFloat() / total) * 10f else 0f)
+
+    val (artCorrect, artTotal) = viewModel.getExamArticuladoBreakdown()
+    val (itcCorrect, itcTotal) = viewModel.getExamItcBreakdown()
 
     val timeMinutes = viewModel.examTimeSpentSeconds / 60
     val timeSeconds = viewModel.examTimeSpentSeconds % 60
@@ -983,8 +1311,78 @@ fun ExamResultsView(viewModel: MainViewModel) {
                         Text("${total - correct}", fontSize = 16.sp, fontWeight = FontWeight.Bold, color = Color(0xFFF85149))
                     }
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text("Nota", fontSize = 11.sp, color = Color.Gray)
+                        Text("$scoreTen / 10", fontSize = 16.sp, fontWeight = FontWeight.Bold, color = if (isPassed) Color(0xFF3FB950) else Color(0xFFF85149))
+                    }
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text("Tiempo", fontSize = 11.sp, color = Color.Gray)
                         Text("${timeMinutes}m ${timeSeconds}s", fontSize = 16.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface)
+                    }
+                }
+
+                // Desglose por bloque normativo (Articulado / ITCs) (Tarea 2)
+                if (artTotal > 0 || itcTotal > 0) {
+                    Spacer(modifier = Modifier.height(18.dp))
+                    Card(
+                        shape = RoundedCornerShape(12.dp),
+                        colors = CardDefaults.cardColors(
+                            containerColor = if (viewModel.isDarkTheme) Color(0xFF0D1117) else Color(0xFFF6F8FA)
+                        ),
+                        border = BorderStroke(1.dp, if (viewModel.isDarkTheme) Color(0xFF30363D) else Color(0xFFE1E4E8)),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Column(modifier = Modifier.padding(14.dp)) {
+                            Text(
+                                text = "Desglose Normativo por Bloque",
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            if (artTotal > 0) {
+                                val artPct = (artCorrect * 100) / artTotal
+                                val artPassed = artPct >= (ExamConfig.PASS_THRESHOLD * 100).toInt()
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text(
+                                        text = "• Articulado REBT (Art. 1-29):",
+                                        fontSize = 12.sp,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                    Text(
+                                        text = "$artCorrect de $artTotal ($artPct%)",
+                                        fontSize = 12.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = if (artPassed) Color(0xFF3FB950) else Color(0xFFF85149)
+                                    )
+                                }
+                            }
+                            if (itcTotal > 0) {
+                                if (artTotal > 0) Spacer(modifier = Modifier.height(6.dp))
+                                val itcPct = (itcCorrect * 100) / itcTotal
+                                val itcPassed = itcPct >= (ExamConfig.PASS_THRESHOLD * 100).toInt()
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text(
+                                        text = "• Instrucciones ITC:",
+                                        fontSize = 12.sp,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                    Text(
+                                        text = "$itcCorrect de $itcTotal ($itcPct%)",
+                                        fontSize = 12.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = if (itcPassed) Color(0xFF3FB950) else Color(0xFFF85149)
+                                    )
+                                }
+                            }
+                        }
                     }
                 }
 

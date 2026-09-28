@@ -17,10 +17,16 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 enum class ExamMode {
-    OFFICIAL_SIMULATION, // 80 questions, 180 min timer, official 75% threshold
-    TOPIC_PRACTICE,      // 10-20 questions from a chosen module, no timer pressure
+    OFFICIAL_SIMULATION, // 40 questions, 90 min timer, official 75% threshold (ExamConfig)
+    TOPIC_PRACTICE,      // 10-20 questions from a chosen module or ITC block (ExamConfig.ITC_BLOCK_MINUTES)
     MISTAKES_REVIEW      // Questions the user previously failed
 }
+
+data class ExamAnswerRecord(
+    val question: Question,
+    val selectedOption: Int,
+    val isCorrect: Boolean
+)
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val repository = EnigmaRepository(application)
@@ -88,10 +94,14 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     var examTimeSpentSeconds by mutableStateOf(0)
 
     // Exam countdown timer
-    var examTotalSeconds by mutableStateOf(180 * 60) // 180 min default for official simulation
-    var examRemainingSeconds by mutableStateOf(180 * 60)
+    var examTotalSeconds by mutableStateOf(ExamConfig.OFFICIAL_MINUTES * 60)
+    var examRemainingSeconds by mutableStateOf(ExamConfig.OFFICIAL_MINUTES * 60)
     var isTimerRunning by mutableStateOf(false)
     private var timerJob: Job? = null
+
+    // Track answers for breakdown report and avoid repeating in next simulation
+    val examAnswerRecords = mutableStateListOf<ExamAnswerRecord>()
+    private var lastOfficialSimulationQuestionHashes = setOf<Int>()
 
     // Study filter
     var studySearchQuery by mutableStateOf("")
@@ -157,26 +167,107 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     // -------------------------------------------------------------
 
     /**
+     * Genera un conjunto de 40 preguntas estratificadas y reproducibles:
+     * - ~25% Articulado (10 preguntas)
+     * - ~75% ITCs (30 preguntas) repartidas entre las ITC del ámbito Categoría Básica (excluyendo SPECIALIST_ONLY_ITC)
+     * - Sin preguntas repetidas en el mismo simulacro
+     * - Prioriza preguntas no vistas en el último simulacro de la sesión
+     */
+    fun generateOfficialSimulationQuestions(): List<Question> {
+        val allQuestions = Content.QUESTIONS.values.flatMap { it.questions }.distinctBy { it.q }
+
+        // Pool de Articulado
+        val articuladoPool = allQuestions.filter { it.isArticulado() && it.itcNumber() == null }.shuffled().toMutableList()
+        if (articuladoPool.size < ExamConfig.OFFICIAL_ARTICULADO_COUNT) {
+            val extraArt = allQuestions.filter { it.isArticulado() && it !in articuladoPool }.shuffled()
+            articuladoPool.addAll(extraArt)
+        }
+
+        // Pool de ITCs del ámbito Básica (excluyendo especialista: 6, 7, 38, 51)
+        val itcPool = allQuestions.filter { q ->
+            val itc = q.itcNumber()
+            itc != null && itc !in ExamConfig.SPECIALIST_ONLY_ITC
+        }.shuffled().toMutableList()
+
+        // Priorizar preguntas no vistas en el último simulacro de la sesión
+        val unseenArt = articuladoPool.filter { it.q.hashCode() !in lastOfficialSimulationQuestionHashes }
+        val seenArt = articuladoPool.filter { it.q.hashCode() in lastOfficialSimulationQuestionHashes }
+        val prioritizedArt = unseenArt + seenArt
+
+        val unseenItc = itcPool.filter { it.q.hashCode() !in lastOfficialSimulationQuestionHashes }
+        val seenItc = itcPool.filter { it.q.hashCode() in lastOfficialSimulationQuestionHashes }
+        val prioritizedItc = unseenItc + seenItc
+
+        val selected = mutableListOf<Question>()
+        val selectedEnunciados = mutableSetOf<String>()
+
+        // 1. Seleccionar preguntas de Articulado (target: ExamConfig.OFFICIAL_ARTICULADO_COUNT)
+        for (q in prioritizedArt) {
+            if (selected.size >= ExamConfig.OFFICIAL_ARTICULADO_COUNT) break
+            if (selectedEnunciados.add(q.q)) {
+                selected.add(q)
+            }
+        }
+
+        // 2. Seleccionar preguntas de ITCs Básicas distribuidas equitativamente
+        val itcGroups = prioritizedItc.groupBy { it.itcNumber() ?: 0 }.toMutableMap()
+        val itcKeys = itcGroups.keys.toList().shuffled()
+        var itcCursor = 0
+
+        while (selected.size < ExamConfig.OFFICIAL_QUESTIONS && itcGroups.values.any { it.isNotEmpty() }) {
+            val key = itcKeys[itcCursor % itcKeys.size]
+            val group = itcGroups[key]
+            if (!group.isNullOrEmpty()) {
+                val q = group.first()
+                itcGroups[key] = group.drop(1)
+                if (selectedEnunciados.add(q.q)) {
+                    selected.add(q)
+                }
+            }
+            itcCursor++
+            if (selected.size >= ExamConfig.OFFICIAL_QUESTIONS) break
+        }
+
+        // 3. Relleno de seguridad si faltasen preguntas para completar exactamente 40
+        if (selected.size < ExamConfig.OFFICIAL_QUESTIONS) {
+            val fallbackPool = allQuestions.filter { q ->
+                val itc = q.itcNumber()
+                itc == null || itc !in ExamConfig.SPECIALIST_ONLY_ITC
+            }.shuffled()
+            for (q in fallbackPool) {
+                if (selected.size >= ExamConfig.OFFICIAL_QUESTIONS) break
+                if (selectedEnunciados.add(q.q)) {
+                    selected.add(q)
+                }
+            }
+        }
+
+        // Registrar hashes en memoria de las preguntas del simulacro para no repetirlas de inmediato
+        lastOfficialSimulationQuestionHashes = selected.map { it.q.hashCode() }.toSet()
+
+        return selected.shuffled()
+    }
+
+    /**
      * Start Official Simulation Exam (40 questions, 90 minutes)
      */
     fun startOfficialSimulation() {
         activeExamMode = ExamMode.OFFICIAL_SIMULATION
-        val allQuestions = Content.QUESTIONS.values.flatMap { it.questions }.shuffled()
-        val questions40 = allQuestions.take(40)
+        val questions40 = generateOfficialSimulationQuestions()
 
         val module = ModuleDefinition(
             id = "simulacro_oficial_${System.currentTimeMillis()}",
-            label = "Simulacro Oficial REBT 2026 (40 Preguntas)",
+            label = "Simulacro Oficial REBT 2026 (${ExamConfig.OFFICIAL_QUESTIONS} Preguntas)",
             icon = "🏛️",
             color = "#58a6ff",
             questions = questions40
         )
 
-        setupExamSession(module, durationSeconds = 90 * 60)
+        setupExamSession(module, durationSeconds = ExamConfig.OFFICIAL_MINUTES * 60)
     }
 
     /**
-     * Start Topic Practice (e.g. 10-20 questions from chosen module)
+     * Inicia un test de bloque temático o módulo específico (20 preguntas, 60 minutos)
      */
     fun startTopicPractice(moduleKey: String) {
         val moduleDef = Content.QUESTIONS[moduleKey] ?: return
@@ -187,15 +278,56 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             label = "Repaso: ${moduleDef.label}",
             icon = moduleDef.icon,
             color = moduleDef.color,
-            questions = moduleDef.questions.shuffled()
+            questions = moduleDef.questions.shuffled().take(ExamConfig.ITC_BLOCK_QUESTIONS)
         )
 
-        // No strict countdown for practice, e.g. 45 min relaxed
-        setupExamSession(practiceModule, durationSeconds = 45 * 60)
+        setupExamSession(practiceModule, durationSeconds = ExamConfig.ITC_BLOCK_MINUTES * 60)
+    }
+
+    /**
+     * Inicia un test específico por ITC (bloque de 20 preguntas, 60 minutos)
+     */
+    fun startItcPractice(itcNumber: Int, itcTitle: String) {
+        activeExamMode = ExamMode.TOPIC_PRACTICE
+        val allQuestions = Content.QUESTIONS.values.flatMap { it.questions }.distinctBy { it.q }
+        val itcQuestions = allQuestions.filter { it.itcNumber() == itcNumber }.shuffled().take(ExamConfig.ITC_BLOCK_QUESTIONS)
+        if (itcQuestions.isEmpty()) return
+
+        val itcCodeFormatted = String.format("ITC-BT-%02d", itcNumber)
+        val module = ModuleDefinition(
+            id = "itc_${String.format("%02d", itcNumber)}_${System.currentTimeMillis()}",
+            label = "Test $itcCodeFormatted: $itcTitle",
+            icon = "📋",
+            color = if (itcNumber in ExamConfig.SPECIALIST_ONLY_ITC) "#d29922" else "#238636",
+            questions = itcQuestions
+        )
+
+        setupExamSession(module, durationSeconds = ExamConfig.ITC_BLOCK_MINUTES * 60)
+    }
+
+    /**
+     * Inicia un test exclusivo del Articulado del REBT (bloque de 20 preguntas, 60 minutos)
+     */
+    fun startArticuladoPractice() {
+        activeExamMode = ExamMode.TOPIC_PRACTICE
+        val allQuestions = Content.QUESTIONS.values.flatMap { it.questions }.distinctBy { it.q }
+        val artQuestions = allQuestions.filter { it.isArticulado() }.shuffled().take(ExamConfig.ITC_BLOCK_QUESTIONS)
+        if (artQuestions.isEmpty()) return
+
+        val module = ModuleDefinition(
+            id = "articulado_${System.currentTimeMillis()}",
+            label = "Test Articulado REBT (Art. 1-29)",
+            icon = "⚡",
+            color = "#bc8cff",
+            questions = artQuestions
+        )
+
+        setupExamSession(module, durationSeconds = ExamConfig.ITC_BLOCK_MINUTES * 60)
     }
 
     /**
      * Start Review of Failed Questions (Spaced Repetition)
+     * Si la pregunta ya no existe en el banco, se omite limpiamente (sin opciones ficticias).
      */
     fun startMistakesReview(reviews: List<QuestionReviewEntity>) {
         if (reviews.isEmpty()) return
@@ -203,14 +335,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
         val allAvailableQuestions = Content.QUESTIONS.values.flatMap { it.questions }
         val mistakeQuestions = reviews.mapNotNull { rev ->
-            allAvailableQuestions.find { it.q == rev.questionText } ?: Question(
-                q = rev.questionText,
-                opts = listOf("Opción revisada A", "Opción revisada B", "Opción revisada C", "Opción revisada D"),
-                a = rev.correctOption,
-                exp = rev.explanation,
-                ref = rev.reference
-            )
+            allAvailableQuestions.find { it.q == rev.questionText }
         }
+        if (mistakeQuestions.isEmpty()) return
 
         val reviewModule = ModuleDefinition(
             id = "revision_fallos_${System.currentTimeMillis()}",
@@ -220,7 +347,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             questions = mistakeQuestions
         )
 
-        setupExamSession(reviewModule, durationSeconds = 60 * 60)
+        setupExamSession(reviewModule, durationSeconds = ExamConfig.ITC_BLOCK_MINUTES * 60)
     }
 
     private fun setupExamSession(module: ModuleDefinition, durationSeconds: Int) {
@@ -234,6 +361,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         examTimeSpentSeconds = 0
         examTotalSeconds = durationSeconds
         examRemainingSeconds = durationSeconds
+        examAnswerRecords.clear()
 
         startTimer()
         activeTab = "exams"
@@ -279,6 +407,14 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         val correct = selectedOptionIndex == question.a
         isAnswerCorrect = correct
 
+        examAnswerRecords.add(
+            ExamAnswerRecord(
+                question = question,
+                selectedOption = selectedOptionIndex ?: 0,
+                isCorrect = correct
+            )
+        )
+
         if (correct) {
             examCorrectCount++
             if (activeExamMode == ExamMode.MISTAKES_REVIEW) {
@@ -300,6 +436,28 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 )
             }
         }
+    }
+
+    fun getExamArticuladoBreakdown(): Pair<Int, Int> { // correct, total
+        val artRecords = examAnswerRecords.filter { it.question.isArticulado() && it.question.itcNumber() == null }
+        return Pair(artRecords.count { it.isCorrect }, artRecords.size)
+    }
+
+    fun getExamItcBreakdown(): Pair<Int, Int> { // correct, total
+        val itcRecords = examAnswerRecords.filter { it.question.itcNumber() != null }
+        return Pair(itcRecords.count { it.isCorrect }, itcRecords.size)
+    }
+
+    fun getItcSuccessPct(itcNumber: Int, progressList: List<ModuleProgressEntity>): String {
+        val key1 = "itc_${String.format("%02d", itcNumber)}"
+        val key2 = "itc_${itcNumber}"
+        val record = progressList.find { it.moduleId.startsWith(key1) || it.moduleId.startsWith(key2) }
+        return if (record != null) "${record.pct}%" else "—"
+    }
+
+    fun getArticuladoSuccessPct(progressList: List<ModuleProgressEntity>): String {
+        val record = progressList.find { it.moduleId.startsWith("articulado") || it.moduleId == "articulado" }
+        return if (record != null) "${record.pct}%" else "—"
     }
 
     fun nextQuestion() {
@@ -619,44 +777,117 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun seedDefaultPostItsIfEmpty() {
+    fun seedDefaultPostItsIfEmpty(forceAddMissing: Boolean = false) {
         viewModelScope.launch {
             val list = repository.postItsFlow.first()
-            if (list.isEmpty()) {
-                val defaults = listOf(
-                    Triple(
-                        "Fórmula Caída Tensión Monofásica:\ne = 2 · L · P / (γ · S · V)\n• Cobre en caliente: γ = 44 m/(Ω·mm²)\n• Aluminio en caliente: γ = 28 m/(Ω·mm²)\n• LGA contadores centralizados: máx 0,5%\n• DI contadores centralizados: máx 1,5%",
-                        "Fórmulas",
-                        "#FFEAA7"
-                    ),
-                    Triple(
-                        "Límites de Tensión de Contacto:\n• Locales secos ordinarios: 50 V\n• Locales húmedos o mojados: 24 V\n• Piscinas e inmersión: 12 V\nFórmula de seguridad: Ra · IΔn ≤ Ul",
-                        "Seguridad",
-                        "#D4EDDA"
-                    ),
-                    Triple(
-                        "Puesta a Tierra (ITC-BT-18):\n• Conductor Cu desnudo enterrado: mín. 35 mm²\n• Conductor Cu aislado enterrado: mín. 16 mm²\n• Pica vertical: longitud estándar 2,0 m enterrada a ≥ 0,50 m.",
-                        "Artículos",
-                        "#CCE5FF"
-                    ),
-                    Triple(
-                        "Circuitos Interiores Vivienda (ITC-25):\n• C1: Alumbrado (10 A - 1,5 mm²)\n• C2: Enchufes generales (16 A - 2,5 mm²)\n• C3: Cocina y Horno (25 A - 6 mm²)\n• C4: Lavadora, lavavajillas, termo (20 A - 4 mm²)\n• C5: Tomas baño y auxiliares cocina (16 A - 2,5 mm²)",
-                        "Examen",
-                        "#FFF3CD"
-                    ),
-                    Triple(
-                        "Regla de Oro en Sobrecargas (ITC-22):\nIB ≤ In ≤ Iz  y  I2 ≤ 1,45 · Iz\n¡Trampa habitual!: El calibre nominal In del magnetotérmico NUNCA puede ser superior a la intensidad admisible Iz del cable que protege.",
-                        "Trucos",
-                        "#F8D7DA"
-                    ),
-                    Triple(
-                        "Inspecciones Periódicas OCA (ITC-05):\n• Cada 5 años: Locales de pública concurrencia, garajes >25 plazas, locales ATEX.\n• Cada 10 años: Zonas comunes edificios de viviendas con potencia total > 100 kW.",
-                        "Artículos",
-                        "#E2E3E5"
-                    )
+            val defaults = listOf(
+                Triple(
+                    "Fórmula Caída Tensión Monofásica:\ne = 2 · L · P / (γ · S · V)\n• Cobre en caliente: γ = 44 m/(Ω·mm²)\n• Aluminio en caliente: γ = 28 m/(Ω·mm²)\n• LGA contadores centralizados: máx 0,5%\n• DI contadores centralizados: máx 1,5%",
+                    "Fórmulas",
+                    "#FFEAA7"
+                ),
+                Triple(
+                    "Fórmula Potencia y Caída Trifásica:\n• P = √3 · V · I · cos φ\n• I = P / (√3 · V · cos φ) (a 400 V con cos φ=0,85 -> I ≈ 1,7 · P[kW])\n• Caída de tensión trifásica: e = (L · P) / (γ · S · V)\n• %e = (100 · L · P) / (γ · S · V²)\n¡Ojo examen!: Para igual potencia transmitida y sección, la caída porcentual en trifásica 400 V es la mitad que en monofásica 230 V.",
+                    "Fórmulas",
+                    "#FFEAA7"
+                ),
+                Triple(
+                    "Límites de Tensión de Contacto:\n• Locales secos ordinarios: 50 V\n• Locales húmedos o mojados: 24 V\n• Piscinas e inmersión: 12 V\nFórmula de seguridad: Ra · IΔn ≤ Ul",
+                    "Seguridad",
+                    "#D4EDDA"
+                ),
+                Triple(
+                    "Puesta a Tierra (ITC-BT-18):\n• Conductor Cu desnudo enterrado: mín. 35 mm²\n• Conductor Cu aislado enterrado: mín. 16 mm²\n• Pica vertical: longitud estándar 2,0 m enterrada a ≥ 0,50 m.",
+                    "Artículos",
+                    "#CCE5FF"
+                ),
+                Triple(
+                    "Circuitos Interiores Vivienda (ITC-25):\n• C1: Alumbrado (10 A - 1,5 mm²)\n• C2: Enchufes generales (16 A - 2,5 mm²)\n• C3: Cocina y Horno (25 A - 6 mm²)\n• C4: Lavadora, lavavajillas, termo (20 A - 4 mm²)\n• C5: Tomas baño y auxiliares cocina (16 A - 2,5 mm²)",
+                    "Examen",
+                    "#FFF3CD"
+                ),
+                Triple(
+                    "Regla de Oro en Sobrecargas (ITC-22):\nIB ≤ In ≤ Iz  y  I2 ≤ 1,45 · Iz\n¡Trampa habitual!: El calibre nominal In del magnetotérmico NUNCA puede ser superior a la intensidad admisible Iz del cable que protege.",
+                    "Trucos",
+                    "#F8D7DA"
+                ),
+                Triple(
+                    "Inspecciones Periódicas OCA (ITC-05):\n• Cada 5 años: Locales de pública concurrencia, garajes >25 plazas, locales ATEX.\n• Cada 10 años: Zonas comunes edificios de viviendas con potencia total > 100 kW.",
+                    "Artículos",
+                    "#E2E3E5"
+                ),
+                Triple(
+                    "Previsión de Cargas en Edificios (ITC-10):\n• Grado Básico: 5.750 W (IGA 32 A a 230 V)\n• Grado Elevado: 9.200 W (IGA 40 A a 230 V)\n• Locales comerciales: mín. 100 W/m² (mín. 3.450 W)\n• Garajes ventilación forzada: 20 W/m² (mín. 3.450 W)\n• Coeficiente simultaneidad viviendas: según tabla par. 3",
+                    "Examen",
+                    "#FFEAA7"
+                ),
+                Triple(
+                    "Simultaneidad Edificios Residenciales (ITC-10):\n• 1 vivienda: Coeficiente = 1 (P = P1)\n• 2 a 4 viviendas: P = Σ P1 (sin simultaneidad, factor = 1)\n• n > 4 viviendas: P_total = P_media · [1 + (n - 1) · 0,153]\n(¡Fórmula imprescindible para cálculo de LGA en examen oficial!)",
+                    "Trucos",
+                    "#FFF3CD"
+                ),
+                Triple(
+                    "Caídas de Tensión Máximas (ITC-14, 15, 19):\n• LGA (Línea General de Alimentación): máx 0,5% (1,0% para contadores en varias plantas)\n• DI (Derivación Individual): máx 1,5% (1,0% si contadores en plantas)\n• Alumbrado interior vivienda: máx 3%\n• Fuerza y otros usos interior: máx 5%",
+                    "Fórmulas",
+                    "#D4EDDA"
+                ),
+                Triple(
+                    "Volúmenes en Baños y Duchas (ITC-27):\n• Vol 0 (interior bañera): IPX7, solo MBTS 12 V\n• Vol 1 (hasta 2,25 m vertical): IPX4, calentador fijo o MBTS 12 V\n• Vol 2 (0,60 m alrededor de vol 1): IPX4, luminarias Clase II\n• Vol 3 (2,40 m desde vol 2): IPX1, bases con diferencial 30 mA",
+                    "Seguridad",
+                    "#CCE5FF"
+                ),
+                Triple(
+                    "Tubos Empotrados en Tabiques (ITC-21):\n• 3 x 1,5 mm²: Tubo exterior Ø 16 mm\n• 3 x 2,5 mm²: Tubo exterior Ø 20 mm\n• 3 x 4 mm²: Tubo exterior Ø 20 mm\n• 3 x 6 mm²: Tubo exterior Ø 25 mm\n• 3 x 10 mm²: Tubo exterior Ø 32 mm\n• Radio curvatura mín: 6 veces diámetro exterior",
+                    "Trucos",
+                    "#FFF3CD"
+                ),
+                Triple(
+                    "Receptores Motores y Alumbrado (ITC-44 y 46):\n• Conductor motor único: I_calculo = 1,25 · I_nominal\n• Conductor varios motores: 1,25 · In(mayor) + Σ In(restantes)\n• Lámparas de descarga/fluorescencia: Potencia cálculo = 1,8 · P_nominal (balastros y armónicos)",
+                    "Fórmulas",
+                    "#F8D7DA"
+                ),
+                Triple(
+                    "Cuadro de Mando y Protecciones (ITC-17):\n• Altura de mandos: entre 1,40 m y 2,00 m del suelo (1,00 - 1,40 m accesibilidad).\n• IGA: Omnipolar, mín. 25 A (habitual 32 A en básico / 40 A en elevado), poder de corte mín. 4,5 kA.\n• ID (Diferencial): Mínimo 1 por cada 5 circuitos instalados.",
+                    "Artículos",
+                    "#CCE5FF"
+                ),
+                Triple(
+                    "Alumbrado de Emergencia (ITC-28):\n• Autonomía mínima: 1 hora.\n• Evacuación: mín. 1 lux en eje central de pasillos; 5 lux en cuadros y botiquín.\n• Antipánico: mín. 0,5 lux en todo el recinto.\n• Tiempo de encendido: 50% de lux en 5 s; 100% en 60 s.",
+                    "Seguridad",
+                    "#D4EDDA"
+                ),
+                Triple(
+                    "Redes Subterráneas de Distribución (ITC-07):\n• Profundidad zanja: mín. 0,60 m (acera) y mín. 0,80 m (calzada).\n• Cinta señalizadora: a 20 cm por encima del tubo o conductor.\n• Cruzamientos con gas o agua: distancia mínima 0,20 m.\n• Resistencia compresión tubos enterrados: 450 N (código 450).",
+                    "Trucos",
+                    "#FFF3CD"
+                ),
+                Triple(
+                    "Códigos de Protección IP e IK:\n• IP 1ª cifra (sólidos 0-6): IP2X (dedos ≥12,5 mm), IP4X (alambres ≥1 mm), IP5X (polvo), IP6X (estanco al polvo).\n• IP 2ª cifra (líquidos 0-8): IPX4 (salpicaduras), IPX5 (chorro), IPX7 (inmersión 1 m), IPX8 (inmersión continua).\n• IK (impacto 00-10): IK08 = resistencia 5 julios (habitual envolventes exteriores).",
+                    "Seguridad",
+                    "#F8D7DA"
+                ),
+                Triple(
+                    "Locales de Pública Concurrencia (ITC-28):\n• Conductores obligatorios: No propagadores del incendio y de emisión reducida de humos y opacidad (libres de halógenos, tipo H07Z1-K o RZ1-K).\n• Suministro complementario: Socorro (mín. 15% potencia contratada) o Reserva (mín. 25%).\n• Obligatorio proyecto y dirección de obra por técnico titulado.",
+                    "Examen",
+                    "#E2E3E5"
+                ),
+                Triple(
+                    "Infraestructura Vehículo Eléctrico (ITC-52):\n• Modo 1: Enchufe doméstico sin control (prohibido en vía pública).\n• Modo 2: Cable con caja de control piloto integrada (ICCB).\n• Modo 3: Wallbox con control piloto dedicado (estándar preferente).\n• Modo 4: Corriente continua de alta potencia.\n• Protección: Diferencial exclusivo por punto (Tipo A con detección CC 6 mA o Tipo B) y protección contra sobretensiones transitorias y permanentes.",
+                    "Examen",
+                    "#FFEAA7"
                 )
+            )
+
+            if (list.isEmpty()) {
                 for ((content, category, color) in defaults) {
                     repository.insertPostIt(content, category, color)
+                }
+            } else if (forceAddMissing) {
+                val existingContents = list.map { it.content.trim().take(30) }.toSet()
+                for ((content, category, color) in defaults) {
+                    if (existingContents.none { content.startsWith(it) }) {
+                        repository.insertPostIt(content, category, color)
+                    }
                 }
             }
         }
