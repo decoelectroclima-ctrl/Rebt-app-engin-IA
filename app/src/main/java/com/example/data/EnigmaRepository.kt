@@ -146,6 +146,10 @@ class EnigmaRepository(private val context: Context) {
         )
     }
 
+    suspend fun updateDailyActivity(activity: DailyActivityEntity) {
+        dao.insertDailyActivity(activity)
+    }
+
     suspend fun initDailyStudyReminder() {
         DailyStudyNotificationManager.ensureDailyStudyChannel(context)
         val activity = dao.getDailyActivityDirect()
@@ -183,14 +187,23 @@ class EnigmaRepository(private val context: Context) {
     }
 
     // Google Play Billing local record stores
-    suspend fun activatePremiumSubscription(plan: String, price: Double) {
-        val txId = "GPA." + (1000..9999).random() + "-" + (1000..9999).random() + "-" + (1000..9999).random()
+    suspend fun activatePremiumSubscription(plan: String, price: Double, transactionId: String? = null, purchaseTime: Long? = null) {
+        val currentSubscription = dao.getSubscriptionDirect()
+        
+        // If already active with the same transactionId, do nothing (to avoid re-writing)
+        if (currentSubscription != null && currentSubscription.isActive && currentSubscription.transactionId == transactionId) {
+            return
+        }
+
+        val finalTransactionId = transactionId ?: ("GPA." + (1000..9999).random() + "-" + (1000..9999).random() + "-" + (1000..9999).random())
+        val finalPurchaseTime = purchaseTime ?: System.currentTimeMillis()
+        
         dao.insertSubscription(
             SubscriptionRecordEntity(
                 plan = plan,
                 price = price,
-                transactionId = txId,
-                purchaseTime = System.currentTimeMillis(),
+                transactionId = finalTransactionId,
+                purchaseTime = finalPurchaseTime,
                 isActive = true
             )
         )

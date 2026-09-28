@@ -1,6 +1,7 @@
 package com.example
 
 import android.app.Application
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -85,6 +86,21 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     // --- EXAM ENGINE STATES ---
     var activeExamMode by mutableStateOf(ExamMode.OFFICIAL_SIMULATION)
     var activeExamModule by mutableStateOf<ModuleDefinition?>(null)
+    
+    val demoUsedCount by derivedStateOf {
+        dailyActivityFlow.value?.demoUsedCount ?: 0
+    }
+    
+    
+    fun incrementDemoUsedCount() {
+        viewModelScope.launch {
+            val activity = repository.dailyActivityFlow.first() ?: DailyActivityEntity(
+                streakDays = 0,
+                lastActiveDate = ""
+            )
+            repository.updateDailyActivity(activity.copy(demoUsedCount = activity.demoUsedCount + 1))
+        }
+    }
     var currentQuestionIndex by mutableStateOf(0)
     var selectedOptionIndex by mutableStateOf<Int?>(null)
     var currentQuestionAnswered by mutableStateOf(false)

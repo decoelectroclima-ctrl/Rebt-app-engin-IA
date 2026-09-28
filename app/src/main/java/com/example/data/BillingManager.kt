@@ -178,7 +178,12 @@ class BillingManager(
 
                 if (activeQuarterly != null) {
                     coroutineScope.launch {
-                        repository.activatePremiumSubscription("pro_quarterly", priceProQuarterlyProvider())
+                        repository.activatePremiumSubscription(
+                            "pro_quarterly", 
+                            priceProQuarterlyProvider(), 
+                            activeQuarterly.orderId, 
+                            activeQuarterly.purchaseTime
+                        )
                     }
                     if (!activeQuarterly.isAcknowledged) {
                         coroutineScope.launch { acknowledgePurchase(activeQuarterly) }
@@ -186,7 +191,12 @@ class BillingManager(
                     onFinished?.invoke(true)
                 } else if (activeMonthly != null) {
                     coroutineScope.launch {
-                        repository.activatePremiumSubscription("pro_monthly", priceProMonthlyProvider())
+                        repository.activatePremiumSubscription(
+                            "pro_monthly", 
+                            priceProMonthlyProvider(), 
+                            activeMonthly.orderId, 
+                            activeMonthly.purchaseTime
+                        )
                     }
                     if (!activeMonthly.isAcknowledged) {
                         coroutineScope.launch { acknowledgePurchase(activeMonthly) }
@@ -216,7 +226,12 @@ class BillingManager(
 
                 if (activePremium != null) {
                     coroutineScope.launch {
-                        repository.activatePremiumSubscription("premium", pricePremiumProvider())
+                        repository.activatePremiumSubscription(
+                            "premium", 
+                            pricePremiumProvider(),
+                            activePremium.orderId,
+                            activePremium.purchaseTime
+                        )
                     }
                     if (!activePremium.isAcknowledged) {
                         coroutineScope.launch { acknowledgePurchase(activePremium) }
@@ -340,7 +355,12 @@ class BillingManager(
                         isProQuarterly -> Pair("pro_quarterly", priceProQuarterlyProvider())
                         else -> Pair("pro_monthly", priceProMonthlyProvider())
                     }
-                    repository.activatePremiumSubscription(plan, price)
+                    repository.activatePremiumSubscription(
+                        plan, 
+                        price, 
+                        purchase.orderId, 
+                        purchase.purchaseTime
+                    )
                 }
             }
 

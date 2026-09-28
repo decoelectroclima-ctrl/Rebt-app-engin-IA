@@ -140,9 +140,8 @@ fun OfficialSimulationsTab(viewModel: MainViewModel) {
     val context = LocalContext.current
     val examHistory by viewModel.examHistoryFlow.collectAsState()
     val isPremium = viewModel.isPremium
-    val officialExamsCount = remember(examHistory) {
-        examHistory.count { it.totalCount == ExamConfig.OFFICIAL_QUESTIONS }
-    }
+    val demoUsedCount = viewModel.demoUsedCount
+    
     var showGatingDialog by remember { mutableStateOf(false) }
     var gatingDialogMessage by remember { mutableStateOf("") }
 
@@ -290,21 +289,21 @@ fun OfficialSimulationsTab(viewModel: MainViewModel) {
                             Surface(
                                 shape = RoundedCornerShape(6.dp),
                                 color = if (!isPremium) {
-                                    if (officialExamsCount >= 1) Color(0xFFF85149).copy(alpha = 0.15f) else Color(0xFFF59E0B).copy(alpha = 0.15f)
+                                    if (demoUsedCount >= 1) Color(0xFFF85149).copy(alpha = 0.15f) else Color(0xFFF59E0B).copy(alpha = 0.15f)
                                 } else {
                                     Color(0xFF238636).copy(alpha = 0.15f)
                                 }
                             ) {
                                 Text(
                                     text = if (!isPremium) {
-                                        if (officialExamsCount >= 1) "Demo Agotada (1/1)" else "1 Prueba Demo (0/1)"
+                                        if (demoUsedCount >= 1) "Demo Agotada (1/1)" else "1 Prueba Demo (0/1)"
                                     } else {
                                         "Ilimitado PRO"
                                     },
                                     fontSize = 11.sp,
                                     fontWeight = FontWeight.Bold,
                                     color = if (!isPremium) {
-                                        if (officialExamsCount >= 1) Color(0xFFF85149) else Color(0xFFF59E0B)
+                                        if (demoUsedCount >= 1) Color(0xFFF85149) else Color(0xFFF59E0B)
                                     } else {
                                         Color(0xFF3FB950)
                                     },
@@ -336,19 +335,22 @@ fun OfficialSimulationsTab(viewModel: MainViewModel) {
                     Button(
                         onClick = {
                             FeedbackManager.playClick(context)
-                            if (!isPremium && officialExamsCount >= 1) {
+                            if (!isPremium && demoUsedCount >= 1) {
                                 gatingDialogMessage = "Has completado tu simulacro oficial de prueba (40 preguntas). Para realizar simulacros oficiales ilimitados con selección estratificada y temporizador de 90 min, activa el Plan Pro."
                                 showGatingDialog = true
                             } else {
                                 viewModel.startOfficialSimulation()
+                                if (!isPremium) {
+                                    viewModel.incrementDemoUsedCount()
+                                }
                             }
                         },
                         modifier = Modifier.fillMaxWidth().testTag("start_sim_40"),
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = if (!isPremium && officialExamsCount >= 1) Color(0xFFE67E22) else Color(0xFF238636)
+                            containerColor = if (!isPremium && demoUsedCount >= 1) Color(0xFFE67E22) else Color(0xFF238636)
                         )
                     ) {
-                        if (!isPremium && officialExamsCount >= 1) {
+                        if (!isPremium && demoUsedCount >= 1) {
                             Icon(Icons.Default.Lock, contentDescription = null, modifier = Modifier.size(16.dp))
                             Spacer(modifier = Modifier.width(6.dp))
                             Text("Desbloquear Ilimitados (Plan Pro)")
