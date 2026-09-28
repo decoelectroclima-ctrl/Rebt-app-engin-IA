@@ -144,6 +144,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             repository.seedDefaultRemindersIfEmpty()
             repository.initDailyStudyReminder()
+            seedDefaultPostItsIfEmpty()
         }
         runLaboratoryCalculation()
         runBuildingForecastingCalculation()
@@ -156,22 +157,22 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     // -------------------------------------------------------------
 
     /**
-     * Start Official Simulation Exam (80 questions, 180 minutes)
+     * Start Official Simulation Exam (40 questions, 90 minutes)
      */
     fun startOfficialSimulation() {
         activeExamMode = ExamMode.OFFICIAL_SIMULATION
         val allQuestions = Content.QUESTIONS.values.flatMap { it.questions }.shuffled()
-        val questions80 = allQuestions.take(80)
+        val questions40 = allQuestions.take(40)
 
         val module = ModuleDefinition(
             id = "simulacro_oficial_${System.currentTimeMillis()}",
-            label = "Simulacro Oficial REBT 2026 (80 Preguntas)",
+            label = "Simulacro Oficial REBT 2026 (40 Preguntas)",
             icon = "🏛️",
             color = "#58a6ff",
-            questions = questions80
+            questions = questions40
         )
 
-        setupExamSession(module, durationSeconds = 180 * 60)
+        setupExamSession(module, durationSeconds = 90 * 60)
     }
 
     /**
@@ -599,6 +600,66 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     fun sendTestDailyStudyNotification() {
         DailyStudyNotificationManager.sendTestDailyStudyNotification(getApplication())
+    }
+
+    // -------------------------------------------------------------
+    // POST-ITS & NOTAS TÉCNICAS REBT
+    // -------------------------------------------------------------
+
+    fun addPostIt(content: String, category: String = "General", color: String = "#FFEAA7") {
+        if (content.isBlank()) return
+        viewModelScope.launch {
+            repository.insertPostIt(content.trim(), category, color)
+        }
+    }
+
+    fun deletePostIt(id: Int) {
+        viewModelScope.launch {
+            repository.deletePostIt(id)
+        }
+    }
+
+    fun seedDefaultPostItsIfEmpty() {
+        viewModelScope.launch {
+            val list = repository.postItsFlow.first()
+            if (list.isEmpty()) {
+                val defaults = listOf(
+                    Triple(
+                        "Fórmula Caída Tensión Monofásica:\ne = 2 · L · P / (γ · S · V)\n• Cobre en caliente: γ = 44 m/(Ω·mm²)\n• Aluminio en caliente: γ = 28 m/(Ω·mm²)\n• LGA contadores centralizados: máx 0,5%\n• DI contadores centralizados: máx 1,5%",
+                        "Fórmulas",
+                        "#FFEAA7"
+                    ),
+                    Triple(
+                        "Límites de Tensión de Contacto:\n• Locales secos ordinarios: 50 V\n• Locales húmedos o mojados: 24 V\n• Piscinas e inmersión: 12 V\nFórmula de seguridad: Ra · IΔn ≤ Ul",
+                        "Seguridad",
+                        "#D4EDDA"
+                    ),
+                    Triple(
+                        "Puesta a Tierra (ITC-BT-18):\n• Conductor Cu desnudo enterrado: mín. 35 mm²\n• Conductor Cu aislado enterrado: mín. 16 mm²\n• Pica vertical: longitud estándar 2,0 m enterrada a ≥ 0,50 m.",
+                        "Artículos",
+                        "#CCE5FF"
+                    ),
+                    Triple(
+                        "Circuitos Interiores Vivienda (ITC-25):\n• C1: Alumbrado (10 A - 1,5 mm²)\n• C2: Enchufes generales (16 A - 2,5 mm²)\n• C3: Cocina y Horno (25 A - 6 mm²)\n• C4: Lavadora, lavavajillas, termo (20 A - 4 mm²)\n• C5: Tomas baño y auxiliares cocina (16 A - 2,5 mm²)",
+                        "Examen",
+                        "#FFF3CD"
+                    ),
+                    Triple(
+                        "Regla de Oro en Sobrecargas (ITC-22):\nIB ≤ In ≤ Iz  y  I2 ≤ 1,45 · Iz\n¡Trampa habitual!: El calibre nominal In del magnetotérmico NUNCA puede ser superior a la intensidad admisible Iz del cable que protege.",
+                        "Trucos",
+                        "#F8D7DA"
+                    ),
+                    Triple(
+                        "Inspecciones Periódicas OCA (ITC-05):\n• Cada 5 años: Locales de pública concurrencia, garajes >25 plazas, locales ATEX.\n• Cada 10 años: Zonas comunes edificios de viviendas con potencia total > 100 kW.",
+                        "Artículos",
+                        "#E2E3E5"
+                    )
+                )
+                for ((content, category, color) in defaults) {
+                    repository.insertPostIt(content, category, color)
+                }
+            }
+        }
     }
 }
 

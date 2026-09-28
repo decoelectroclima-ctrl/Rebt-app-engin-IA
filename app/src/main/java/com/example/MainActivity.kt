@@ -403,6 +403,9 @@ fun MainAppLayout(viewModel: MainViewModel) {
                 "analytics" -> AnalyticsScreen(viewModel)
                 "settings" -> SettingsScreen(viewModel)
                 "reminders" -> RemindersScreen(viewModel)
+                "posits" -> com.example.ui.screens.posits.PositsScreen(viewModel)
+                "correlacion" -> com.example.ui.screens.study.CorrelacionScreen(viewModel)
+                "boe" -> com.example.ui.screens.settings.BoeScreen(viewModel)
                 else -> DashboardScreen(viewModel)
             }
         }

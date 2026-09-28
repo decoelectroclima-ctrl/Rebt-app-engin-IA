@@ -200,7 +200,7 @@ fun DashboardScreen(viewModel: MainViewModel) {
                         Button(
                             onClick = {
                                 FeedbackManager.playClick(context)
-                                viewModel.startOfficialSimulation()
+                                viewModel.startTopicPractice("articulado")
                             },
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -214,7 +214,7 @@ fun DashboardScreen(viewModel: MainViewModel) {
                             Icon(Icons.Default.PlayArrow, contentDescription = null, modifier = Modifier.size(20.dp))
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
-                                text = "Iniciar Simulacro Oficial (80 Preguntas)",
+                                text = "Continuar Estudio",
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 14.sp
                             )
@@ -370,7 +370,7 @@ fun DashboardScreen(viewModel: MainViewModel) {
                 tag = "dashboard_action_posits",
                 onClick = {
                     FeedbackManager.playClick(context)
-                    // TODO: Implement navigation to Posits screen
+                    viewModel.activeTab = "posits"
                 }
             )
         }

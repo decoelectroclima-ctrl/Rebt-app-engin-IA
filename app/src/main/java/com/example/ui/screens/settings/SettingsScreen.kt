@@ -371,14 +371,16 @@ fun SettingsScreen(viewModel: MainViewModel) {
                     ActionRow(
                         title = "BOE 2026 (Actualizado)",
                         icon = Icons.Default.Description,
-                        isDark = viewModel.isDarkTheme
+                        isDark = viewModel.isDarkTheme,
+                        onClick = { viewModel.activeTab = "boe" }
                     )
 
                     // Índice y Correlación
                     ActionRow(
                         title = "Índice y Correlación ITC",
                         icon = Icons.Default.List,
-                        isDark = viewModel.isDarkTheme
+                        isDark = viewModel.isDarkTheme,
+                        onClick = { viewModel.activeTab = "correlacion" }
                     )
 
                     HorizontalDivider(color = if (viewModel.isDarkTheme) Color(0xFF30363D) else Color(0xFFE1E4E8))
@@ -426,13 +428,15 @@ fun SettingsScreen(viewModel: MainViewModel) {
 fun ActionRow(
     title: String,
     icon: androidx.compose.ui.graphics.vector.ImageVector,
-    isDark: Boolean
+    isDark: Boolean,
+    onClick: () -> Unit = {}
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier
             .fillMaxWidth()
+            .clickable(onClick = onClick)
             .padding(vertical = 8.dp)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
