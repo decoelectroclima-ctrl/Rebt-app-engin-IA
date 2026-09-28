@@ -649,26 +649,51 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     // SUBSCRIPTION & GOOGLE PLAY BILLING ACTIONS
     // -------------------------------------------------------------
 
-    fun purchaseSubscription(activity: android.app.Activity, planType: String) {
-        val (productId, productType) = when (planType) {
-            "pro" -> Pair(billingManager.PRO_MONTHLY_PRODUCT_ID, com.android.billingclient.api.BillingClient.ProductType.SUBS)
-            "premium" -> Pair(billingManager.PREMIUM_LIFETIME_PRODUCT_ID, com.android.billingclient.api.BillingClient.ProductType.INAPP)
-            else -> Pair(billingManager.PRO_MONTHLY_PRODUCT_ID, com.android.billingclient.api.BillingClient.ProductType.SUBS)
+    val formattedPrices: StateFlow<Map<String, String>> = billingManager.formattedPrices
+
+    val isPremium: Boolean
+        get() = subscriptionFlow.value?.isActive == true
+
+    fun purchaseSubscription(activity: android.app.Activity, planId: String, planKey: String) {
+        val (productId, productType, basePlanId) = when (planId) {
+            "plan_trimestral" -> Triple(
+                billingManager.PRO_QUARTERLY_PRODUCT_ID,
+                com.android.billingclient.api.BillingClient.ProductType.SUBS,
+                billingManager.BASE_PLAN_QUARTERLY
+            )
+            "plan_mensual" -> Triple(
+                billingManager.PRO_MONTHLY_PRODUCT_ID,
+                com.android.billingclient.api.BillingClient.ProductType.SUBS,
+                billingManager.BASE_PLAN_MONTHLY
+            )
+            "plan_vitalicio" -> Triple(
+                billingManager.PREMIUM_LIFETIME_PRODUCT_ID,
+                com.android.billingclient.api.BillingClient.ProductType.INAPP,
+                null
+            )
+            else -> Triple(
+                billingManager.PRO_QUARTERLY_PRODUCT_ID,
+                com.android.billingclient.api.BillingClient.ProductType.SUBS,
+                billingManager.BASE_PLAN_QUARTERLY
+            )
         }
-        billingManager.launchBillingFlow(activity, productId, productType)
+        billingManager.launchBillingFlow(activity, productId, productType, basePlanId)
     }
 
     fun activatePlanDirect(plan: String, price: Double) {
+        // P0-4 FIX: activatePlanDirect is strictly restricted to DEBUG sandbox builds
+        if (!BuildConfig.DEBUG) return
         viewModelScope.launch {
             repository.activatePremiumSubscription(plan, price)
         }
     }
 
-    fun restoreSubscription() {
-        billingManager.queryActivePurchases()
+    fun restoreSubscription(onResult: ((Boolean) -> Unit)? = null) {
+        billingManager.queryActivePurchases(onResult)
     }
 
     fun cancelSubscriptionDev() {
+        if (!BuildConfig.DEBUG) return
         viewModelScope.launch {
             repository.restoreOrCancelSubscription()
         }
@@ -806,7 +831,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun seedDefaultPostItsIfEmpty(forceAddMissing: Boolean = false) {
+    fun seedDefaultPostItsIfEmpty(forceAddMissing: Boolean = false, onlyBasic: Boolean = false) {
         viewModelScope.launch {
             val list = repository.postItsFlow.first()
             val defaults = listOf(
@@ -907,13 +932,15 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 )
             )
 
+            val targetDefaults = if (onlyBasic) defaults.take(10) else defaults
+
             if (list.isEmpty()) {
-                for ((content, category, color) in defaults) {
+                for ((content, category, color) in targetDefaults) {
                     repository.insertPostIt(content, category, color)
                 }
             } else if (forceAddMissing) {
                 val existingContents = list.map { it.content.trim().take(30) }.toSet()
-                for ((content, category, color) in defaults) {
+                for ((content, category, color) in targetDefaults) {
                     if (existingContents.none { content.startsWith(it) }) {
                         repository.insertPostIt(content, category, color)
                     }

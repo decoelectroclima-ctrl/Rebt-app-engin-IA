@@ -352,7 +352,9 @@ fun DashboardScreen(viewModel: MainViewModel) {
                 tag = "dashboard_action_mistakes",
                 onClick = {
                     FeedbackManager.playClick(context)
-                    if (mistakeReviews.isNotEmpty()) {
+                    if (!isPremium) {
+                        viewModel.activeTab = "exams"
+                    } else if (mistakeReviews.isNotEmpty()) {
                         viewModel.startMistakesReview(mistakeReviews)
                     } else {
                         viewModel.activeTab = "exams"

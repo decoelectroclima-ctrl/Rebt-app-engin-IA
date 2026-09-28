@@ -140,7 +140,12 @@ fun SettingsScreen(viewModel: MainViewModel) {
                             Spacer(modifier = Modifier.height(2.dp))
                             Text(
                                 text = if (isPremium) {
-                                    val planName = if (subscription?.plan == "premium") "Plan Instalador Vitalicio" else "Plan Aspirante Pro"
+                                    val planName = when (subscription?.plan) {
+                                        "premium" -> "Plan Instalador Pro Vitalicio (49,99 €)"
+                                        "pro_quarterly" -> "Plan Convocatoria Trimestral (29,99 €)"
+                                        "pro_monthly" -> "Plan Aspirante Pro Mensual (14,99 €)"
+                                        else -> "Plan Pro"
+                                    }
                                     "✨ $planName Activo"
                                 } else {
                                     "Plan Gratuito de Demostración"

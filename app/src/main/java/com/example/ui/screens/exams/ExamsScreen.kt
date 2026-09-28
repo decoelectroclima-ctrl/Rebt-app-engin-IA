@@ -138,6 +138,57 @@ fun ExamSelectionHub(viewModel: MainViewModel) {
 @Composable
 fun OfficialSimulationsTab(viewModel: MainViewModel) {
     val context = LocalContext.current
+    val examHistory by viewModel.examHistoryFlow.collectAsState()
+    val isPremium = viewModel.isPremium
+    val officialExamsCount = remember(examHistory) {
+        examHistory.count { it.totalCount == ExamConfig.OFFICIAL_QUESTIONS }
+    }
+    var showGatingDialog by remember { mutableStateOf(false) }
+    var gatingDialogMessage by remember { mutableStateOf("") }
+
+    if (showGatingDialog) {
+        AlertDialog(
+            onDismissRequest = { showGatingDialog = false },
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.WorkspacePremium,
+                    contentDescription = null,
+                    tint = Color(0xFFF59E0B),
+                    modifier = Modifier.size(32.dp)
+                )
+            },
+            title = {
+                Text(
+                    text = "Función del Plan Pro",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            },
+            text = {
+                Text(
+                    text = gatingDialogMessage,
+                    fontSize = 13.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        showGatingDialog = false
+                        viewModel.activeTab = "subscription"
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE67E22))
+                ) {
+                    Text("Ver Planes de Suscripción")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showGatingDialog = false }) {
+                    Text("Cerrar")
+                }
+            }
+        )
+    }
 
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(14.dp),
@@ -235,17 +286,44 @@ fun OfficialSimulationsTab(viewModel: MainViewModel) {
                             fontWeight = FontWeight.Bold,
                             fontSize = 15.sp
                         )
-                        Surface(
-                            shape = RoundedCornerShape(6.dp),
-                            color = Color(0xFF238636).copy(alpha = 0.15f)
-                        ) {
-                            Text(
-                                text = "Básica (IBTB)",
-                                fontSize = 11.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = Color(0xFF3FB950),
-                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
-                            )
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Surface(
+                                shape = RoundedCornerShape(6.dp),
+                                color = if (!isPremium) {
+                                    if (officialExamsCount >= 1) Color(0xFFF85149).copy(alpha = 0.15f) else Color(0xFFF59E0B).copy(alpha = 0.15f)
+                                } else {
+                                    Color(0xFF238636).copy(alpha = 0.15f)
+                                }
+                            ) {
+                                Text(
+                                    text = if (!isPremium) {
+                                        if (officialExamsCount >= 1) "Demo Agotada (1/1)" else "1 Prueba Demo (0/1)"
+                                    } else {
+                                        "Ilimitado PRO"
+                                    },
+                                    fontSize = 11.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = if (!isPremium) {
+                                        if (officialExamsCount >= 1) Color(0xFFF85149) else Color(0xFFF59E0B)
+                                    } else {
+                                        Color(0xFF3FB950)
+                                    },
+                                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                                )
+                            }
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Surface(
+                                shape = RoundedCornerShape(6.dp),
+                                color = Color(0xFF238636).copy(alpha = 0.15f)
+                            ) {
+                                Text(
+                                    text = "Básica (IBTB)",
+                                    fontSize = 11.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color(0xFF3FB950),
+                                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                                )
+                            }
                         }
                     }
                     Spacer(modifier = Modifier.height(4.dp))
@@ -255,16 +333,28 @@ fun OfficialSimulationsTab(viewModel: MainViewModel) {
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Spacer(modifier = Modifier.height(10.dp))
-                    // TODO(javi): confirmar gating si los simulacros de 40 preguntas o ITCs avanzadas requieren suscripción Pro activa
                     Button(
                         onClick = {
                             FeedbackManager.playClick(context)
-                            viewModel.startOfficialSimulation()
+                            if (!isPremium && officialExamsCount >= 1) {
+                                gatingDialogMessage = "Has completado tu simulacro oficial de prueba (40 preguntas). Para realizar simulacros oficiales ilimitados con selección estratificada y temporizador de 90 min, activa el Plan Pro."
+                                showGatingDialog = true
+                            } else {
+                                viewModel.startOfficialSimulation()
+                            }
                         },
                         modifier = Modifier.fillMaxWidth().testTag("start_sim_40"),
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF238636))
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = if (!isPremium && officialExamsCount >= 1) Color(0xFFE67E22) else Color(0xFF238636)
+                        )
                     ) {
-                        Text("Iniciar (${ExamConfig.OFFICIAL_MINUTES} min)")
+                        if (!isPremium && officialExamsCount >= 1) {
+                            Icon(Icons.Default.Lock, contentDescription = null, modifier = Modifier.size(16.dp))
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Text("Desbloquear Ilimitados (Plan Pro)")
+                        } else {
+                            Text("Iniciar (${ExamConfig.OFFICIAL_MINUTES} min)")
+                        }
                     }
                 }
             }
@@ -377,8 +467,55 @@ fun ItcTestsList(
     allQuestions: List<Question>
 ) {
     val context = LocalContext.current
+    val isPremium = viewModel.isPremium
     var itcSearchQuery by remember { mutableStateOf("") }
     val syllabusMap = remember { Content.SYLLABUS.associateBy { it.id } }
+    var showGatingDialog by remember { mutableStateOf(false) }
+    var gatingMessage by remember { mutableStateOf("") }
+
+    if (showGatingDialog) {
+        AlertDialog(
+            onDismissRequest = { showGatingDialog = false },
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.WorkspacePremium,
+                    contentDescription = null,
+                    tint = Color(0xFFF59E0B),
+                    modifier = Modifier.size(32.dp)
+                )
+            },
+            title = {
+                Text(
+                    text = "Instrucción Técnica Pro",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            },
+            text = {
+                Text(
+                    text = gatingMessage,
+                    fontSize = 13.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        showGatingDialog = false
+                        viewModel.activeTab = "subscription"
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE67E22))
+                ) {
+                    Text("Ver Planes de Suscripción")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showGatingDialog = false }) {
+                    Text("Cerrar")
+                }
+            }
+        )
+    }
 
     val filteredItcs = remember(itcSearchQuery) {
         (1..52).filter { itcNum ->
@@ -492,13 +629,19 @@ fun ItcTestsList(
             val itcQuestions = remember(allQuestions, itcNum) { allQuestions.filter { it.itcNumber() == itcNum } }
             val qCount = itcQuestions.size
             val successPct = viewModel.getItcSuccessPct(itcNum, progressList)
+            val isLockedForFree = !isPremium && itcNum > 5
 
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clickable(enabled = qCount > 0) {
+                    .clickable(enabled = qCount > 0 || isLockedForFree) {
                         FeedbackManager.playClick(context)
-                        viewModel.startItcPractice(itcNum, title)
+                        if (isLockedForFree) {
+                            gatingMessage = "La preparación específica para la ITC-BT-${String.format("%02d", itcNum)} ($title) está reservada para el Plan Pro (ITCs 01 a 05 gratuitas). Desbloquea las 52 ITCs del REBT con el Plan Pro o Vitalicio."
+                            showGatingDialog = true
+                        } else if (qCount > 0) {
+                            viewModel.startItcPractice(itcNum, title)
+                        }
                     }
                     .testTag("itc_card_${itcNum}"),
                 shape = RoundedCornerShape(14.dp),
@@ -507,7 +650,9 @@ fun ItcTestsList(
                 ),
                 border = BorderStroke(
                     1.dp,
-                    if (qCount > 0) {
+                    if (isLockedForFree) {
+                        Color(0xFFE67E22).copy(alpha = 0.4f)
+                    } else if (qCount > 0) {
                         if (isSpecialist) Color(0xFFD29922).copy(alpha = 0.4f)
                         else if (viewModel.isDarkTheme) Color(0xFF30363D) else Color(0xFFE1E4E8)
                     } else {
@@ -521,7 +666,9 @@ fun ItcTestsList(
                 ) {
                     Surface(
                         shape = RoundedCornerShape(8.dp),
-                        color = if (isSpecialist) Color(0xFFD29922).copy(alpha = 0.15f) else MaterialTheme.colorScheme.primary.copy(alpha = 0.12f),
+                        color = if (isLockedForFree) Color(0xFFE67E22).copy(alpha = 0.12f)
+                        else if (isSpecialist) Color(0xFFD29922).copy(alpha = 0.15f)
+                        else MaterialTheme.colorScheme.primary.copy(alpha = 0.12f),
                         modifier = Modifier.size(42.dp)
                     ) {
                         Box(contentAlignment = Alignment.Center) {
@@ -529,7 +676,9 @@ fun ItcTestsList(
                                 text = String.format("%02d", itcNum),
                                 fontWeight = FontWeight.Black,
                                 fontSize = 15.sp,
-                                color = if (isSpecialist) Color(0xFFD29922) else MaterialTheme.colorScheme.primary
+                                color = if (isLockedForFree) Color(0xFFE67E22)
+                                else if (isSpecialist) Color(0xFFD29922)
+                                else MaterialTheme.colorScheme.primary
                             )
                         }
                     }
@@ -571,30 +720,57 @@ fun ItcTestsList(
                         Spacer(modifier = Modifier.height(2.dp))
                         Text(
                             text = when {
+                                isLockedForFree -> "ITC Pro (01-05 gratis en Plan Free)"
                                 qCount == 0 -> "0 preguntas disponibles"
                                 qCount < ExamConfig.ITC_BLOCK_QUESTIONS -> "$qCount preguntas disponibles • ${ExamConfig.ITC_BLOCK_MINUTES} min"
                                 else -> "$qCount preguntas • ${ExamConfig.ITC_BLOCK_MINUTES} min"
                             },
                             fontSize = 11.sp,
-                            color = if (qCount > 0) Color(0xFF3FB950) else Color.Gray
+                            color = if (isLockedForFree) Color(0xFFE67E22) else if (qCount > 0) Color(0xFF3FB950) else Color.Gray
                         )
                     }
 
                     Column(horizontalAlignment = Alignment.End) {
-                        Surface(
-                            shape = RoundedCornerShape(6.dp),
-                            color = if (successPct != "—") Color(0xFF3FB950).copy(alpha = 0.12f) else Color.Gray.copy(alpha = 0.1f)
-                        ) {
-                            Text(
-                                text = successPct,
-                                fontSize = 12.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = if (successPct != "—") Color(0xFF3FB950) else Color.Gray,
-                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
-                            )
+                        if (isLockedForFree) {
+                            Surface(
+                                shape = RoundedCornerShape(6.dp),
+                                color = Color(0xFFE67E22).copy(alpha = 0.15f)
+                            ) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 3.dp)
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Lock,
+                                        contentDescription = "Requiere Plan Pro",
+                                        tint = Color(0xFFE67E22),
+                                        modifier = Modifier.size(12.dp)
+                                    )
+                                    Spacer(modifier = Modifier.width(3.dp))
+                                    Text(
+                                        text = "PRO",
+                                        fontSize = 10.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = Color(0xFFE67E22)
+                                    )
+                                }
+                            }
+                        } else {
+                            Surface(
+                                shape = RoundedCornerShape(6.dp),
+                                color = if (successPct != "—") Color(0xFF3FB950).copy(alpha = 0.12f) else Color.Gray.copy(alpha = 0.1f)
+                            ) {
+                                Text(
+                                    text = successPct,
+                                    fontSize = 12.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = if (successPct != "—") Color(0xFF3FB950) else Color.Gray,
+                                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                                )
+                            }
+                            Spacer(modifier = Modifier.height(2.dp))
+                            Text("Acierto", fontSize = 10.sp, color = Color.Gray)
                         }
-                        Spacer(modifier = Modifier.height(2.dp))
-                        Text("Acierto", fontSize = 10.sp, color = Color.Gray)
                     }
                 }
             }
@@ -661,6 +837,52 @@ fun ThematicModulesList(viewModel: MainViewModel) {
 @Composable
 fun MistakesReviewTab(viewModel: MainViewModel, reviews: List<com.example.data.QuestionReviewEntity>) {
     val context = LocalContext.current
+    val isPremium = viewModel.isPremium
+    var showGatingDialog by remember { mutableStateOf(false) }
+
+    if (showGatingDialog) {
+        AlertDialog(
+            onDismissRequest = { showGatingDialog = false },
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.WorkspacePremium,
+                    contentDescription = null,
+                    tint = Color(0xFFF59E0B),
+                    modifier = Modifier.size(32.dp)
+                )
+            },
+            title = {
+                Text(
+                    text = "Repaso Interactivo Pro",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            },
+            text = {
+                Text(
+                    text = "El test interactivo con repetición espaciada es una función exclusiva del Plan Pro. Puedes consultar todas tus preguntas falladas en esta lista, o desbloquear el test interactivo para eliminarlas de tu lista al acertarlas.",
+                    fontSize = 13.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        showGatingDialog = false
+                        viewModel.activeTab = "subscription"
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE67E22))
+                ) {
+                    Text("Ver Planes de Suscripción")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showGatingDialog = false }) {
+                    Text("Cerrar")
+                }
+            }
+        )
+    }
 
     if (reviews.isEmpty()) {
         Box(
@@ -723,17 +945,29 @@ fun MistakesReviewTab(viewModel: MainViewModel, reviews: List<com.example.data.Q
                         Button(
                             onClick = {
                                 FeedbackManager.playClick(context)
-                                viewModel.startMistakesReview(reviews)
+                                if (!isPremium) {
+                                    showGatingDialog = true
+                                } else {
+                                    viewModel.startMistakesReview(reviews)
+                                }
                             },
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .testTag("start_mistakes_review_button"),
-                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFF85149)),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = if (!isPremium) Color(0xFFE67E22) else Color(0xFFF85149)
+                            ),
                             shape = RoundedCornerShape(10.dp)
                         ) {
-                            Icon(Icons.Default.PlayArrow, contentDescription = null)
-                            Spacer(modifier = Modifier.width(6.dp))
-                            Text("Repasar Todos los Fallos (${reviews.size})")
+                            if (!isPremium) {
+                                Icon(Icons.Default.Lock, contentDescription = null, modifier = Modifier.size(16.dp))
+                                Spacer(modifier = Modifier.width(6.dp))
+                                Text("Desbloquear Modo Test Interactivo (Plan Pro)")
+                            } else {
+                                Icon(Icons.Default.PlayArrow, contentDescription = null)
+                                Spacer(modifier = Modifier.width(6.dp))
+                                Text("Repasar Todos los Fallos (${reviews.size})")
+                            }
                         }
                     }
                 }
@@ -1211,6 +1445,7 @@ fun ActiveExamView(viewModel: MainViewModel) {
 @Composable
 fun ExamResultsView(viewModel: MainViewModel) {
     val context = LocalContext.current
+    val isPremium = viewModel.isPremium
     val module = viewModel.activeExamModule ?: return
     val total = module.questions.size
     val correct = viewModel.examCorrectCount
@@ -1409,16 +1644,25 @@ fun ExamResultsView(viewModel: MainViewModel) {
                     OutlinedButton(
                         onClick = {
                             FeedbackManager.playClick(context)
-                            // Collect mistake reviews and start
-                            val reviews = viewModel.questionReviewsFlow.value
-                            viewModel.startMistakesReview(reviews)
+                            if (!isPremium) {
+                                viewModel.activeTab = "subscription"
+                            } else {
+                                val reviews = viewModel.questionReviewsFlow.value
+                                viewModel.startMistakesReview(reviews)
+                            }
                         },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(12.dp)
                     ) {
-                        Icon(Icons.Default.RestartAlt, contentDescription = null, modifier = Modifier.size(16.dp))
-                        Spacer(modifier = Modifier.width(6.dp))
-                        Text("Repasar Fallos de esta Sesión")
+                        if (!isPremium) {
+                            Icon(Icons.Default.Lock, contentDescription = null, modifier = Modifier.size(16.dp), tint = Color(0xFFE67E22))
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Text("Repasar Fallos en Test (Plan Pro)", color = Color(0xFFE67E22))
+                        } else {
+                            Icon(Icons.Default.RestartAlt, contentDescription = null, modifier = Modifier.size(16.dp))
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Text("Repasar Fallos de esta Sesión")
+                        }
                     }
                 }
             }

@@ -191,10 +191,20 @@ fun AnalyticsScreen(viewModel: MainViewModel) {
                         TextButton(
                             onClick = {
                                 FeedbackManager.playClick(context)
-                                viewModel.startMistakesReview(mistakeReviews)
+                                if (!viewModel.isPremium) {
+                                    viewModel.activeTab = "subscription"
+                                } else {
+                                    viewModel.startMistakesReview(mistakeReviews)
+                                }
                             }
                         ) {
-                            Text("Repasar", fontWeight = FontWeight.Bold, color = Color(0xFFF85149))
+                            if (!viewModel.isPremium) {
+                                Icon(Icons.Default.Lock, contentDescription = null, modifier = Modifier.size(14.dp), tint = Color(0xFFF85149))
+                                Spacer(modifier = Modifier.width(4.dp))
+                                Text("Repasar (PRO)", fontWeight = FontWeight.Bold, color = Color(0xFFF85149))
+                            } else {
+                                Text("Repasar", fontWeight = FontWeight.Bold, color = Color(0xFFF85149))
+                            }
                         }
                     }
                 }
@@ -213,7 +223,10 @@ fun AnalyticsScreen(viewModel: MainViewModel) {
         }
 
         val allModules = Content.QUESTIONS.values.toList()
-        items(allModules, key = { it.id }) { mod ->
+        val isPremium = viewModel.isPremium
+        val displayedModules = if (isPremium) allModules else allModules.take(2)
+
+        items(displayedModules, key = { it.id }) { mod ->
             val prog = progressList.find { it.moduleId == mod.id }
             val pct = prog?.pct ?: 0
             val answered = prog?.answeredCount ?: 0
@@ -282,6 +295,62 @@ fun AnalyticsScreen(viewModel: MainViewModel) {
                             fontWeight = FontWeight.Bold,
                             color = if (pct >= 75) Color(0xFF3FB950) else Color(0xFFE67E22)
                         )
+                    }
+                }
+            }
+        }
+
+        if (!isPremium && allModules.size > 2) {
+            item {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            FeedbackManager.playClick(context)
+                            viewModel.activeTab = "subscription"
+                        }
+                        .testTag("analytics_upgrade_card"),
+                    shape = RoundedCornerShape(16.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = if (viewModel.isDarkTheme) Color(0xFF1F1D17) else Color(0xFFFFFBEB)
+                    ),
+                    border = BorderStroke(1.5.dp, Color(0xFFF59E0B))
+                ) {
+                    Column(
+                        modifier = Modifier.padding(18.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Lock,
+                            contentDescription = null,
+                            tint = Color(0xFFF59E0B),
+                            modifier = Modifier.size(28.dp)
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = "Diagnóstico Detallado de Módulos (Función Pro)",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 14.sp,
+                            color = MaterialTheme.colorScheme.onSurface,
+                            textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            text = "Desbloquea el análisis completo de los ${allModules.size} módulos temáticos, tasas de fallo por ITC y puntos débiles con el Plan Pro.",
+                            fontSize = 12.sp,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                        )
+                        Spacer(modifier = Modifier.height(10.dp))
+                        Button(
+                            onClick = {
+                                FeedbackManager.playClick(context)
+                                viewModel.activeTab = "subscription"
+                            },
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE67E22))
+                        ) {
+                            Text("Desbloquear Analítica Completa", color = Color.White)
+                        }
                     }
                 }
             }

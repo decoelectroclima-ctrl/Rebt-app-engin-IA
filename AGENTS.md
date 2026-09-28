@@ -7,8 +7,8 @@ Please adhere strictly to the following configuration and publishing guidelines 
 *   **Why**: This application is already configured and uploaded to the Google Play Console under this ID. Changing the `applicationId` in `app/build.gradle.kts` will break updates and result in submission failures.
 
 ## 2. Versioning Restrictions
-*   **Version Code (`versionCode`)**: The current version code uploaded and recognized is **22**.
+*   **Version Code (`versionCode`)**: The current version code uploaded and recognized is **24**.
 *   **Increment Requirement**: Any subsequent updates or build corrections must use a `versionCode` strictly greater than the last used version.
 *   **Updating Scheme**:
-*   Set `versionCode` in `/app/build.gradle.kts` to `23` or higher for the next release.
-*   Increment `versionName` accordingly (e.g., `"23.0"`).
+*   Set `versionCode` in `/app/build.gradle.kts` to `25` or higher for the next release.
+*   Increment `versionName` accordingly (e.g., `"25.0"`).

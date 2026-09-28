@@ -1,6 +1,8 @@
 package com.example.ui.screens.subscription
 
 import android.app.Activity
+import android.content.Context
+import android.content.ContextWrapper
 import android.content.Intent
 import android.net.Uri
 import android.widget.Toast
@@ -15,7 +17,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -28,7 +29,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.BuildConfig
@@ -37,6 +37,16 @@ import com.example.ui.FeedbackManager
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+
+// Helper to safely resolve Activity through ContextWrapper layers (P0-4 fix)
+fun Context.findActivity(): Activity? {
+    var ctx = this
+    while (ctx is ContextWrapper) {
+        if (ctx is Activity) return ctx
+        ctx = ctx.baseContext
+    }
+    return null
+}
 
 data class PlanFeature(
     val title: String,
@@ -69,8 +79,8 @@ data class FaqItem(
 @Composable
 fun SubscriptionScreen(viewModel: MainViewModel) {
     val context = LocalContext.current
-    val activity = context as? Activity
     val subscription by viewModel.subscriptionFlow.collectAsState()
+    val playPrices by viewModel.formattedPrices.collectAsState()
     val isPremium = subscription?.isActive == true
     val activePlanKey = subscription?.plan ?: "gratuito"
 
@@ -81,16 +91,21 @@ fun SubscriptionScreen(viewModel: MainViewModel) {
         viewModel.activeTab = "settings"
     }
 
+    // Dynamic prices from Google Play with reliable local defaults
+    val monthlyPriceStr = playPrices[viewModel.billingManager.PRO_MONTHLY_PRODUCT_ID] ?: "14,99 €"
+    val quarterlyPriceStr = playPrices[viewModel.billingManager.PRO_QUARTERLY_PRODUCT_ID] ?: "29,99 €"
+    val lifetimePriceStr = playPrices[viewModel.billingManager.PREMIUM_LIFETIME_PRODUCT_ID] ?: "49,99 €"
+
     val plans = listOf(
         PlanOption(
             id = "plan_mensual",
             name = "Aspirante Mensual",
             badge = "FLEXIBLE",
             badgeColor = Color(0xFF58A6FF),
-            price = "14,99 €",
+            price = monthlyPriceStr,
             pricePeriod = "/ mes",
             savingsText = "Cancela cuando quieras",
-            description = "Ideal si tu convocatoria de examen es el próximo mes y necesitas preparación intensiva inmediata.",
+            description = "Ideal si tu examen es inminente y necesitas simulacros ilimitados durante las próximas 4 semanas.",
             isPopular = false,
             planKey = "pro",
             numericPrice = 14.99
@@ -100,10 +115,10 @@ fun SubscriptionScreen(viewModel: MainViewModel) {
             name = "Plan Convocatoria",
             badge = "MÁS POPULAR PARA EL EXAMEN",
             badgeColor = Color(0xFFF59E0B),
-            price = "29,99 €",
+            price = quarterlyPriceStr,
             pricePeriod = "/ 3 meses",
-            savingsText = "Ahorras un 33 % (solo 9,99 €/mes)",
-            description = "El período recomendado por academias: 3 meses para dominar las 52 ITCs y asegurar el aprobado a la primera.",
+            savingsText = "Ahorras un 33 % (aprox. 9,99 €/mes)",
+            description = "El plazo recomendado para asimilar el temario, dominar las ITCs y consolidar el aprobado.",
             isPopular = true,
             planKey = "pro",
             numericPrice = 29.99
@@ -111,18 +126,19 @@ fun SubscriptionScreen(viewModel: MainViewModel) {
         PlanOption(
             id = "plan_vitalicio",
             name = "Instalador Pro Vitalicio",
-            badge = "PAGO ÚNICO · DE POR VIDA",
+            badge = "PAGO ÚNICO · SIN CUOTAS",
             badgeColor = Color(0xFF10B981),
-            price = "49,99 €",
+            price = lifetimePriceStr,
             pricePeriod = "pago único",
-            savingsText = "Sin cuotas jamás · Actualizaciones REBT incluidas",
-            description = "Para instaladores autorizados y técnicos en ejercicio. Úsalo en obra, cálculos y consultas toda tu carrera profesional.",
+            savingsText = "Sin renovaciones jamás · Para toda tu carrera",
+            description = "Para instaladores y técnicos electricistas. Acceso permanente sin cuotas mensuales para tus consultas y cálculos en obra.",
             isPopular = false,
             planKey = "premium",
             numericPrice = 49.99
         )
     )
 
+    // Accurate features matrix matching the actual app implementation (P0-5 fix)
     val comparisonFeatures = listOf(
         PlanFeature(
             title = "Simulacros Oficiales REBT (40 preg. / 90 min)",
@@ -132,45 +148,52 @@ fun SubscriptionScreen(viewModel: MainViewModel) {
             isKeyHighlight = true
         ),
         PlanFeature(
-            title = "Test por ITC (Las 52 ITCs del Reglamento)",
-            freeText = "Solo ITCs 01 a 05",
-            proText = "52 ITCs completas",
-            lifetimeText = "52 ITCs completas",
+            title = "Simulacros Cortos de Práctica (20 preg.)",
+            freeText = "Ilimitados",
+            proText = "Ilimitados",
+            lifetimeText = "Ilimitados",
+            isKeyHighlight = false
+        ),
+        PlanFeature(
+            title = "Test por ITC reglamentarias",
+            freeText = "Articulado e ITCs 01 a 05",
+            proText = "Catálogo completo",
+            lifetimeText = "Catálogo completo",
             isKeyHighlight = true
         ),
         PlanFeature(
-            title = "Reparto oficial estratificado (25% Art. / 75% ITC)",
-            freeText = "Aleatorio básico",
-            proText = "Estratificado real",
-            lifetimeText = "Estratificado real",
+            title = "Reparto estratificado oficial (25% Art. / 75% ITC)",
+            freeText = "En simulacro demo",
+            proText = "Siempre activo",
+            lifetimeText = "Siempre activo",
             isKeyHighlight = false
         ),
         PlanFeature(
-            title = "Repaso inteligente de errores (repetición espaciada)",
-            freeText = "No disponible",
-            proText = "Algoritmo activo",
-            lifetimeText = "Algoritmo activo",
+            title = "Repaso inteligente de fallos (test interactivo)",
+            freeText = "Solo lectura de fallos",
+            proText = "Test interactivo activo",
+            lifetimeText = "Test interactivo activo",
             isKeyHighlight = true
         ),
         PlanFeature(
-            title = "Calculadoras de Laboratorio Electrotécnico",
-            freeText = "5 calculadoras",
-            proText = "Todas (tubos, tierra, Iz)",
-            lifetimeText = "Todas + futuras",
+            title = "Laboratorio Electrotécnico",
+            freeText = "Conductores y tubos",
+            proText = "Todas (cargas, tierras, Iz)",
+            lifetimeText = "Todas las calculadoras",
             isKeyHighlight = false
         ),
         PlanFeature(
-            title = "Colección de Chuletas Oficiales en Posits",
-            freeText = "10 chuletas",
-            proText = "19+ chuletas y sync",
-            lifetimeText = "19+ chuletas y sync",
+            title = "Chuletas Oficiales en Posits",
+            freeText = "10 chuletas básicas",
+            proText = "19+ chuletas en local",
+            lifetimeText = "19+ chuletas en local",
             isKeyHighlight = false
         ),
         PlanFeature(
-            title = "Analítica predictiva de probabilidad de APTO",
+            title = "Analítica de Probabilidad de APTO",
             freeText = "Básica",
-            proText = "Detallada por ITC",
-            lifetimeText = "Detallada por ITC",
+            proText = "Diagnóstico detallado",
+            lifetimeText = "Diagnóstico detallado",
             isKeyHighlight = true
         ),
         PlanFeature(
@@ -181,10 +204,10 @@ fun SubscriptionScreen(viewModel: MainViewModel) {
             isKeyHighlight = false
         ),
         PlanFeature(
-            title = "Sin cuotas de suscripción recurrentes",
+            title = "Sin cuotas de suscripción periódicas",
             freeText = "Gratis",
             proText = "Cuota periódica",
-            lifetimeText = "PAGO ÚNICO PARA SIEMPRE",
+            lifetimeText = "PAGO ÚNICO DEFINITIVO",
             isKeyHighlight = true
         )
     )
@@ -192,19 +215,19 @@ fun SubscriptionScreen(viewModel: MainViewModel) {
     val faqs = listOf(
         FaqItem(
             question = "¿Qué plan me conviene más para prepararme el examen?",
-            answer = "Si tienes fecha de examen en los próximos 2 o 3 meses, el **Plan Convocatoria (Trimestral a 29,99 €)** es el más eficiente: te da acceso a los simulacros oficiales de 40 preguntas ilimitados y a las 52 ITCs por solo 9,99 €/mes. Si ya ejerces como instalador o quieres tener la herramienta siempre en el bolsillo, el **Plan Vitalicio a 49,99 €** amortiza la inversión de por vida en un solo pago."
+            answer = "Si tienes fecha de examen en los próximos 2 o 3 meses, el Plan Convocatoria (Trimestral) es el más eficiente: te permite hacer simulacros oficiales de 40 preguntas ilimitados y testear todas las ITCs por solo 9,99 €/mes equivalente. Si trabajas habitualmente en obra o proyectos y buscas una herramienta permanente de consulta, el Plan Vitalicio te da acceso de por vida sin cuotas mensuales."
         ),
         FaqItem(
             question = "¿Cómo funciona la garantía y la cancelación de suscripción?",
-            answer = "Las suscripciones mensuales y trimestrales se gestionan íntegramente a través de Google Play Store. Puedes cancelar en cualquier instante con 1 clic desde tu cuenta de Google Play y seguirás disfrutando del acceso Pro hasta el último día del período pagado, sin cargos sorpresa."
+            answer = "Las suscripciones periódicas se gestionan íntegramente a través de Google Play Store. Puedes cancelar en cualquier instante con 1 clic desde tu cuenta de Google Play y seguirás disfrutando del acceso Pro hasta el último día del período contratado, sin renovaciones sorpresa."
         ),
         FaqItem(
-            question = "¿Funciona la app y el contenido si no tengo cobertura o internet?",
+            question = "¿Funciona la app y el contenido si no tengo internet?",
             answer = "¡Sí, al 100 %! Toda la base de datos de preguntas, temarios, calculadoras de laboratorio y apuntes técnicos residen de forma local en tu dispositivo (base de datos Room nativa). Puedes hacer exámenes en el tren, en sótanos o en obras sin internet."
         ),
         FaqItem(
-            question = "¿Qué incluye el Plan Vitalicio (Licencia Definitiva)?",
-            answer = "El Plan Vitalicio es un pago único que te otorga acceso permanente a todas las funcionalidades Pro de EnginIA REBT para siempre, incluyendo futuras actualizaciones normativas del REBT 2026+ (nuevas ITCs, vehículo eléctrico ITC-52, autoconsumo ITC-40) y soporte multi-dispositivo con tu cuenta de Google Play."
+            question = "¿Qué condiciones tiene el Plan Vitalicio (Licencia Definitiva)?",
+            answer = "El Plan Vitalicio es un pago único que te otorga acceso permanente a todas las funcionalidades Pro de EnginIA REBT para siempre, sin cuotas periódicas, incluyendo las actualizaciones normativas y mejoras técnicas que se publiquen en la aplicación."
         )
     )
 
@@ -251,8 +274,15 @@ fun SubscriptionScreen(viewModel: MainViewModel) {
                     TextButton(
                         onClick = {
                             FeedbackManager.playClick(context)
-                            viewModel.restoreSubscription()
-                            Toast.makeText(context, "Consultando compras activas en Google Play...", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, "Consultando compras en Google Play...", Toast.LENGTH_SHORT).show()
+                            viewModel.restoreSubscription { hasActive ->
+                                val msg = if (hasActive) {
+                                    "¡Suscripción activa recuperada y verificada!"
+                                } else {
+                                    "No se encontraron compras activas asociadas a esta cuenta."
+                                }
+                                Toast.makeText(context, msg, Toast.LENGTH_LONG).show()
+                            }
                         }
                     ) {
                         Text(
@@ -365,7 +395,7 @@ fun SubscriptionScreen(viewModel: MainViewModel) {
                             Spacer(modifier = Modifier.height(8.dp))
 
                             Text(
-                                text = "Desbloquea simulacros oficiales de 40 preguntas ilimitados, las 52 ITCs reglamentarias y el laboratorio técnico para trabajar en obra con total seguridad.",
+                                text = "Desbloquea simulacros oficiales de 40 preguntas ilimitados, el catálogo completo de ITCs y el laboratorio técnico para trabajar en obra con total seguridad.",
                                 fontSize = 13.sp,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 textAlign = TextAlign.Center,
@@ -391,7 +421,7 @@ fun SubscriptionScreen(viewModel: MainViewModel) {
             // 3. Plan Selection Cards
             item {
                 Text(
-                    text = "Elige tu Modalidad de Estudio",
+                    text = "Elige tu Modalidad de Acceso",
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface,
@@ -412,7 +442,7 @@ fun SubscriptionScreen(viewModel: MainViewModel) {
                 )
             }
 
-            // 4. CTA Action Button for Selected Plan
+            // 4. CTA Action Button for Selected Plan (P0-4 FIX: ContextWrapper + BuildConfig.DEBUG safeguard)
             item {
                 val currentSelectedPlan = plans.first { it.id == selectedPlanId }
 
@@ -426,10 +456,13 @@ fun SubscriptionScreen(viewModel: MainViewModel) {
                     Button(
                         onClick = {
                             FeedbackManager.playClick(context)
-                            if (activity != null) {
-                                viewModel.purchaseSubscription(activity, currentSelectedPlan.planKey)
-                            } else {
+                            val act = context.findActivity()
+                            if (act != null) {
+                                viewModel.purchaseSubscription(act, currentSelectedPlan.id, currentSelectedPlan.planKey)
+                            } else if (BuildConfig.DEBUG) {
                                 viewModel.activatePlanDirect(currentSelectedPlan.planKey, currentSelectedPlan.numericPrice)
+                            } else {
+                                Toast.makeText(context, "No se pudo iniciar el servicio de facturación de Google Play.", Toast.LENGTH_SHORT).show()
                             }
                         },
                         modifier = Modifier
@@ -468,7 +501,7 @@ fun SubscriptionScreen(viewModel: MainViewModel) {
                         textAlign = TextAlign.Center
                     )
 
-                    // Dev / Sandbox fast activation helper
+                    // Dev / Sandbox fast activation helper (Strictly DEBUG only)
                     if (BuildConfig.DEBUG) {
                         Surface(
                             modifier = Modifier
@@ -499,22 +532,32 @@ fun SubscriptionScreen(viewModel: MainViewModel) {
                                     OutlinedButton(
                                         onClick = {
                                             FeedbackManager.playClick(context)
-                                            viewModel.activatePlanDirect("pro", 14.99)
-                                            Toast.makeText(context, "Plan PRO activado en BD local", Toast.LENGTH_SHORT).show()
+                                            viewModel.activatePlanDirect("pro_monthly", 14.99)
+                                            Toast.makeText(context, "Plan PRO Mensual activado en BD local", Toast.LENGTH_SHORT).show()
                                         },
                                         modifier = Modifier.weight(1f)
                                     ) {
-                                        Text("Activar Pro Dev", fontSize = 11.sp)
+                                        Text("Pro Mensual Dev", fontSize = 11.sp)
+                                    }
+                                    OutlinedButton(
+                                        onClick = {
+                                            FeedbackManager.playClick(context)
+                                            viewModel.activatePlanDirect("pro_quarterly", 29.99)
+                                            Toast.makeText(context, "Plan Trimestral activado en BD local", Toast.LENGTH_SHORT).show()
+                                        },
+                                        modifier = Modifier.weight(1f)
+                                    ) {
+                                        Text("Trimestral Dev", fontSize = 11.sp)
                                     }
                                     OutlinedButton(
                                         onClick = {
                                             FeedbackManager.playClick(context)
                                             viewModel.activatePlanDirect("premium", 49.99)
-                                            Toast.makeText(context, "Plan VITALICIO activado en BD local", Toast.LENGTH_SHORT).show()
+                                            Toast.makeText(context, "Plan Vitalicio activado en BD local", Toast.LENGTH_SHORT).show()
                                         },
                                         modifier = Modifier.weight(1f)
                                     ) {
-                                        Text("Activar Vitalicio Dev", fontSize = 11.sp)
+                                        Text("Vitalicio Dev", fontSize = 11.sp)
                                     }
                                 }
                             }
@@ -527,13 +570,13 @@ fun SubscriptionScreen(viewModel: MainViewModel) {
             item {
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "Comparativa de Beneficios",
+                    text = "Comparativa de Niveles",
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 Text(
-                    text = "Compara en detalle lo que incluye cada nivel de preparación:",
+                    text = "Compara las características incluidas en cada modalidad:",
                     fontSize = 12.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -674,7 +717,8 @@ private fun ActiveSubscriptionStatusCard(
 
     val planTitle = when (subscriptionPlan) {
         "premium" -> "Plan Instalador Pro Vitalicio"
-        "pro" -> "Plan Aspirante Pro (Activo)"
+        "pro_quarterly" -> "Plan Convocatoria (Trimestral)"
+        "pro_monthly" -> "Plan Aspirante Pro (Mensual)"
         else -> "Plan Pro Activo"
     }
 

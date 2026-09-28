@@ -1,5 +1,6 @@
 package com.example.ui.screens.posits
 
+import android.widget.Toast
 import androidx.compose.animation.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -36,6 +37,7 @@ import java.util.Locale
 fun PositsScreen(viewModel: MainViewModel) {
     val context = LocalContext.current
     val postIts by viewModel.postItsFlow.collectAsState()
+    val isPremium = viewModel.isPremium
 
     var searchQuery by remember { mutableStateOf("") }
     var selectedCategory by remember { mutableStateOf("Todos") }
@@ -62,6 +64,9 @@ fun PositsScreen(viewModel: MainViewModel) {
         val matchesQuery = searchQuery.isBlank() || item.content.contains(searchQuery, ignoreCase = true) || item.category.contains(searchQuery, ignoreCase = true)
         matchesCat && matchesQuery
     }
+
+    val displayedList = if (isPremium) filteredList else filteredList.take(10)
+    val lockedCount = if (isPremium) 0 else (filteredList.size - 10).coerceAtLeast(0)
 
     Scaffold(
         topBar = {
@@ -129,10 +134,19 @@ fun PositsScreen(viewModel: MainViewModel) {
             FloatingActionButton(
                 onClick = {
                     FeedbackManager.playClick(context)
-                    newContent = ""
-                    newCategory = "Fórmulas"
-                    newColor = "#FFEAA7"
-                    showAddDialog = true
+                    if (!isPremium && postIts.size >= 10) {
+                        Toast.makeText(
+                            context,
+                            "Has alcanzado el límite de 10 notas en la versión gratuita. Desbloquea posits ilimitados con el Plan Pro.",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        viewModel.activeTab = "subscription"
+                    } else {
+                        newContent = ""
+                        newCategory = "Fórmulas"
+                        newColor = "#FFEAA7"
+                        showAddDialog = true
+                    }
                 },
                 containerColor = Color(0xFFE67E22),
                 contentColor = Color.White,
@@ -275,7 +289,7 @@ fun PositsScreen(viewModel: MainViewModel) {
             }
 
             // List of Post-its
-            items(filteredList, key = { it.id }) { posit ->
+            items(displayedList, key = { it.id }) { posit ->
                 PostItCard(
                     posit = posit,
                     onDelete = {
@@ -283,6 +297,63 @@ fun PositsScreen(viewModel: MainViewModel) {
                         viewModel.deletePostIt(posit.id)
                     }
                 )
+            }
+
+            // Gating Card for Free users when exceeding 10 notes
+            if (lockedCount > 0) {
+                item {
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                FeedbackManager.playClick(context)
+                                viewModel.activeTab = "subscription"
+                            }
+                            .testTag("posits_upgrade_card"),
+                        shape = RoundedCornerShape(16.dp),
+                        colors = CardDefaults.cardColors(
+                            containerColor = if (viewModel.isDarkTheme) Color(0xFF1E261F) else Color(0xFFF0FDF4)
+                        ),
+                        border = BorderStroke(1.5.dp, Color(0xFF10B981))
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(16.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Lock,
+                                contentDescription = null,
+                                tint = Color(0xFF10B981),
+                                modifier = Modifier.size(28.dp)
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(
+                                text = "Tienes $lockedCount chuletas oficiales protegidas",
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 14.sp,
+                                color = MaterialTheme.colorScheme.onSurface,
+                                textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                            )
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text(
+                                text = "El plan gratuito incluye 10 chuletas básicas. Desbloquea las 19+ chuletas del REBT y notas ilimitadas con el Plan Pro.",
+                                fontSize = 12.sp,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                            )
+                            Spacer(modifier = Modifier.height(10.dp))
+                            Button(
+                                onClick = {
+                                    FeedbackManager.playClick(context)
+                                    viewModel.activeTab = "subscription"
+                                },
+                                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF10B981))
+                            ) {
+                                Text("Desbloquear con Plan Pro", color = Color.White)
+                            }
+                        }
+                    }
+                }
             }
         }
     }

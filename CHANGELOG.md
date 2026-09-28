@@ -1,5 +1,26 @@
 # Changelog
 
+## v24.0 - 28 Septiembre 2026
+
+### Auditoría y Blindaje de Facturación y Límites de Suscripción (Corrección P0 Completa)
+- **Corrección P0-1 (Billing Library 8.0 / OfferToken)**: Extracción rigurosa del `offerToken` genuino desde `subscriptionOfferDetails` para suscripciones (`SUBS`), impidiendo compras fallidas por tokens vacíos.
+- **Corrección P0-2 (Planes Base Mensual y Trimestral)**: Diferenciación completa en facturación y catálogo de productos Play (`pro_monthly` con base plan `monthly` y `pro_quarterly` con base plan `quarterly`), permitiendo cobros exactos según el período seleccionado.
+- **Corrección P0-3 (Revocación Automática de Acceso Caducado)**: `queryActivePurchases()` ahora revoca y restablece automáticamente el estado local a Gratuito cuando Google Play confirma la ausencia de compras activas (por cancelación, impago, fin de período o reembolso).
+- **Corrección P0-4 (Blindaje de Concesión Directa)**: `activatePlanDirect` y `cancelSubscriptionDev` quedan estrictamente encapsulados con guarda `BuildConfig.DEBUG`, y el Context se resuelve recursivamente vía `ContextWrapper.findActivity()`, imposibilitando accesos Premium fortuitos en compilaciones de producción.
+- **Corrección P0-5 (Cumplimiento Estricto de Límites Prometidos)**:
+  - **Simulacros Oficiales REBT (40 preg. / 90 min)**: 1 simulacro demo gratuito; a partir del segundo se exige Plan Pro.
+  - **Test por ITC**: Articulado e ITCs 01 a 05 disponibles gratuitamente; ITCs 06 a 52 bloqueadas con indicador visual `PRO` y diálogo explicativo.
+  - **Laboratorio de Cálculo**: Conductores (ITC-14/19) y Tubos (ITC-21) 100% gratuitos; Previsión de Cargas en Edificios (ITC-10) y Tierras (ITC-18) reservadas para el Plan Pro con tarjetas de previsualización técnica.
+  - **Chuletas y Posits**: Límite de 10 chuletas básicas en plan gratuito; tarjeta de desbloqueo para las 19+ chuletas restantes y notas ilimitadas.
+  - **Repaso Inteligente de Fallos**: Lectura y consulta de explicaciones abierta para todos; modo test interactivo con repetición espaciada reservado para Plan Pro.
+  - **Analítica de Aprendizaje**: Índice de preparación global gratuito; diagnóstico detallado por módulos temáticos reservado para Pro.
+- **Corrección P0-6 / Errores Menores**:
+  - Consulta y visualización dinámica de precios reales formateados desde Google Play (`formattedPrice`).
+  - Precios por defecto y precios guardados corregidos con exactitud en Room: Mensual (14,99 €), Trimestral (29,99 €) y Vitalicio (49,99 €).
+  - Clarificación del texto comercial del paywall para reflejar fielmente la base de datos y la arquitectura 100% offline sin promesas de sincronización en la nube innecesarias.
+
+---
+
 ## v22.0 - 28 Septiembre 2026
 
 ### Modelo Coherente de Planes y Suscripción

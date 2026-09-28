@@ -25,7 +25,13 @@ import com.example.ui.FeedbackManager
 @Composable
 fun LaboratoryScreen(viewModel: MainViewModel) {
     val context = LocalContext.current
-    val subTabs = listOf("Conductores", "Previsión Cargas", "Tubos ITC-21", "Tierras ITC-18")
+    val isPremium = viewModel.isPremium
+    val subTabs = listOf(
+        "Conductores",
+        if (isPremium) "Previsión Cargas" else "Previsión Cargas 🔒",
+        "Tubos ITC-21",
+        if (isPremium) "Tierras ITC-18" else "Tierras ITC-18 🔒"
+    )
 
     Column(
         modifier = Modifier
@@ -73,9 +79,162 @@ fun LaboratoryScreen(viewModel: MainViewModel) {
 
         when (viewModel.labActiveSubTab) {
             0 -> CableSizingTab(viewModel)
-            1 -> BuildingLoadTab(viewModel)
+            1 -> if (isPremium) {
+                BuildingLoadTab(viewModel)
+            } else {
+                LockedLabCalculatorCard(
+                    title = "Previsión de Cargas en Edificios",
+                    itcReference = "ITC-BT-10 Oficial",
+                    description = "Dimensionamiento riguroso de potencia simultánea para edificios de viviendas, servicios generales, garajes con recarga de vehículos eléctricos (ITC-52) y locales comerciales.",
+                    keyFeatures = listOf(
+                        "Grados de electrificación Básica (5.750 W) y Elevada (9.200 W)",
+                        "Coeficientes de simultaneidad oficiales según número de viviendas",
+                        "Integración automática con recarga de vehículo eléctrico (ITC-BT-52)",
+                        "Cálculo de acometida general y línea general de alimentación (LGA)"
+                    ),
+                    onUnlock = {
+                        FeedbackManager.playClick(context)
+                        viewModel.activeTab = "subscription"
+                    },
+                    isDarkTheme = viewModel.isDarkTheme
+                )
+            }
             2 -> ConduitTubesTab(viewModel)
-            3 -> GroundingTab(viewModel)
+            3 -> if (isPremium) {
+                GroundingTab(viewModel)
+            } else {
+                LockedLabCalculatorCard(
+                    title = "Red de Puesta a Tierra y Protección",
+                    itcReference = "ITC-BT-18 Oficial",
+                    description = "Cálculo de resistencia de tierra admisible, dimensionamiento de picas, placas, conductores de cobre desnudo y verificación de tensiones de paso y contacto.",
+                    keyFeatures = listOf(
+                        "Fórmulas oficiales para picas verticales, conductores enterrados y placas",
+                        "Resistividad del terreno según tipo de suelo (roca, arcilla, caliza)",
+                        "Sensibilidad diferencial requerida (30 mA, 300 mA)",
+                        "Comprobación automática de seguridad frente a contactos indirectos"
+                    ),
+                    onUnlock = {
+                        FeedbackManager.playClick(context)
+                        viewModel.activeTab = "subscription"
+                    },
+                    isDarkTheme = viewModel.isDarkTheme
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun LockedLabCalculatorCard(
+    title: String,
+    itcReference: String,
+    description: String,
+    keyFeatures: List<String>,
+    onUnlock: () -> Unit,
+    isDarkTheme: Boolean
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 12.dp)
+            .testTag("locked_lab_calculator_card"),
+        shape = RoundedCornerShape(18.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = if (isDarkTheme) Color(0xFF1E211A) else Color(0xFFFBF8EE)
+        ),
+        border = BorderStroke(1.5.dp, Color(0xFFE67E22))
+    ) {
+        Column(
+            modifier = Modifier.padding(20.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Surface(
+                shape = androidx.compose.foundation.shape.CircleShape,
+                color = Color(0xFFE67E22).copy(alpha = 0.15f),
+                modifier = Modifier.size(54.dp)
+            ) {
+                Box(contentAlignment = Alignment.Center) {
+                    Icon(
+                        imageVector = Icons.Default.Lock,
+                        contentDescription = "Calculadora Pro",
+                        tint = Color(0xFFE67E22),
+                        modifier = Modifier.size(28.dp)
+                    )
+                }
+            }
+            Spacer(modifier = Modifier.height(14.dp))
+            Surface(
+                shape = RoundedCornerShape(6.dp),
+                color = Color(0xFFE67E22).copy(alpha = 0.15f)
+            ) {
+                Text(
+                    text = "FUNCIÓN EXCLUSIVA PLAN PRO",
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.ExtraBold,
+                    color = Color(0xFFE67E22),
+                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                )
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = title,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface,
+                textAlign = androidx.compose.ui.text.style.TextAlign.Center
+            )
+            Spacer(modifier = Modifier.height(2.dp))
+            Text(
+                text = itcReference,
+                fontSize = 12.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = MaterialTheme.colorScheme.primary
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = description,
+                fontSize = 13.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = androidx.compose.ui.text.style.TextAlign.Center
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                keyFeatures.forEach { feat ->
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            imageVector = Icons.Default.Check,
+                            contentDescription = null,
+                            tint = Color(0xFF10B981),
+                            modifier = Modifier.size(16.dp)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = feat,
+                            fontSize = 12.sp,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            Button(
+                onClick = onUnlock,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp),
+                shape = RoundedCornerShape(12.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE67E22))
+            ) {
+                Icon(Icons.Default.WorkspacePremium, contentDescription = null, modifier = Modifier.size(18.dp))
+                Spacer(modifier = Modifier.width(8.dp))
+                Text("Desbloquear con Plan Pro", fontWeight = FontWeight.Bold)
+            }
         }
     }
 }
