@@ -8,8 +8,10 @@ import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.*
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.draw.clip
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.automirrored.filled.*
@@ -263,15 +265,35 @@ fun MainAppLayout(viewModel: MainViewModel) {
                         Spacer(modifier = Modifier.width(8.dp))
                         Surface(
                             shape = RoundedCornerShape(6.dp),
-                            color = if (isPremium) Color(0xFFD4AC0D) else MaterialTheme.colorScheme.surfaceVariant
+                            color = if (isPremium) Color(0xFFD4AC0D) else MaterialTheme.colorScheme.surfaceVariant,
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(6.dp))
+                                .clickable {
+                                    FeedbackManager.playClick(context)
+                                    viewModel.activeTab = "subscription"
+                                }
+                                .testTag("top_bar_subscription_badge")
                         ) {
-                            Text(
-                                text = if (isPremium) "PRO" else "FREE",
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 10.sp,
-                                color = if (isPremium) Color.Black else MaterialTheme.colorScheme.onSurfaceVariant,
-                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
-                            )
+                            Row(
+                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                if (isPremium) {
+                                    Icon(
+                                        imageVector = Icons.Default.Star,
+                                        contentDescription = null,
+                                        tint = Color.Black,
+                                        modifier = Modifier.size(11.dp)
+                                    )
+                                    Spacer(modifier = Modifier.width(3.dp))
+                                }
+                                Text(
+                                    text = if (isPremium) "PRO" else "FREE",
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 10.sp,
+                                    color = if (isPremium) Color.Black else MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
                         }
                     }
                 },
@@ -407,6 +429,7 @@ fun MainAppLayout(viewModel: MainViewModel) {
                 "posits" -> com.example.ui.screens.posits.PositsScreen(viewModel)
                 "correlacion" -> com.example.ui.screens.study.CorrelacionScreen(viewModel)
                 "boe" -> com.example.ui.screens.settings.BoeScreen(viewModel)
+                "subscription" -> com.example.ui.screens.subscription.SubscriptionScreen(viewModel)
                 else -> DashboardScreen(viewModel)
             }
         }

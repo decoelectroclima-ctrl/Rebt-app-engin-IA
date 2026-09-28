@@ -255,6 +255,7 @@ fun OfficialSimulationsTab(viewModel: MainViewModel) {
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Spacer(modifier = Modifier.height(10.dp))
+                    // TODO(javi): confirmar gating si los simulacros de 40 preguntas o ITCs avanzadas requieren suscripción Pro activa
                     Button(
                         onClick = {
                             FeedbackManager.playClick(context)

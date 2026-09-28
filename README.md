@@ -4,10 +4,20 @@
 
 # EnginIA REBT — App Offline de Estudio y Preparación Oficial
 
-**Versión actual:** 21.0 (versionCode 21)  
+**Versión actual:** 22.0 (versionCode 22)  
 **ID de aplicación:** `com.aistudio.enginia.pwtvzc`
 
 Aplicación nativa Android (Kotlin + Jetpack Compose + Room) 100 % offline para la preparación exhaustiva de exámenes oficiales de Instalador Autorizado en Baja Tensión (REBT 2026).
+
+---
+
+## 💎 Planes de Suscripción Coherentes
+
+La aplicación implementa un modelo de acceso honesto, sin publicidad y 100% offline:
+1. **Plan Gratuito Demo:** Acceso permanente al Articulado (Art. 1-29), simulacros de prueba, primeras 5 ITCs, 5 calculadoras y 10 chuletas básicas.
+2. **Plan Aspirante Mensual (14,99 €/mes):** Para aspirantes con examen en las próximas semanas. Simulacros oficiales de 40 preguntas ilimitados, las 52 ITCs y repaso de fallos con cancelación en cualquier momento.
+3. **Plan Convocatoria Trimestral (29,99 € / 3 meses - 9,99 €/mes):** La opción más popular recomendada por academias para dominar todo el temario (ahorro del 33 %).
+4. **Plan Instalador Pro Vitalicio (49,99 € pago único):** Licencia de por vida sin renovaciones periódicas. Diseñado para instaladores y técnicos en obra, con actualizaciones continuas del REBT garantizadas.
 
 ---
 

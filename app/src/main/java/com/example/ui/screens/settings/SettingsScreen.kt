@@ -109,49 +109,108 @@ fun SettingsScreen(viewModel: MainViewModel) {
                 ),
                 border = BorderStroke(1.dp, if (viewModel.isDarkTheme) Color(0xFF30363D) else Color(0xFFE1E4E8))
             ) {
-                Row(
-                    modifier = Modifier.padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .size(48.dp)
-                            .clip(CircleShape)
-                            .background(Color(0xFF58A6FF).copy(alpha = 0.2f)),
-                        contentAlignment = Alignment.Center
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.Person,
-                            contentDescription = null,
-                            tint = Color(0xFF58A6FF),
-                            modifier = Modifier.size(26.dp)
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.width(14.dp))
-
-                    Column(modifier = Modifier.weight(1f)) {
-                        Text(
-                            text = viewModel.currentUserEmail,
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                        Spacer(modifier = Modifier.height(2.dp))
-                        Text(
-                            text = if (isPremium) "Plan Pro / Premium Activo (Google Play)" else "Plan Gratuito de Demostración",
-                            fontSize = 12.sp,
-                            color = if (isPremium) Color(0xFF3FB950) else MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-
-                    IconButton(
-                        onClick = {
-                            viewModel.inputEmailString = viewModel.currentUserEmail
-                            viewModel.showUserEmailDialog = true
+                        Box(
+                            modifier = Modifier
+                                .size(48.dp)
+                                .clip(CircleShape)
+                                .background(Color(0xFF58A6FF).copy(alpha = 0.2f)),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Person,
+                                contentDescription = null,
+                                tint = Color(0xFF58A6FF),
+                                modifier = Modifier.size(26.dp)
+                            )
                         }
+
+                        Spacer(modifier = Modifier.width(14.dp))
+
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = viewModel.currentUserEmail,
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                            Spacer(modifier = Modifier.height(2.dp))
+                            Text(
+                                text = if (isPremium) {
+                                    val planName = if (subscription?.plan == "premium") "Plan Instalador Vitalicio" else "Plan Aspirante Pro"
+                                    "✨ $planName Activo"
+                                } else {
+                                    "Plan Gratuito de Demostración"
+                                },
+                                fontSize = 12.sp,
+                                fontWeight = if (isPremium) FontWeight.SemiBold else FontWeight.Normal,
+                                color = if (isPremium) Color(0xFF3FB950) else MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+
+                        IconButton(
+                            onClick = {
+                                viewModel.inputEmailString = viewModel.currentUserEmail
+                                viewModel.showUserEmailDialog = true
+                            }
+                        ) {
+                            Icon(Icons.Default.Edit, contentDescription = "Editar cuenta", tint = Color.Gray)
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(14.dp))
+                    HorizontalDivider(color = if (viewModel.isDarkTheme) Color(0xFF30363D) else Color(0xFFE1E4E8))
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Icon(Icons.Default.Edit, contentDescription = "Editar cuenta", tint = Color.Gray)
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = if (isPremium) "Gestión de Licencia" else "Pase Oficial de Examen",
+                                fontSize = 13.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                            Text(
+                                text = if (isPremium) "Consulta tu plan o gestiona en Play Store" else "Desbloquea las 52 ITCs y simulacros ilimitados",
+                                fontSize = 11.sp,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+
+                        Button(
+                            onClick = {
+                                FeedbackManager.playClick(context)
+                                viewModel.activeTab = "subscription"
+                            },
+                            shape = RoundedCornerShape(10.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = if (isPremium) MaterialTheme.colorScheme.primaryContainer else Color(0xFFE67E22),
+                                contentColor = if (isPremium) MaterialTheme.colorScheme.onPrimaryContainer else Color.White
+                            ),
+                            contentPadding = PaddingValues(horizontal = 14.dp, vertical = 8.dp),
+                            modifier = Modifier.testTag("settings_view_plans_button")
+                        ) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Icon(
+                                    imageVector = if (isPremium) Icons.Default.Settings else Icons.Default.WorkspacePremium,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(16.dp)
+                                )
+                                Spacer(modifier = Modifier.width(6.dp))
+                                Text(
+                                    text = if (isPremium) "Ver Planes" else "Ver Planes",
+                                    fontSize = 12.sp,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
+                        }
                     }
                 }
             }

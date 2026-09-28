@@ -645,6 +645,35 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         inputEmailString = email
     }
 
+    // -------------------------------------------------------------
+    // SUBSCRIPTION & GOOGLE PLAY BILLING ACTIONS
+    // -------------------------------------------------------------
+
+    fun purchaseSubscription(activity: android.app.Activity, planType: String) {
+        val (productId, productType) = when (planType) {
+            "pro" -> Pair(billingManager.PRO_MONTHLY_PRODUCT_ID, com.android.billingclient.api.BillingClient.ProductType.SUBS)
+            "premium" -> Pair(billingManager.PREMIUM_LIFETIME_PRODUCT_ID, com.android.billingclient.api.BillingClient.ProductType.INAPP)
+            else -> Pair(billingManager.PRO_MONTHLY_PRODUCT_ID, com.android.billingclient.api.BillingClient.ProductType.SUBS)
+        }
+        billingManager.launchBillingFlow(activity, productId, productType)
+    }
+
+    fun activatePlanDirect(plan: String, price: Double) {
+        viewModelScope.launch {
+            repository.activatePremiumSubscription(plan, price)
+        }
+    }
+
+    fun restoreSubscription() {
+        billingManager.queryActivePurchases()
+    }
+
+    fun cancelSubscriptionDev() {
+        viewModelScope.launch {
+            repository.restoreOrCancelSubscription()
+        }
+    }
+
     fun clearExamHistory() {
         viewModelScope.launch {
             repository.clearExamHistory()

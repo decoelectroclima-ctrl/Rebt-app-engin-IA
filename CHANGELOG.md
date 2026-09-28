@@ -1,5 +1,25 @@
 # Changelog
 
+## v22.0 - 28 Septiembre 2026
+
+### Modelo Coherente de Planes y Suscripción
+- **Nueva Pantalla de Planes (`SubscriptionScreen`)**: Presentación exhaustiva y pedagógica de modalidades de suscripción adaptadas a los perfiles de aspirante a instalador y profesional en ejercicio.
+  - **Plan Aspirante Mensual (14,99 €/mes)**: Máxima flexibilidad para aspirantes con examen inminente.
+  - **Plan Convocatoria Trimestral (29,99 € / 3 meses - 9,99 €/mes, ahorro 33%)**: Recomendado por academias para dominar las 52 ITCs y asegurar el aprobado a la primera.
+  - **Plan Instalador Pro Vitalicio (49,99 € pago único)**: Licencia permanente sin cuotas periódicas jamás, con actualizaciones del REBT 2026+ incluidas para uso diario en obra y proyectos.
+- **Matriz Comparativa de Beneficios**: Tabla detallada que compara de forma transparente el nivel Gratuito, Pro y Vitalicio.
+- **FAQ Técnica y de Facturación**: Sección interactiva de preguntas frecuentes sobre cancelación, garantía Google Play, funcionamiento 100% offline y soporte multidispositivo.
+- **Acceso Directo desde la App**:
+  - Badge interactivo `PRO` / `FREE` en el TopAppBar principal con navegación directa.
+  - Tarjeta de perfil y suscripción renovada en `SettingsScreen`.
+  - Banner informativo para usuarios en modalidad gratuita en `DashboardScreen`.
+- **Integración con Google Play Billing y Entorno Sandbox**:
+  - Flujo de compra con `BillingManager` para `PRO_MONTHLY_PRODUCT_ID` y `PREMIUM_LIFETIME_PRODUCT_ID`.
+  - Herramientas de activación rápida en modo de desarrollo (`BuildConfig.DEBUG`) para testing exhaustivo sin depender de Play Console.
+  - Restauración de compras con verificación inmediata.
+
+---
+
 ## v21.0 - 28 Septiembre 2026
 
 ### Exámenes y Simulacros

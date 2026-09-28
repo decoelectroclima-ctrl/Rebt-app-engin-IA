@@ -265,6 +265,66 @@ fun DashboardScreen(viewModel: MainViewModel) {
             }
         }
 
+        // 2.5 Subscription Upsell Banner (Free users only)
+        if (!isPremium) {
+            item {
+                Card(
+                    onClick = {
+                        FeedbackManager.playClick(context)
+                        viewModel.activeTab = "subscription"
+                    },
+                    shape = RoundedCornerShape(16.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = if (viewModel.isDarkTheme) Color(0xFF1F242C) else Color(0xFFFFF8E7)
+                    ),
+                    border = BorderStroke(1.dp, Color(0xFFF59E0B).copy(alpha = 0.5f)),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .testTag("dashboard_upgrade_banner")
+                ) {
+                    Row(
+                        modifier = Modifier.padding(14.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(40.dp)
+                                .clip(CircleShape)
+                                .background(Color(0xFFF59E0B).copy(alpha = 0.2f)),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.WorkspacePremium,
+                                contentDescription = null,
+                                tint = Color(0xFFF59E0B),
+                                modifier = Modifier.size(22.dp)
+                            )
+                        }
+                        Spacer(modifier = Modifier.width(12.dp))
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = "Pase Oficial de Examen REBT",
+                                fontSize = 13.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                            Text(
+                                text = "Simulacros de 40 preguntas ilimitados y las 52 ITCs para asegurar tu aprobado.",
+                                fontSize = 11.sp,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                            contentDescription = "Ver planes",
+                            tint = Color(0xFFF59E0B),
+                            modifier = Modifier.size(18.dp)
+                        )
+                    }
+                }
+            }
+        }
+
         // 3. Recommended Actions
         item {
             Text(
