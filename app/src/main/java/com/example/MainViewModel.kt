@@ -33,6 +33,32 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val repository = EnigmaRepository(application)
     val billingManager = BillingManager(application, repository, viewModelScope)
 
+    // Load and merge questions
+    val allQuestions = Content.QUESTIONS.toMutableMap().apply {
+        val loadedQuestions = QuestionLoader.loadQuestions(application)
+        loadedQuestions.forEach { q ->
+            val moduleKey = inferModuleKeyFromRef(q.ref)
+            this[moduleKey] = this[moduleKey]?.let {
+                it.copy(questions = it.questions + q)
+            } ?: ModuleDefinition(moduleKey, moduleKey, "⚡", "#CCCCCC", listOf(q))
+        }
+    }
+
+    private fun inferModuleKeyFromRef(ref: String): String {
+        return when {
+            ref.contains("ARTÍCULO") -> "articulado"
+            ref.contains("ITC-BT-03") || ref.contains("ITC-BT-04") || ref.contains("ITC-BT-05") -> "empresas"
+            ref.contains("ITC-BT-10") || ref.contains("ITC-BT-12") || ref.contains("ITC-BT-13") || ref.contains("ITC-BT-14") || ref.contains("ITC-BT-15") || ref.contains("ITC-BT-16") || ref.contains("ITC-BT-17") -> "enlace"
+            ref.contains("ITC-BT-19") || ref.contains("ITC-BT-20") || ref.contains("ITC-BT-21") || ref.contains("ITC-BT-22") || ref.contains("ITC-BT-23") || ref.contains("ITC-BT-24") || ref.contains("ITC-BT-25") || ref.contains("ITC-BT-26") || ref.contains("ITC-BT-27") -> "interiores"
+            ref.contains("ITC-BT-18") -> "tierra"
+            ref.contains("ITC-BT-28") || ref.contains("ITC-BT-29") || ref.contains("ITC-BT-30") || ref.contains("ITC-BT-31") || ref.contains("ITC-BT-32") || ref.contains("ITC-BT-33") || ref.contains("ITC-BT-34") || ref.contains("ITC-BT-35") || ref.contains("ITC-BT-36") || ref.contains("ITC-BT-37") || ref.contains("ITC-BT-39") || ref.contains("ITC-BT-40") || ref.contains("ITC-BT-41") || ref.contains("ITC-BT-42") || ref.contains("ITC-BT-43") || ref.contains("ITC-BT-44") || ref.contains("ITC-BT-45") || ref.contains("ITC-BT-46") || ref.contains("ITC-BT-47") || ref.contains("ITC-BT-48") || ref.contains("ITC-BT-49") || ref.contains("ITC-BT-50") || ref.contains("ITC-BT-52") -> "especiales"
+            ref.contains("ITC-BT-01") -> "itc_01"
+            ref.contains("ITC-BT-11") -> "itc_11"
+            ref.contains("ITC-BT-12") -> "itc_12"
+            else -> "especiales"
+        }
+    }
+
     // User profile state
     var currentUserEmail by mutableStateOf("jj.terapias@gmail.com")
     var currentUserName by mutableStateOf("Instalador Autorizado")
@@ -190,7 +216,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
      * - Prioriza preguntas no vistas en el último simulacro de la sesión
      */
     fun generateOfficialSimulationQuestions(): List<Question> {
-        val allQuestions = Content.QUESTIONS.values.flatMap { it.questions }.distinctBy { it.q }
+        val allQuestionsList = allQuestions.values.flatMap { it.questions }.distinctBy { it.q }
 
         // Pool de Articulado
         val articuladoPool = allQuestions.filter { it.isArticulado() && it.itcNumber() == null }.shuffled().toMutableList()
@@ -286,7 +312,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
      * Inicia un test de bloque temático o módulo específico (20 preguntas, 60 minutos)
      */
     fun startTopicPractice(moduleKey: String) {
-        val moduleDef = Content.QUESTIONS[moduleKey] ?: return
+        val moduleDef = allQuestions[moduleKey] ?: return
         activeExamMode = ExamMode.TOPIC_PRACTICE
 
         val practiceModule = ModuleDefinition(
@@ -349,7 +375,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         if (reviews.isEmpty()) return
         activeExamMode = ExamMode.MISTAKES_REVIEW
 
-        val allAvailableQuestions = Content.QUESTIONS.values.flatMap { it.questions }
+        val allAvailableQuestions = allQuestions.values.flatMap { it.questions }
         val mistakeQuestions = reviews.mapNotNull { rev ->
             allAvailableQuestions.find { it.q == rev.questionText }
         }
