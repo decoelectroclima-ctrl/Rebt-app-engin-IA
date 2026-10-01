@@ -289,7 +289,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         // Registrar hashes en memoria de las preguntas del simulacro para no repetirlas de inmediato
         lastOfficialSimulationQuestionHashes = selected.map { it.q.hashCode() }.toSet()
 
-        return selected.shuffled()
+        return selected.shuffled().map { it.withShuffledOptions() }
     }
 
     /**
@@ -322,51 +322,169 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             label = "Repaso: ${moduleDef.label}",
             icon = moduleDef.icon,
             color = moduleDef.color,
-            questions = moduleDef.questions.shuffled().take(ExamConfig.ITC_BLOCK_QUESTIONS)
+            questions = moduleDef.questions.shuffled().take(ExamConfig.ITC_BLOCK_QUESTIONS).map { it.withShuffledOptions() }
         )
 
         setupExamSession(practiceModule, durationSeconds = ExamConfig.ITC_BLOCK_MINUTES * 60)
     }
 
+    private val itcPrefs by lazy {
+        getApplication<Application>().getSharedPreferences("itc_practice_history", android.content.Context.MODE_PRIVATE)
+    }
+
+    private fun getSeenQuestionsForItcKey(key: String): Set<String> {
+        return itcPrefs.getStringSet("seen_$key", emptySet()) ?: emptySet()
+    }
+
+    private fun saveSeenQuestionsForItcKey(key: String, seen: Set<String>) {
+        itcPrefs.edit().putStringSet("seen_$key", seen).apply()
+    }
+
+    fun getItcSeenCount(itcNumber: Int): Int {
+        val itcKey = String.format("itc_%02d", itcNumber)
+        val allQuestionsList = allQuestions.values.flatMap { it.questions }.distinctBy { it.q }
+        val pool = allQuestionsList.filter { it.itcNumber() == itcNumber }
+        val seen = getSeenQuestionsForItcKey(itcKey)
+        return pool.count { it.q in seen }
+    }
+
+    fun isItcBankExhausted(itcNumber: Int): Boolean {
+        val allQuestionsList = allQuestions.values.flatMap { it.questions }.distinctBy { it.q }
+        val pool = allQuestionsList.filter { it.itcNumber() == itcNumber }
+        if (pool.isEmpty()) return false
+        val itcKey = String.format("itc_%02d", itcNumber)
+        val seen = getSeenQuestionsForItcKey(itcKey)
+        return pool.isNotEmpty() && pool.all { it.q in seen }
+    }
+
     /**
-     * Inicia un test específico por ITC (bloque de 20 preguntas, 60 minutos)
+     * Inicia un test específico por ITC (bloque de 20 preguntas, 60 minutos).
+     * Si el usuario ya ha realizado tests y agotado el banco de preguntas de esa ITC,
+     * permite seguir realizando tests indefinidamente en bucle continuo de asimilación,
+     * variando de forma aleatoria tanto el orden de las preguntas como el orden de las
+     * opciones de respuesta para afianzar el dominio real del reglamento.
      */
     fun startItcPractice(itcNumber: Int, itcTitle: String) {
         activeExamMode = ExamMode.TOPIC_PRACTICE
         val allQuestionsList = allQuestions.values.flatMap { it.questions }.distinctBy { it.q }
-        val itcQuestions = allQuestionsList.filter { it.itcNumber() == itcNumber }.shuffled().take(ExamConfig.ITC_BLOCK_QUESTIONS)
-        if (itcQuestions.isEmpty()) return
+        val pool = allQuestionsList.filter { it.itcNumber() == itcNumber }
+        if (pool.isEmpty()) return
+
+        val itcKey = String.format("itc_%02d", itcNumber)
+        val seenQuestions = getSeenQuestionsForItcKey(itcKey).toMutableSet()
+        val targetCount = minOf(pool.size, ExamConfig.ITC_BLOCK_QUESTIONS)
+
+        val unseen = pool.filter { it.q !in seenQuestions }
+        val selectedPool: List<Question>
+        val isExhaustedMode: Boolean
+
+        if (unseen.size >= targetCount) {
+            // Hay suficientes preguntas no vistas en este ciclo
+            val chosen = unseen.shuffled().take(targetCount)
+            selectedPool = chosen
+            seenQuestions.addAll(chosen.map { it.q })
+            saveSeenQuestionsForItcKey(itcKey, seenQuestions)
+            isExhaustedMode = false
+        } else {
+            // El banco se ha agotado o no quedan suficientes no vistas para completar el bloque
+            // Priorizamos las no vistas restantes y rellenamos con recicladas barajadas
+            isExhaustedMode = true
+            val remainingUnseen = unseen.shuffled()
+            val needed = targetCount - remainingUnseen.size
+            val recycled = pool.filter { it !in remainingUnseen }.shuffled().take(needed)
+            selectedPool = (remainingUnseen + recycled).shuffled()
+
+            // Guardamos el conjunto de preguntas para el nuevo ciclo de asimilación
+            saveSeenQuestionsForItcKey(itcKey, selectedPool.map { it.q }.toSet())
+        }
+
+        // Variar obligatoriamente tanto el orden de las preguntas como el orden de las 4 opciones
+        val randomizedQuestions = selectedPool.shuffled().map { it.withShuffledOptions() }
 
         val itcCodeFormatted = String.format("ITC-BT-%02d", itcNumber)
+        val modeLabel = if (isExhaustedMode) " • Refuerzo y Asimilación" else ""
         val module = ModuleDefinition(
             id = "itc_${String.format("%02d", itcNumber)}_${System.currentTimeMillis()}",
-            label = "Test $itcCodeFormatted: $itcTitle",
-            icon = "📋",
+            label = "Test $itcCodeFormatted: $itcTitle$modeLabel",
+            icon = if (isExhaustedMode) "🔄" else "📋",
             color = if (itcNumber in ExamConfig.SPECIALIST_ONLY_ITC) "#d29922" else "#238636",
-            questions = itcQuestions
+            questions = randomizedQuestions
         )
 
         setupExamSession(module, durationSeconds = ExamConfig.ITC_BLOCK_MINUTES * 60)
     }
 
     /**
-     * Inicia un test exclusivo del Articulado del REBT (bloque de 20 preguntas, 60 minutos)
+     * Inicia un test exclusivo del Articulado del REBT (bloque de 20 preguntas, 60 minutos).
+     * Soporta rotación continua y barajado de preguntas y respuestas al agotar el banco.
      */
     fun startArticuladoPractice() {
         activeExamMode = ExamMode.TOPIC_PRACTICE
         val allQuestionsList = allQuestions.values.flatMap { it.questions }.distinctBy { it.q }
-        val artQuestions = allQuestionsList.filter { it.isArticulado() }.shuffled().take(ExamConfig.ITC_BLOCK_QUESTIONS)
-        if (artQuestions.isEmpty()) return
+        val pool = allQuestionsList.filter { it.isArticulado() }
+        if (pool.isEmpty()) return
+
+        val artKey = "articulado"
+        val seenQuestions = getSeenQuestionsForItcKey(artKey).toMutableSet()
+        val targetCount = minOf(pool.size, ExamConfig.ITC_BLOCK_QUESTIONS)
+
+        val unseen = pool.filter { it.q !in seenQuestions }
+        val selectedPool: List<Question>
+        val isExhaustedMode: Boolean
+
+        if (unseen.size >= targetCount) {
+            val chosen = unseen.shuffled().take(targetCount)
+            selectedPool = chosen
+            seenQuestions.addAll(chosen.map { it.q })
+            saveSeenQuestionsForItcKey(artKey, seenQuestions)
+            isExhaustedMode = false
+        } else {
+            isExhaustedMode = true
+            val remainingUnseen = unseen.shuffled()
+            val needed = targetCount - remainingUnseen.size
+            val recycled = pool.filter { it !in remainingUnseen }.shuffled().take(needed)
+            selectedPool = (remainingUnseen + recycled).shuffled()
+            saveSeenQuestionsForItcKey(artKey, selectedPool.map { it.q }.toSet())
+        }
+
+        val randomizedQuestions = selectedPool.shuffled().map { it.withShuffledOptions() }
 
         val module = ModuleDefinition(
             id = "articulado_${System.currentTimeMillis()}",
-            label = "Test Articulado REBT (Art. 1-29)",
-            icon = "⚡",
+            label = if (isExhaustedMode) "Test Articulado REBT • Refuerzo y Asimilación" else "Test Articulado REBT (Art. 1-29)",
+            icon = if (isExhaustedMode) "🔄" else "⚡",
             color = "#bc8cff",
-            questions = artQuestions
+            questions = randomizedQuestions
         )
 
         setupExamSession(module, durationSeconds = ExamConfig.ITC_BLOCK_MINUTES * 60)
+    }
+
+    /**
+     * Permite al usuario repetir o iniciar un nuevo intento del examen o test actual,
+     * barajando nuevamente tanto el orden de las preguntas como el orden de las opciones.
+     */
+    fun repeatCurrentExamShuffled() {
+        val currentModule = activeExamModule ?: return
+        val currentQuestions = currentModule.questions
+        if (currentQuestions.isEmpty()) return
+
+        val itcNumber = currentQuestions.firstOrNull()?.itcNumber()
+        val isArt = currentQuestions.all { it.isArticulado() && it.itcNumber() == null }
+
+        if (itcNumber != null) {
+            val cleanTitle = currentModule.label.substringAfter(": ").substringBefore(" •").trim()
+            startItcPractice(itcNumber, cleanTitle.ifBlank { "ITC-BT-${String.format("%02d", itcNumber)}" })
+        } else if (isArt) {
+            startArticuladoPractice()
+        } else {
+            val newShuffled = currentQuestions.shuffled().map { it.withShuffledOptions() }
+            val newModule = currentModule.copy(
+                id = "${currentModule.id.substringBeforeLast("_")}_${System.currentTimeMillis()}",
+                questions = newShuffled
+            )
+            setupExamSession(newModule, durationSeconds = examTotalSeconds.coerceAtLeast(60))
+        }
     }
 
     /**

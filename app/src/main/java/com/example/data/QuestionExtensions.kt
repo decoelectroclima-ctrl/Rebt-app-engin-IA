@@ -49,3 +49,21 @@ fun Question.hasOrderDependentOptions(): Boolean {
     return opts.any { ORDER_DEPENDENT_REGEX.containsMatchIn(it) }
 }
 
+/**
+ * Retorna una copia de la pregunta con sus 4 opciones barajadas de forma aleatoria,
+ * recalculando con exactitud el nuevo índice 'a' para que apunte a la misma opción correcta.
+ * Si la pregunta incluye fórmulas posicionales ("todas las anteriores", "A y B", etc.),
+ * se conserva el orden original para preservar la lógica y validez pedagógica.
+ */
+fun Question.withShuffledOptions(): Question {
+    if (hasOrderDependentOptions() || opts.size <= 1) return this
+    val originalCorrectText = opts.getOrNull(a) ?: return this
+    val shuffledOpts = opts.shuffled()
+    val newCorrectIndex = shuffledOpts.indexOf(originalCorrectText).coerceAtLeast(0)
+    return this.copy(
+        opts = shuffledOpts,
+        a = newCorrectIndex
+    )
+}
+
+

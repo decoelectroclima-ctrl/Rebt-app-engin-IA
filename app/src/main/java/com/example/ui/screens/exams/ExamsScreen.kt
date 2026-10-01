@@ -630,6 +630,8 @@ fun ItcTestsList(
             val isSpecialist = itcNum in ExamConfig.SPECIALIST_ONLY_ITC
             val itcQuestions = remember(allQuestions, itcNum) { allQuestions.filter { it.itcNumber() == itcNum } }
             val qCount = itcQuestions.size
+            val seenCount = remember(itcNum, qCount) { viewModel.getItcSeenCount(itcNum) }
+            val isBankExhausted = remember(itcNum, qCount, seenCount) { qCount > 0 && seenCount >= qCount }
             val successPct = viewModel.getItcSuccessPct(itcNum, progressList)
             val isLockedForFree = !isPremium && itcNum > 5
 
@@ -710,6 +712,27 @@ fun ItcTestsList(
                                     )
                                 }
                             }
+                            if (isBankExhausted) {
+                                Spacer(modifier = Modifier.width(6.dp))
+                                Surface(
+                                    shape = RoundedCornerShape(4.dp),
+                                    color = Color(0xFF238636).copy(alpha = 0.15f)
+                                ) {
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp)
+                                    ) {
+                                        Icon(Icons.Default.Shuffle, contentDescription = null, tint = Color(0xFF3FB950), modifier = Modifier.size(10.dp))
+                                        Spacer(modifier = Modifier.width(2.dp))
+                                        Text(
+                                            text = "Asimilación",
+                                            fontSize = 9.sp,
+                                            fontWeight = FontWeight.Bold,
+                                            color = Color(0xFF3FB950)
+                                        )
+                                    }
+                                }
+                            }
                         }
                         Spacer(modifier = Modifier.height(2.dp))
                         Text(
@@ -724,11 +747,13 @@ fun ItcTestsList(
                             text = when {
                                 isLockedForFree -> "ITC Pro (01-05 gratis en Plan Free)"
                                 qCount == 0 -> "0 preguntas disponibles"
+                                isBankExhausted -> "$qCount preguntas • Banco completado • Toca para practicar (modo barajado)"
+                                seenCount > 0 -> "$qCount preguntas ($seenCount vistas) • ${ExamConfig.ITC_BLOCK_MINUTES} min"
                                 qCount < ExamConfig.ITC_BLOCK_QUESTIONS -> "$qCount preguntas disponibles • ${ExamConfig.ITC_BLOCK_MINUTES} min"
                                 else -> "$qCount preguntas • ${ExamConfig.ITC_BLOCK_MINUTES} min"
                             },
                             fontSize = 11.sp,
-                            color = if (isLockedForFree) Color(0xFFE67E22) else if (qCount > 0) Color(0xFF3FB950) else Color.Gray
+                            color = if (isLockedForFree) Color(0xFFE67E22) else if (isBankExhausted) Color(0xFF58A6FF) else if (qCount > 0) Color(0xFF3FB950) else Color.Gray
                         )
                     }
 
@@ -1147,18 +1172,8 @@ fun ActiveExamView(viewModel: MainViewModel) {
     val currentQuestion = questions.getOrNull(currentIndex) ?: return
 
     // Barajado de opciones en presentación (una sola vez por pregunta y por intento de sesión)
-    val displayQuestion = remember(currentQuestion, module.id) {
-        if (currentQuestion.hasOrderDependentOptions()) {
-            currentQuestion
-        } else {
-            val originalCorrectText = currentQuestion.opts.getOrNull(currentQuestion.a) ?: ""
-            val shuffledOpts = currentQuestion.opts.shuffled()
-            val newCorrectIndex = shuffledOpts.indexOf(originalCorrectText).coerceAtLeast(0)
-            currentQuestion.copy(
-                opts = shuffledOpts,
-                a = newCorrectIndex
-            )
-        }
+    val displayQuestion = remember(currentQuestion, module.id, currentIndex) {
+        currentQuestion.withShuffledOptions()
     }
 
     var showExitConfirmDialog by remember { mutableStateOf(false) }
@@ -1643,6 +1658,27 @@ fun ExamResultsView(viewModel: MainViewModel) {
 
                 // Actions
                 Button(
+                    onClick = {
+                        FeedbackManager.playClick(context)
+                        viewModel.repeatCurrentExamShuffled()
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(48.dp)
+                        .testTag("repeat_exam_shuffled_button"),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFF238636)
+                    )
+                ) {
+                    Icon(Icons.Default.Shuffle, contentDescription = null, modifier = Modifier.size(18.dp))
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text("Repetir Test (Preguntas y Opciones Barajadas)", fontWeight = FontWeight.Bold)
+                }
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+                OutlinedButton(
                     onClick = {
                         FeedbackManager.playClick(context)
                         viewModel.exitActiveExam()
