@@ -1,5 +1,15 @@
 # Changelog
 
+## v26.0 - 01 Octubre 2026
+
+### Consolidación y Resolución de las 5 Tareas REBT
+- **Tarea 1 (Punto de Restauración & Checkpoint)**: Formalizado y etiquetado el checkpoint `checkpoint-v25` y la versión `v26.0` en el control de versiones.
+- **Tarea 2 (Sanitización y Deduplicación CSV)**: Depuración de `questions.csv` reduciéndolo a 7 preguntas normativas puras, sin duplicados con `Content.kt` y con erradicación de fugas del indicador "(correcta)".
+- **Tarea 3 (Unificación del Banco y Eliminación de Shadowing)**: Corregido el shadowing en `MainViewModel` (`startItcPractice`, `startArticuladoPractice`, `startOfficialSimulation`); todas las modalidades consumen de forma coherente el banco integrado (`Content.kt` + CSV fusionado). Eliminado el script temporal `fix_vm.py`.
+- **Tarea 4 (Barajado Aleatorio Seguro en Interfaz)**: Implementación de barajado dinámico de opciones en `ActiveExamView` (`remember(currentQuestion, module.id)`) con recálculo transparente del índice de respuesta correcta y excepción inteligente para preguntas con dependencia de orden textual (`hasOrderDependentOptions()`).
+- **Tarea 5 (Cobertura de las 52 ITCs)**: Rellenadas todas las ITCs del reglamento (52 de 52 con cobertura activa en `Content.kt`).
+- **Configuración de Release**: `versionCode = 26`, `versionName = "26.0"`, `isMinifyEnabled = true`, `allowBackup = false`, y `applicationId = "com.aistudio.enginia.pwtvzc"`.
+
 ## v24.0 - 28 Septiembre 2026
 
 ### Auditoría y Blindaje de Facturación y Límites de Suscripción (Corrección P0 Completa)
