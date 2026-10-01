@@ -45,16 +45,18 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     private fun inferModuleKeyFromRef(ref: String): String {
+        val itcMatch = """\bITC(?:-BT|\s+BT)?\s*[-–]?\s*(\d+)""".toRegex(RegexOption.IGNORE_CASE).find(ref)
+        val itc = itcMatch?.groupValues?.get(1)?.toIntOrNull()
         return when {
-            ref.contains("ARTÍCULO") -> "articulado"
-            ref.contains("ITC-BT-03") || ref.contains("ITC-BT-04") || ref.contains("ITC-BT-05") -> "empresas"
-            ref.contains("ITC-BT-10") || ref.contains("ITC-BT-12") || ref.contains("ITC-BT-13") || ref.contains("ITC-BT-14") || ref.contains("ITC-BT-15") || ref.contains("ITC-BT-16") || ref.contains("ITC-BT-17") -> "enlace"
-            ref.contains("ITC-BT-19") || ref.contains("ITC-BT-20") || ref.contains("ITC-BT-21") || ref.contains("ITC-BT-22") || ref.contains("ITC-BT-23") || ref.contains("ITC-BT-24") || ref.contains("ITC-BT-25") || ref.contains("ITC-BT-26") || ref.contains("ITC-BT-27") -> "interiores"
-            ref.contains("ITC-BT-18") -> "tierra"
-            ref.contains("ITC-BT-28") || ref.contains("ITC-BT-29") || ref.contains("ITC-BT-30") || ref.contains("ITC-BT-31") || ref.contains("ITC-BT-32") || ref.contains("ITC-BT-33") || ref.contains("ITC-BT-34") || ref.contains("ITC-BT-35") || ref.contains("ITC-BT-36") || ref.contains("ITC-BT-37") || ref.contains("ITC-BT-39") || ref.contains("ITC-BT-40") || ref.contains("ITC-BT-41") || ref.contains("ITC-BT-42") || ref.contains("ITC-BT-43") || ref.contains("ITC-BT-44") || ref.contains("ITC-BT-45") || ref.contains("ITC-BT-46") || ref.contains("ITC-BT-47") || ref.contains("ITC-BT-48") || ref.contains("ITC-BT-49") || ref.contains("ITC-BT-50") || ref.contains("ITC-BT-52") -> "especiales"
-            ref.contains("ITC-BT-01") -> "itc_01"
-            ref.contains("ITC-BT-11") -> "itc_11"
-            ref.contains("ITC-BT-12") -> "itc_12"
+            itc == 1 -> "itc_01"
+            itc in 3..5 -> "empresas"
+            itc in 6..9 -> "suministro"
+            itc == 10 || itc in 12..17 -> if (itc == 12) "itc_12" else "enlace"
+            itc == 11 -> "itc_11"
+            itc == 18 -> "tierra"
+            itc in 19..27 -> "interiores"
+            itc != null -> "especiales"
+            ref.contains("ART", ignoreCase = true) || ref.contains("RD 842", ignoreCase = true) -> "articulado"
             else -> "especiales"
         }
     }
@@ -219,14 +221,14 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         val allQuestionsList = allQuestions.values.flatMap { it.questions }.distinctBy { it.q }
 
         // Pool de Articulado
-        val articuladoPool = allQuestions.filter { it.isArticulado() && it.itcNumber() == null }.shuffled().toMutableList()
+        val articuladoPool = allQuestionsList.filter { it.isArticulado() && it.itcNumber() == null }.shuffled().toMutableList()
         if (articuladoPool.size < ExamConfig.OFFICIAL_ARTICULADO_COUNT) {
-            val extraArt = allQuestions.filter { it.isArticulado() && it !in articuladoPool }.shuffled()
+            val extraArt = allQuestionsList.filter { it.isArticulado() && it !in articuladoPool }.shuffled()
             articuladoPool.addAll(extraArt)
         }
 
         // Pool de ITCs del ámbito Básica (excluyendo especialista: 6, 7, 38, 51)
-        val itcPool = allQuestions.filter { q ->
+        val itcPool = allQuestionsList.filter { q ->
             val itc = q.itcNumber()
             itc != null && itc !in ExamConfig.SPECIALIST_ONLY_ITC
         }.shuffled().toMutableList()
@@ -272,7 +274,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
         // 3. Relleno de seguridad si faltasen preguntas para completar exactamente 40
         if (selected.size < ExamConfig.OFFICIAL_QUESTIONS) {
-            val fallbackPool = allQuestions.filter { q ->
+            val fallbackPool = allQuestionsList.filter { q ->
                 val itc = q.itcNumber()
                 itc == null || itc !in ExamConfig.SPECIALIST_ONLY_ITC
             }.shuffled()
@@ -331,8 +333,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
      */
     fun startItcPractice(itcNumber: Int, itcTitle: String) {
         activeExamMode = ExamMode.TOPIC_PRACTICE
-        val allQuestions = Content.QUESTIONS.values.flatMap { it.questions }.distinctBy { it.q }
-        val itcQuestions = allQuestions.filter { it.itcNumber() == itcNumber }.shuffled().take(ExamConfig.ITC_BLOCK_QUESTIONS)
+        val allQuestionsList = allQuestions.values.flatMap { it.questions }.distinctBy { it.q }
+        val itcQuestions = allQuestionsList.filter { it.itcNumber() == itcNumber }.shuffled().take(ExamConfig.ITC_BLOCK_QUESTIONS)
         if (itcQuestions.isEmpty()) return
 
         val itcCodeFormatted = String.format("ITC-BT-%02d", itcNumber)
@@ -352,8 +354,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
      */
     fun startArticuladoPractice() {
         activeExamMode = ExamMode.TOPIC_PRACTICE
-        val allQuestions = Content.QUESTIONS.values.flatMap { it.questions }.distinctBy { it.q }
-        val artQuestions = allQuestions.filter { it.isArticulado() }.shuffled().take(ExamConfig.ITC_BLOCK_QUESTIONS)
+        val allQuestionsList = allQuestions.values.flatMap { it.questions }.distinctBy { it.q }
+        val artQuestions = allQuestionsList.filter { it.isArticulado() }.shuffled().take(ExamConfig.ITC_BLOCK_QUESTIONS)
         if (artQuestions.isEmpty()) return
 
         val module = ModuleDefinition(
@@ -440,19 +442,25 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         timerJob = null
     }
 
-    fun submitAnswer() {
+    fun submitAnswer(displayedQuestion: Question? = null) {
         val module = activeExamModule ?: return
-        val question = module.questions.getOrNull(currentQuestionIndex) ?: return
+        val originalQuestion = module.questions.getOrNull(currentQuestionIndex) ?: return
         if (selectedOptionIndex == null) return
 
+        val activeQuestion = displayedQuestion ?: originalQuestion
         currentQuestionAnswered = true
-        val correct = selectedOptionIndex == question.a
+        val correct = selectedOptionIndex == activeQuestion.a
         isAnswerCorrect = correct
+
+        val selectedOptionText = activeQuestion.opts.getOrNull(selectedOptionIndex ?: 0) ?: ""
+        val originalSelectedOptionIndex = originalQuestion.opts.indexOf(selectedOptionText).let {
+            if (it >= 0) it else (selectedOptionIndex ?: 0)
+        }
 
         examAnswerRecords.add(
             ExamAnswerRecord(
-                question = question,
-                selectedOption = selectedOptionIndex ?: 0,
+                question = originalQuestion,
+                selectedOption = originalSelectedOptionIndex,
                 isCorrect = correct
             )
         )
@@ -461,7 +469,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             examCorrectCount++
             if (activeExamMode == ExamMode.MISTAKES_REVIEW) {
                 viewModelScope.launch {
-                    val qId = "${module.id}_${question.q.hashCode()}"
+                    val qId = "${module.id}_${originalQuestion.q.hashCode()}"
                     repository.markQuestionMastered(qId)
                 }
             }
@@ -469,12 +477,12 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             // Record mistake for Weaknesses review / spaced repetition
             viewModelScope.launch {
                 repository.recordQuestionMistake(
-                    questionText = question.q,
+                    questionText = originalQuestion.q,
                     moduleKey = module.id,
-                    selectedOption = selectedOptionIndex ?: 0,
-                    correctOption = question.a,
-                    explanation = question.exp,
-                    reference = question.ref
+                    selectedOption = originalSelectedOptionIndex,
+                    correctOption = originalQuestion.a,
+                    explanation = originalQuestion.exp,
+                    reference = originalQuestion.ref
                 )
             }
         }

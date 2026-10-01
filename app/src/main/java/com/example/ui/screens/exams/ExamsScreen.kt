@@ -1146,6 +1146,21 @@ fun ActiveExamView(viewModel: MainViewModel) {
     val currentIndex = viewModel.currentQuestionIndex
     val currentQuestion = questions.getOrNull(currentIndex) ?: return
 
+    // Barajado de opciones en presentación (una sola vez por pregunta y por intento de sesión)
+    val displayQuestion = remember(currentQuestion, module.id) {
+        if (currentQuestion.hasOrderDependentOptions()) {
+            currentQuestion
+        } else {
+            val originalCorrectText = currentQuestion.opts.getOrNull(currentQuestion.a) ?: ""
+            val shuffledOpts = currentQuestion.opts.shuffled()
+            val newCorrectIndex = shuffledOpts.indexOf(originalCorrectText).coerceAtLeast(0)
+            currentQuestion.copy(
+                opts = shuffledOpts,
+                a = newCorrectIndex
+            )
+        }
+    }
+
     var showExitConfirmDialog by remember { mutableStateOf(false) }
 
     if (showExitConfirmDialog) {
@@ -1249,14 +1264,14 @@ fun ActiveExamView(viewModel: MainViewModel) {
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             // Reference Badge
-            if (currentQuestion.ref.isNotBlank()) {
+            if (displayQuestion.ref.isNotBlank()) {
                 item {
                     Surface(
                         shape = RoundedCornerShape(6.dp),
                         color = Color(0xFF58A6FF).copy(alpha = 0.12f)
                     ) {
                         Text(
-                            text = "Referencia: ${currentQuestion.ref}",
+                            text = "Referencia: ${displayQuestion.ref}",
                             fontSize = 11.sp,
                             fontWeight = FontWeight.Bold,
                             color = if (viewModel.isDarkTheme) Color(0xFF58A6FF) else Color(0xFF0969DA),
@@ -1269,7 +1284,7 @@ fun ActiveExamView(viewModel: MainViewModel) {
             // Question Text
             item {
                 Text(
-                    text = currentQuestion.q,
+                    text = displayQuestion.q,
                     fontSize = 17.sp,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface,
@@ -1278,11 +1293,11 @@ fun ActiveExamView(viewModel: MainViewModel) {
             }
 
             // Options List
-            items(currentQuestion.opts.indices.toList()) { optIndex ->
-                val optText = currentQuestion.opts[optIndex]
+            items(displayQuestion.opts.indices.toList()) { optIndex ->
+                val optText = displayQuestion.opts[optIndex]
                 val isSelected = viewModel.selectedOptionIndex == optIndex
                 val isAnswered = viewModel.currentQuestionAnswered
-                val isCorrectOption = optIndex == currentQuestion.a
+                val isCorrectOption = optIndex == displayQuestion.a
 
                 val (containerColor, borderColor, contentColor) = when {
                     isAnswered && isCorrectOption -> Triple(Color(0xFF3FB950).copy(alpha = 0.15f), Color(0xFF3FB950), Color(0xFF3FB950))
@@ -1378,7 +1393,7 @@ fun ActiveExamView(viewModel: MainViewModel) {
 
                             Spacer(modifier = Modifier.height(6.dp))
                             Text(
-                                text = currentQuestion.exp,
+                                text = displayQuestion.exp,
                                 fontSize = 13.sp,
                                 color = MaterialTheme.colorScheme.onSurface,
                                 lineHeight = 18.sp
@@ -1404,7 +1419,7 @@ fun ActiveExamView(viewModel: MainViewModel) {
                     Button(
                         onClick = {
                             FeedbackManager.playClick(context)
-                            viewModel.submitAnswer()
+                            viewModel.submitAnswer(displayQuestion)
                         },
                         enabled = viewModel.selectedOptionIndex != null,
                         modifier = Modifier

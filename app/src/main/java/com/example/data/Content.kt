@@ -10476,6 +10476,846 @@ object Content {
                     a = 0,
                     exp = "ITC-BT-28, apartado 3.4.1: «deberán cumplir las normas UNE-EN 60.598-2-22».",
                     ref = "ITC-BT-28"
+                ),
+                Question(
+                    q = "En receptores de caldeo para usos domésticos, ¿cuál de los siguientes sistemas está terminantemente prohibido?",
+                    opts = listOf(
+                        "Aparatos provistos de elementos de caldeo desnudos sumergidos en agua",
+                        "Termos eléctricos con resistencia envainada",
+                        "Radiadores de aceite térmico sellados",
+                        "Placas de cocción de inducción magnética"
+                    ),
+                    a = 0,
+                    exp = "La ITC-BT-45 apartado 2.1 prohíbe expresamente en instalaciones domésticas el empleo de calentadores provistos de elementos de caldeo desnudos en contacto directo con agua o en los que el agua forme parte del circuito eléctrico.",
+                    ref = "ITC-BT-45 §2.1"
+                ),
+                Question(
+                    q = "En ausencia de instrucciones del fabricante, ¿qué distancia mínima deben mantener los aparatos de calefacción a superficies de materiales combustibles?",
+                    opts = listOf(
+                        "4 cm",
+                        "8 cm",
+                        "12 cm",
+                        "15 cm"
+                    ),
+                    a = 1,
+                    exp = "Según la ITC-BT-45 par. 2.2, a falta de indicaciones expresas del fabricante en el manual técnico, los aparatos de calefacción deberán montarse manteniendo una separación mínima de 8 cm respecto a cualquier pared o superficie combustible.",
+                    ref = "ITC-BT-45 §2.2"
+                ),
+                Question(
+                    q = "Para aparatos calefactores con elementos incandescentes luminosos detrás de aberturas o rejillas, ¿cuál es la distancia mínima a materiales combustibles?",
+                    opts = listOf(
+                        "25 cm",
+                        "30 cm",
+                        "50 cm",
+                        "75 cm"
+                    ),
+                    a = 2,
+                    exp = "La ITC-BT-45 par. 2.2 establece que cuando existan elementos calefactores incandescentes visibles o luminosos tras rejillas, la distancia frontal a cualquier elemento combustible será de al menos 50 cm para prevenir riesgos de ignición.",
+                    ref = "ITC-BT-45 §2.2"
+                ),
+                Question(
+                    q = "¿Cómo debe realizarse la conexión a la red de las cocinas y hornos domésticos según la ITC-BT-45?",
+                    opts = listOf(
+                        "Mediante clavijas domésticas estándar de 10 A",
+                        "Compartiendo la toma con el frigorífico",
+                        "A través del circuito de alumbrado general",
+                        "Mediante interruptores de corte omnipolar o tomas de corriente dedicados exclusivamente a ellos"
+                    ),
+                    a = 3,
+                    exp = "La ITC-BT-45 par. 2.3 dispone que los aparatos de cocción y hornos estarán conectados a su circuito de alimentación mediante interruptores de corte omnipolar o bases de toma de corriente diseñadas y destinadas exclusivamente a ellos.",
+                    ref = "ITC-BT-45 §2.3"
+                ),
+                Question(
+                    q = "¿Cuál es la tensión máxima en vacío en corriente alterna permitida para aparatos de soldadura por arco en locales no muy conductores?",
+                    opts = listOf(
+                        "90 V de valor eficaz",
+                        "50 V de valor eficaz",
+                        "120 V de valor eficaz",
+                        "230 V de valor eficaz"
+                    ),
+                    a = 0,
+                    exp = "Según la ITC-BT-45 par. 3.3 letra f, la tensión en vacío entre el electrodo y la pieza a soldar en soldadura eléctrica manual por arco no debe sobrepasar 90 V de valor eficaz en corriente alterna para locales ordinarios.",
+                    ref = "ITC-BT-45 §3.3"
+                ),
+                Question(
+                    q = "En aparatos de soldadura por arco en corriente continua, ¿cuál es la tensión máxima en vacío reglamentaria?",
+                    opts = listOf(
+                        "100 V",
+                        "150 V",
+                        "200 V",
+                        "75 V"
+                    ),
+                    a = 1,
+                    exp = "Conforme a la ITC-BT-45 par. 3.3, la tensión en vacío admisible en corriente continua entre el porta-electrodos y la masa de la pieza a soldar no podrá ser superior a 150 V en condiciones normales de trabajo.",
+                    ref = "ITC-BT-45 §3.3"
+                ),
+                Question(
+                    q = "¿A qué porcentaje máximo de la intensidad nominal de alimentación debe regularse el dispositivo de sobrecarga en un aparato de soldadura por arco?",
+                    opts = listOf(
+                        "125 %",
+                        "150 %",
+                        "200 %",
+                        "250 %"
+                    ),
+                    a = 2,
+                    exp = "La ITC-BT-45 par. 3.3 exige que cada equipo de soldadura por arco incorpore un dispositivo de protección contra sobrecargas regulado, como máximo, al 200 % de la intensidad nominal de su alimentación.",
+                    ref = "ITC-BT-45 §3.3"
+                ),
+                Question(
+                    q = "¿Qué sección mínima debe tener el conductor de puesta a tierra de la cuba metálica en calentadores de agua industriales por electrodos sumergidos?",
+                    opts = listOf(
+                        "1,5 mm²",
+                        "2,5 mm²",
+                        "6 mm²",
+                        "4 mm²"
+                    ),
+                    a = 3,
+                    exp = "Según la ITC-BT-45 par. 3.1.1 letra c, la sección del conductor de puesta a tierra de la cuba metálica en calentadores industriales de electrodos no será inferior a 4 mm² de cobre, garantizando la evacuación segura de corrientes de fuga.",
+                    ref = "ITC-BT-45 §3.1.1"
+                ),
+                Question(
+                    q = "En calentadores de agua industriales conectados a más de 440 V trifásicos por electrodos, ¿a qué valor de fuga a tierra debe actuar el corte automático?",
+                    opts = listOf(
+                        "Superior al 10 % de la corriente nominal (hasta 15 % por estabilidad)",
+                        "Exactamente a 30 mA fijos",
+                        "Superior a 300 mA",
+                        "Al 50 % de la corriente de cortocircuito"
+                    ),
+                    a = 0,
+                    exp = "La ITC-BT-45 par. 3.1.1 letra d especifica que el interruptor diferencial o relé de defecto debe desconectar el suministro cuando se registre una fuga a tierra superior al 10 % de la intensidad nominal, admitiéndose hasta el 15 % por razones de estabilidad.",
+                    ref = "ITC-BT-45 §3.1.1"
+                ),
+                Question(
+                    q = "¿Qué esquema de distribución es obligatorio para la alimentación de hornos industriales que presenten corrientes de fuga importantes?",
+                    opts = listOf(
+                        "Esquema TT",
+                        "Esquema TN-C",
+                        "Esquema IT",
+                        "Esquema TN-S con diferencial de 30 mA"
+                    ),
+                    a = 1,
+                    exp = "La ITC-BT-45 par. 3.2 estipula de forma taxativa que cuando los hornos industriales presenten corrientes de fuga apreciables, como en los hornos de resistencias, deberán alimentarse obligatoriamente bajo el esquema TN-C.",
+                    ref = "ITC-BT-45 §3.2"
+                ),
+                Question(
+                    q = "¿Cuál es la tensión asignada normalizada para los cables y folios radiantes de calefacción empotrados en suelos o techos?",
+                    opts = listOf(
+                        "300/500 V",
+                        "230/400 V",
+                        "450/750 V",
+                        "0,6/1 kV"
+                    ),
+                    a = 0,
+                    exp = "La ITC-BT-46 apartado 1 establece que los cables eléctricos y folios radiantes calefactores utilizados en suelos o techos tendrán una tensión nominal asignada de 300/500 V, garantizando su aislamiento frente a tensiones de red.",
+                    ref = "ITC-BT-46 §1"
+                ),
+                Question(
+                    q = "En locales con bañera o ducha, ¿dónde está prohibido instalar cables y folios calefactores radiantes?",
+                    opts = listOf(
+                        "En ningún volumen si tienen diferencial",
+                        "Dentro de los volúmenes de prohibición 0 y 1",
+                        "Únicamente en el volumen 3",
+                        "En todo el cuarto de baño sin excepción"
+                    ),
+                    a = 1,
+                    exp = "La ITC-BT-46 par. 2 determina que estas instalaciones de calefacción radiante no deben realizarse dentro de los volúmenes 0 y 1 de los cuartos de baño para evitar cualquier riesgo por contacto directo con elementos energizados.",
+                    ref = "ITC-BT-46 §2"
+                ),
+                Question(
+                    q = "¿Qué prescripción reglamentaria rige para las uniones frías entre el cable calefactor y los conductores de alimentación?",
+                    opts = listOf(
+                        "Pueden empalmarse en obra mediante regletas convencionales",
+                        "Deben ubicarse siempre en el volumen 1 del baño",
+                        "Deben venir obligatoriamente realizadas de fábrica y no en obra",
+                        "Se permiten uniones manuales con cinta termorretráctil"
+                    ),
+                    a = 2,
+                    exp = "La ITC-BT-46 par. 3.2.1 exige que las uniones frías vengan realizadas de fábrica con ensayos de estanqueidad y rigidez superados, quedando terminantemente prohibida su ejecución improvisada en la obra.",
+                    ref = "ITC-BT-46 §3.2.1"
+                ),
+                Question(
+                    q = "¿Cuál es el espesor mínimo de la capa de hormigón o mortero no aislante que debe recubrir los cables calefactores en suelos radiantes?",
+                    opts = listOf(
+                        "10 mm",
+                        "20 mm",
+                        "40 mm",
+                        "30 mm"
+                    ),
+                    a = 3,
+                    exp = "Según la ITC-BT-46 par. 4.1, la capa superior de mortero u hormigón de recubrimiento (de tipo no aislante) en la que se embeben los cables calefactores deberá tener un espesor mínimo de 30 mm para asegurar disipación térmica y solidez.",
+                    ref = "ITC-BT-46 §4.1"
+                ),
+                Question(
+                    q = "En instalaciones de calefacción mediante cables o folios radiantes empotrados en el techo, ¿cuál es la altura mínima reglamentaria del local?",
+                    opts = listOf(
+                        "3,5 metros",
+                        "2,5 metros",
+                        "3,0 metros",
+                        "2,8 metros"
+                    ),
+                    a = 0,
+                    exp = "La ITC-BT-46 par. 5.1 establece que la altura mínima de los locales acondicionados mediante elementos calefactores radiantes en el techo será de 3,5 metros para garantizar el confort fisiológico y evitar radiación cenital excesiva.",
+                    ref = "ITC-BT-46 §5.1"
+                ),
+                Question(
+                    q = "¿Qué protección diferencial es obligatoria para cada circuito de calefacción por cable o folio radiante?",
+                    opts = listOf(
+                        "Diferencial selectivo de 300 mA",
+                        "Diferencial de alta sensibilidad de 30 mA",
+                        "Diferencial retardado de 100 mA",
+                        "No se exige diferencial si hay toma de tierra"
+                    ),
+                    a = 1,
+                    exp = "La ITC-BT-46 par. 3.2 estipula como obligatoria la instalación de una protección diferencial de alta sensibilidad con corriente asignada no superior a 30 mA para cada circuito de calefacción radiante.",
+                    ref = "ITC-BT-46 §3.2"
+                ),
+                Question(
+                    q = "¿Cuál es la intensidad máxima admisible por fase y circuito en instalaciones de calefacción radiante?",
+                    opts = listOf(
+                        "16 A",
+                        "20 A",
+                        "25 A",
+                        "32 A"
+                    ),
+                    a = 2,
+                    exp = "Conforme a la ITC-BT-46 par. 3.2, cada circuito de calefacción estará protegido por un interruptor automático de corte omnipolar con un límite máximo de 25 A por fase y circuito.",
+                    ref = "ITC-BT-46 §3.2"
+                ),
+                Question(
+                    q = "¿Qué valor mínimo de resistencia de aislamiento respecto a tierra debe comprobarse tras cubrir el elemento calefactor y antes de pavimentar?",
+                    opts = listOf(
+                        "50.000 Ω",
+                        "100.000 Ω",
+                        "500.000 Ω",
+                        "250.000 Ω"
+                    ),
+                    a = 3,
+                    exp = "La ITC-BT-46 par. 3.2 exige comprobar la resistencia de aislamiento eléctrico respecto a tierra antes de aplicar el pavimento definitivo, debiendo ser igual o superior a 250.000 Ω.",
+                    ref = "ITC-BT-46 §3.2"
+                ),
+                Question(
+                    q = "¿Cuál es el radio de curvatura mínimo admisible para cables calefactores que no disponen de armadura metálica?",
+                    opts = listOf(
+                        "6 veces el diámetro exterior del cable",
+                        "10 veces el diámetro exterior del cable",
+                        "4 veces el diámetro exterior del cable",
+                        "12 veces el diámetro exterior del cable"
+                    ),
+                    a = 0,
+                    exp = "Según la ITC-BT-46 par. 3.4, el radio de curvatura en los cambios de dirección no deberá ser inferior a 6 veces el diámetro exterior del cable para modelos sin armadura (y 10 veces cuando dispongan de armadura).",
+                    ref = "ITC-BT-46 §3.4"
+                ),
+                Question(
+                    q = "¿Qué valor máximo no debe sobrepasar el diferencial de temperatura del termostato de regulación ambiental?",
+                    opts = listOf(
+                        "0,5 K",
+                        "1,5 K",
+                        "2,0 K",
+                        "3,0 K"
+                    ),
+                    a = 1,
+                    exp = "La ITC-BT-46 apartado 6 prescribe que el diferencial de temperatura de disparo y rearme del termostato de control no deberá ser superior a 1,5 K para mantener la estabilidad térmica del recinto.",
+                    ref = "ITC-BT-46 §6"
+                ),
+                Question(
+                    q = "Los conductores que alimentan a un único motor eléctrico deben dimensionarse para una intensidad mínima respecto a su plena carga de:",
+                    opts = listOf(
+                        "125 % de la intensidad a plena carga",
+                        "100 % de la intensidad a plena carga",
+                        "115 % de la intensidad a plena carga",
+                        "150 % de la intensidad a plena carga"
+                    ),
+                    a = 0,
+                    exp = "La ITC-BT-47 apartado 3.1 dispone que los conductores de conexión que alimentan a un solo motor deben estar dimensionados para una intensidad no inferior al 125 % de la intensidad a plena carga del motor.",
+                    ref = "ITC-BT-47 §3.1"
+                ),
+                Question(
+                    q = "Al dimensionar los conductores que alimentan a una línea con varios motores, ¿qué criterio reglamentario debe aplicarse?",
+                    opts = listOf(
+                        "El 100 % de la suma aritmética de todos los motores",
+                        "El 125 % del motor de mayor potencia más la suma de intensidades a plena carga del resto",
+                        "El 125 % de la suma total de intensidades",
+                        "El 150 % del motor más potente exclusivamente"
+                    ),
+                    a = 1,
+                    exp = "Según la ITC-BT-47 par. 3.2, la línea principal que alimenta a un grupo de motores se dimensionará para al menos el 125 % de la intensidad a plena carga del motor de mayor potencia más la intensidad nominal de todos los demás.",
+                    ref = "ITC-BT-47 §3.2"
+                ),
+                Question(
+                    q = "En motores de rotor devanado en régimen continuo, ¿para qué intensidad deben dimensionarse los conductores del circuito secundario?",
+                    opts = listOf(
+                        "Para el 100 % de la intensidad primaria del estator",
+                        "Para el 85 % de la intensidad secundaria",
+                        "Para el 125 % de la intensidad a plena carga del rotor",
+                        "Para la corriente de cortocircuito rotórica"
+                    ),
+                    a = 2,
+                    exp = "La ITC-BT-47 par. 3.1 fija que los conductores secundarios de conexión rotórica en motores de anillos rozantes en servicio continuo deben dimensionarse para el 125 % de la intensidad a plena carga del rotor.",
+                    ref = "ITC-BT-47 §3.1"
+                ),
+                Question(
+                    q = "¿Qué sección mínima deben tener los conductores secundarios en motores de rotor devanado destinados a servicio intermitente?",
+                    opts = listOf(
+                        "No inferior a la correspondiente al 50 % de la intensidad del rotor",
+                        "No inferior a la del 100 % de la corriente de arranque",
+                        "No inferior a la de fase del estator",
+                        "No inferior a la correspondiente al 85 % de la intensidad a plena carga del rotor"
+                    ),
+                    a = 3,
+                    exp = "Conforme a la ITC-BT-47 par. 3.1, en motores para servicio intermitente los conductores del circuito del rotor no tendrán en ningún caso una sección inferior a la correspondiente al 85 % de la intensidad a plena carga rotórica.",
+                    ref = "ITC-BT-47 §3.1"
+                ),
+                Question(
+                    q = "¿A partir de qué potencia nominal es preceptivo que los motores eléctricos incorporen limitación de la corriente de arranque?",
+                    opts = listOf(
+                        "Superior a 0,75 kW",
+                        "Superior a 1,5 kW",
+                        "Superior a 3 kW",
+                        "Superior a 5 kW"
+                    ),
+                    a = 0,
+                    exp = "La ITC-BT-47 par. 6 establece con carácter general que los motores de potencia superior a 0,75 kW deben disponer de dispositivos de arranque progresivo o reóstatos que limiten la punta de corriente en la red.",
+                    ref = "ITC-BT-47 §6"
+                ),
+                Question(
+                    q = "En el cálculo de la corriente de arranque para motores de ascensores y elevadores, ¿por qué coeficiente se multiplica la intensidad normal de carga?",
+                    opts = listOf(
+                        "1,15",
+                        "1,30",
+                        "1,50",
+                        "2,00"
+                    ),
+                    a = 1,
+                    exp = "Según la ITC-BT-47 par. 6, para los motores de ascensores la intensidad absorbida a plena carga para elevar la carga nominal se multiplicará por el coeficiente 1,3 para verificar las relaciones de corriente de arranque admisibles.",
+                    ref = "ITC-BT-47 §6"
+                ),
+                Question(
+                    q = "En motores trifásicos, ¿qué contingencia específica debe cubrir obligatoriamente la protección contra sobrecargas?",
+                    opts = listOf(
+                        "El desequilibrio de impedancias de tierra",
+                        "La inversión del sentido de giro",
+                        "El riesgo de falta de tensión en una de sus fases",
+                        "La elevación de armónicos de tercer orden"
+                    ),
+                    a = 2,
+                    exp = "La ITC-BT-47 par. 4 exige que los motores estén protegidos contra sobrecargas en todas sus fases, y en motores trifásicos este dispositivo debe proteger específicamente contra el riesgo de funcionamiento bifásico por falta de una fase.",
+                    ref = "ITC-BT-47 §4"
+                ),
+                Question(
+                    q = "¿Qué condición de seguridad debe cumplir la protección térmica en motores con arrancador estrella-triángulo?",
+                    opts = listOf(
+                        "Proteger únicamente durante la conexión en triángulo",
+                        "Proteger únicamente en el momento del arranque en estrella",
+                        "Desconectarse automáticamente durante el cambio de contacto",
+                        "Asegurar la protección contra sobrecargas tanto en la conexión en estrella como en triángulo"
+                    ),
+                    a = 3,
+                    exp = "La ITC-BT-47 par. 4 prescribe expresamente que en motores dotados de arrancador estrella-triángulo debe asegurarse la protección contra sobrecargas para ambas fases de la marcha: tanto en la posición estrella como en triángulo.",
+                    ref = "ITC-BT-47 §4"
+                ),
+                Question(
+                    q = "¿Cuándo es obligatorio instalar un dispositivo de protección contra falta de tensión en un motor?",
+                    opts = listOf(
+                        "Cuando el arranque espontáneo tras restablecerse la tensión entrañe peligro para personas o maquinaria",
+                        "En todos los motores monofásicos sin excepción",
+                        "Únicamente en motores de potencia superior a 50 kW",
+                        "Solo si están conectados a una red rural aislada"
+                    ),
+                    a = 0,
+                    exp = "La ITC-BT-47 par. 5 hace obligatoria la protección contra falta de tensión siempre que el arranque no intencionado tras el restablecimiento del suministro pueda ocasionar accidentes a personas o daños mecánicos.",
+                    ref = "ITC-BT-47 §5"
+                ),
+                Question(
+                    q = "¿Qué distancia mínima de separación respecto a los muros deben guardar los reóstatos de arranque y resistencias?",
+                    opts = listOf(
+                        "2 cm",
+                        "5 cm",
+                        "10 cm",
+                        "15 cm"
+                    ),
+                    a = 1,
+                    exp = "Según la ITC-BT-47 apartado 7, los reóstatos y resistencias se colocarán distanciados de los muros al menos cinco centímetros para permitir una adecuada ventilación y evitar la transmisión de calor a las paredes.",
+                    ref = "ITC-BT-47 §7"
+                ),
+                Question(
+                    q = "¿A partir de qué tensión en arrollamientos o elementos bajo tensión deben ser inaccesibles los transformadores al alcance de personas no especializadas?",
+                    opts = listOf(
+                        "Superior a 50 V",
+                        "Superior a 24 V",
+                        "Superior a 120 V",
+                        "Superior a 230 V"
+                    ),
+                    a = 0,
+                    exp = "La ITC-BT-48 apartado 2.1 establece que los transformadores que puedan quedar al alcance de personas no especializadas estarán construidos o ubicados de modo que sus arrollamientos bajo tensión superior a 50 V sean inaccesibles.",
+                    ref = "ITC-BT-48 §2.1"
+                ),
+                Question(
+                    q = "En transformadores fijos montados cerca de partes combustibles, ¿cuándo se exige colocar pantallas incombustibles de separación a 1 cm?",
+                    opts = listOf(
+                        "Para potencias superiores a 10 kVA",
+                        "Para potencias de hasta 3.000 VA",
+                        "En transformadores trifásicos únicamente",
+                        "Solo si el aislamiento es seco con resina"
+                    ),
+                    a = 1,
+                    exp = "Conforme a la ITC-BT-48 par. 2.1, cuando la potencia del transformador sea inferior o igual a 3.000 VA la separación a pantallas incombustibles será de 1 cm, aumentándose proporcionalmente para potencias superiores.",
+                    ref = "ITC-BT-48 §2.1"
+                ),
+                Question(
+                    q = "Al conectar un autotransformador a una red con neutro distribuido, ¿cómo debe conectarse el arrollamiento común?",
+                    opts = listOf(
+                        "Al conductor de fase de mayor tensión",
+                        "Al conductor de tierra de protección",
+                        "El borne del extremo del arrollamiento común debe unirse al conductor neutro",
+                        "Debe dejarse flotante y aislado"
+                    ),
+                    a = 2,
+                    exp = "La ITC-BT-48 par. 2.1 determina que en la conexión de un autotransformador a una fuente con neutro, el borne del extremo del arrollamiento común al primario y secundario se unirá preceptivamente al conductor neutro.",
+                    ref = "ITC-BT-48 §2.1"
+                ),
+                Question(
+                    q = "¿En qué circunstancia queda expresamente prohibido el empleo de autotransformadores según la ITC-BT-48?",
+                    opts = listOf(
+                        "En instalaciones industriales con potencia mayor a 5 kVA",
+                        "En suministros monofásicos a 230 V",
+                        "En equipos con aislamiento de clase II",
+                        "Si los dos circuitos conectados no tienen un aislamiento previsto para la tensión mayor"
+                    ),
+                    a = 3,
+                    exp = "La ITC-BT-48 par. 2.1 prohíbe el uso de autotransformadores si ambos circuitos conectados a ellos no disponen de un nivel de aislamiento coordinado y dimensionado para soportar la tensión más alta presente.",
+                    ref = "ITC-BT-48 §2.1"
+                ),
+                Question(
+                    q = "¿Para qué rango de intensidades en régimen permanente deben dimensionarse los aparatos de mando y protección de los condensadores?",
+                    opts = listOf(
+                        "De 1,5 a 1,8 veces la intensidad nominal asignada",
+                        "Exactamente para el 100 % de su corriente asignada",
+                        "De 1,1 a 1,2 veces la intensidad nominal",
+                        "De 2,0 a 2,5 veces la intensidad de cortocircuito"
+                    ),
+                    a = 0,
+                    exp = "La ITC-BT-48 par. 2.3 exige que los dispositivos de maniobra y protección de condensadores soporten de 1,5 a 1,8 veces la intensidad nominal para considerar armónicos y sobreintensidades transitorias de conexión.",
+                    ref = "ITC-BT-48 §2.3"
+                ),
+                Question(
+                    q = "Si la carga residual de una batería de condensadores entraña peligro para las personas, ¿qué elemento debe incorporar obligatoriamente?",
+                    opts = listOf(
+                        "Un extintor automático de CO2",
+                        "Un dispositivo automático de descarga o un rótulo de advertencia bien visible",
+                        "Un aislamiento reforzado de silicona",
+                        "Una pica de tierra independiente"
+                    ),
+                    a = 1,
+                    exp = "Según la ITC-BT-48 par. 2.3, los condensadores cuya carga residual tras la desconexión pueda poner en riesgo a personas deberán incorporar un dispositivo automático de descarga o señalizarse con un rótulo de peligro visible.",
+                    ref = "ITC-BT-48 §2.3"
+                ),
+                Question(
+                    q = "Los condensadores que no incluyan marcado con indicación de temperatura máxima admisible no podrán utilizarse en locales donde la temperatura sea:",
+                    opts = listOf(
+                        "Superior a 30 ºC",
+                        "Superior a 40 ºC",
+                        "De 50 ºC o mayor",
+                        "Superior a 60 ºC"
+                    ),
+                    a = 2,
+                    exp = "La ITC-BT-48 par. 2.3 prohíbe instalar condensadores sin indicación de temperatura máxima en aquellos emplazamientos donde la temperatura ambiente alcance o supere los 50 ºC.",
+                    ref = "ITC-BT-48 §2.3"
+                ),
+                Question(
+                    q = "En instalaciones con rectificadores, ¿qué prescripción rige para las canalizaciones de corriente alterna y corriente continua?",
+                    opts = listOf(
+                        "Deben compartir siempre el mismo tubo para reducir inductancia",
+                        "Pueden identificarse únicamente con cinta aislante negra",
+                        "No se permite su instalación en el mismo edificio",
+                        "Serán distintas y estarán convenientemente señalizadas o separadas entre sí"
+                    ),
+                    a = 3,
+                    exp = "La ITC-BT-48 par. 2.2 exige que las canalizaciones de corrientes de diferente naturaleza (CA y CC) sean independientes y estén convenientemente separadas o señalizadas para evitar confusiones y acoplamientos.",
+                    ref = "ITC-BT-48 §2.2"
+                ),
+                Question(
+                    q = "Para la instalación de condensadores situados a más de 2.000 metros de altitud sobre el nivel del mar, ¿qué medida debe adoptarse?",
+                    opts = listOf(
+                        "Tomar precauciones de acuerdo con el fabricante según la norma UNE-EN 60831-1",
+                        "Duplicar la tensión nominal del condensador",
+                        "Reducir la capacidad en microfaradios a la mitad",
+                        "Instalar refrigeración líquida obligatoria"
+                    ),
+                    a = 0,
+                    exp = "La ITC-BT-48 par. 2.3 remite a la norma UNE-EN 60831-1 indicando que para altitudes superiores a 2.000 m deben adoptarse precauciones especiales acordadas con el fabricante debido a la menor rigidez dieléctrica del aire.",
+                    ref = "ITC-BT-48 §2.3"
+                ),
+                Question(
+                    q = "Todo transformador de potencia en baja tensión debe estar protegido en su alimentación por:",
+                    opts = listOf(
+                        "Un interruptor diferencial de 30 mA exclusivamente",
+                        "Un dispositivo de corte por sobreintensidad adecuado a su placa y uso",
+                        "Un fusible en el secundario únicamente",
+                        "Un relé térmico regulado al 50 %"
+                    ),
+                    a = 1,
+                    exp = "Según la ITC-BT-48 apartado 3, todo transformador estará protegido por un dispositivo de corte por sobreintensidad acorde con las características de su placa de características y sus condiciones de servicio.",
+                    ref = "ITC-BT-48 §3"
+                ),
+                Question(
+                    q = "¿Qué consideración reglamentaria otorga la ITC-BT-49 a cualquier mueble comercializado que incorpore un equipo eléctrico montado?",
+                    opts = listOf(
+                        "Se considerará como un receptor a todos los efectos",
+                        "Se considerará una instalación de enlace",
+                        "Se clasifica como cuadro general de distribución",
+                        "Se considera un local especial"
+                    ),
+                    a = 0,
+                    exp = "La ITC-BT-49 apartado 1 establece que cualquier mueble comercializado con un equipo eléctrico montado en él se considerará como un receptor, debiendo cumplir los requisitos de seguridad correspondientes.",
+                    ref = "ITC-BT-49 §1"
+                ),
+                Question(
+                    q = "En el cableado interior de muebles, ¿qué tipo de cable flexible con aislamiento de PVC se exige como mínimo?",
+                    opts = listOf(
+                        "H03VV-F",
+                        "H05VV-F (o equivalente)",
+                        "H07V-K unipolar sin cubierta",
+                        "Cable coaxial con malla de cobre"
+                    ),
+                    a = 1,
+                    exp = "La ITC-BT-49 par. 2.2 especifica que los cables flexibles bajo cubierta de PVC utilizados dentro de muebles deben ser equivalentes, como mínimo, al tipo normalizado H05VV-F para soportar esfuerzos mecánicos.",
+                    ref = "ITC-BT-49 §2.2"
+                ),
+                Question(
+                    q = "Si un mueble comercializado incorpora alguna base de toma de corriente, ¿cuál es la sección mínima obligatoria de los conductores de cobre?",
+                    opts = listOf(
+                        "1,5 mm²",
+                        "0,75 mm²",
+                        "2,5 mm²",
+                        "4 mm²"
+                    ),
+                    a = 2,
+                    exp = "Conforme a la ITC-BT-49 par. 2.3, la sección mínima de los conductores de cobre dentro del mueble será de 2,5 mm² siempre que incorpore bases de toma de corriente, asegurando la capacidad térmica adecuada.",
+                    ref = "ITC-BT-49 §2.3"
+                ),
+                Question(
+                    q = "¿Qué sección mínima de conductor de cobre se permite en muebles para circuitos de alumbrado exclusivo con longitud no superior a 10 m sin tomas?",
+                    opts = listOf(
+                        "0,5 mm²",
+                        "1,5 mm²",
+                        "1,0 mm²",
+                        "0,75 mm²"
+                    ),
+                    a = 3,
+                    exp = "La ITC-BT-49 par. 2.3 permite emplear conductores de cobre de 0,75 mm² para instalaciones de alumbrado exclusivo en muebles siempre que la longitud entre la conexión fija y el aparato no supere los 10 metros.",
+                    ref = "ITC-BT-49 §2.3"
+                ),
+                Question(
+                    q = "¿Qué grado de protección mínimo y sistema de cierre deben tener las cajas de conexión eléctrica situadas en los muebles?",
+                    opts = listOf(
+                        "IP 3X y con tapa que solo pueda abrirse con la ayuda de un útil o llave",
+                        "IP 20 con tapa a presión manual",
+                        "IP 55 con tornillos inviolables",
+                        "IP 44 con cierre magnético"
+                    ),
+                    a = 0,
+                    exp = "Según la ITC-BT-49 par. 2.5, las conexiones eléctricas en muebles deben alojarse en cajas con grado de protección mínimo IP 3X cuya tapa sólo pueda ser abierta mediante el empleo de una llave o herramienta.",
+                    ref = "ITC-BT-49 §2.5"
+                ),
+                Question(
+                    q = "Los muebles que incorporan equipo eléctrico para instalarse en cuartos de baño o aseos deben ser obligatoriamente:",
+                    opts = listOf(
+                        "Móviles con ruedas bloqueables",
+                        "Fijos y respetar los volúmenes de la ITC-BT-27",
+                        "Portátiles con clavija estanca",
+                        "De Clase 0 con toma de tierra"
+                    ),
+                    a = 1,
+                    exp = "La ITC-BT-49 apartado 3 exige que los muebles con equipo eléctrico destinados a cuartos de baño o aseo sean fijos y cumplan rigurosamente los volúmenes de protección e instalación de la ITC-BT-27.",
+                    ref = "ITC-BT-49 §3"
+                ),
+                Question(
+                    q = "¿Qué símbolo normativo deben llevar marcado las luminarias instaladas sobre superficies inflamables del mueble (madera, aglomerado)?",
+                    opts = listOf(
+                        "Símbolo de doble aislamiento",
+                        "Símbolo CE exclusivamente",
+                        "Símbolo F (según norma UNE-EN 60598-1)",
+                        "Símbolo de toma de tierra"
+                    ),
+                    a = 2,
+                    exp = "La ITC-BT-49 par. 2.1 establece que las luminarias destinadas a montaje directo sobre superficies inflamables de mobiliario deben llevar el marcado homologado con el símbolo F según la norma UNE-EN 60598-1.",
+                    ref = "ITC-BT-49 §2.1"
+                ),
+                Question(
+                    q = "En muebles donde los equipos eléctricos disipen calor en recintos cerrados (ej. camas abatibles), ¿qué dispositivo de seguridad debe instalarse?",
+                    opts = listOf(
+                        "Un ventilador de 230 V permanente",
+                        "Un fusible térmico desechable",
+                        "Un termómetro visible desde el exterior",
+                        "Un interruptor accionado por el cierre que deje fuera de servicio el equipo"
+                    ),
+                    a = 3,
+                    exp = "Según la ITC-BT-49 par. 2.1, si la potencia disipada puede generar sobrecalentamiento peligroso al cerrar el mueble, debe instalarse un interruptor de fin de carrera accionado por el cierre que desconecte el equipo.",
+                    ref = "ITC-BT-49 §2.1"
+                ),
+                Question(
+                    q = "Para la conexión fija a la red de un mueble de cuarto de baño con equipo eléctrico, ¿qué elemento debe incorporar el mueble?",
+                    opts = listOf(
+                        "Una caja de conexión con bornes fija accesible solo mediante herramienta",
+                        "Una clavija móvil Schuko de goma",
+                        "Un interruptor unipolar en el cable",
+                        "Un enchufe hembra en la parte trasera"
+                    ),
+                    a = 0,
+                    exp = "La ITC-BT-49 apartado 3 exige que los muebles de baño dispongan de una caja de conexión fija con bornes, accesible únicamente tras retirar una tapa con la ayuda de una herramienta.",
+                    ref = "ITC-BT-49 §3"
+                ),
+                Question(
+                    q = "En el cableado de muebles, ¿contra qué esfuerzos mecánicos deben quedar especialmente protegidos los conductores?",
+                    opts = listOf(
+                        "Vibraciones acústicas",
+                        "Tracción y torsión",
+                        "Presión hidrostática",
+                        "Fricción con superficies metálicas"
+                    ),
+                    a = 1,
+                    exp = "La ITC-BT-49 par. 2.4 dispone que los cables estarán firmemente fijados y dotados de dispositivos antitracción en los puntos de entrada, quedando protegidos en particular contra esfuerzos de tracción y torsión.",
+                    ref = "ITC-BT-49 §2.4"
+                ),
+                Question(
+                    q = "¿Cuál es el objeto y campo de aplicación de la ITC-BT-50 del REBT?",
+                    opts = listOf(
+                        "Determinar los requisitos de instalación de equipos eléctricos en locales que contienen radiadores para saunas",
+                        "Regular la temperatura máxima de los baños turcos",
+                        "Establecer la potencia de los calentadores de spa comunitarios",
+                        "Normalizar la ventilación en piscinas climatizadas"
+                    ),
+                    a = 0,
+                    exp = "La ITC-BT-50 punto 1 define expresamente su objeto como la determinación de los requisitos de instalación de los equipos eléctricos en aquellos locales que contienen radiadores o calentadores para saunas.",
+                    ref = "ITC-BT-50 §1"
+                ),
+                Question(
+                    q = "¿A qué norma técnica remite la ITC-BT-50 para las prescripciones particulares de instalación en saunas?",
+                    opts = listOf(
+                        "UNE-EN 60598-2-22",
+                        "UNE 20.460-7-703",
+                        "UNE-EN 60335-2-41",
+                        "UNE-HD 60364-4-41"
+                    ),
+                    a = 1,
+                    exp = "La ITC-BT-50 punto 2 establece que las prescripciones particulares para los locales con radiadores de sauna son las contempladas en la norma UNE 20.460-7-703 (y su equivalente HD 60364-7-703).",
+                    ref = "ITC-BT-50 §2"
+                ),
+                Question(
+                    q = "En el interior de la cabina de sauna (zonas 1, 2 y 3), ¿qué elemento está terminantemente prohibido instalar?",
+                    opts = listOf(
+                        "Sensores de temperatura de seguridad",
+                        "Luminarias con aislamiento de silicona",
+                        "Bases de toma de corriente y aparamenta de mando ajena al calentador",
+                        "El propio calefactor de sauna"
+                    ),
+                    a = 2,
+                    exp = "Conforme a la norma UNE 20.460-7-703 referenciada por la ITC-BT-50, no se permite la instalación de bases de toma de corriente ni interruptores generales de mando dentro del volumen de la sauna.",
+                    ref = "ITC-BT-50 §2"
+                ),
+                Question(
+                    q = "¿Qué tipo de cable debe emplearse para la alimentación del radiador de sauna en zonas sometidas a alta temperatura?",
+                    opts = listOf(
+                        "Cable con aislamiento de PVC convencional (H07V-K)",
+                        "Cable con aislamiento de polietileno reticulado",
+                        "Cable plano bajo rodapié",
+                        "Cable con aislamiento de silicona resistente al calor (tipo H05SS-F o equivalente)"
+                    ),
+                    a = 3,
+                    exp = "La normativa de saunas exige conductores con aislamiento elastomérico de silicona resistentes a elevadas temperaturas (al menos 170 ºC, tipo H05SS-F) para prevenir la degradación del dieléctrico por calor.",
+                    ref = "ITC-BT-50 §2"
+                ),
+                Question(
+                    q = "¿Qué grado de protección mínimo contra la penetración de agua deben poseer los equipos eléctricos situados en la cabina de sauna?",
+                    opts = listOf(
+                        "Al menos IPX4 (protegido contra salpicaduras de agua)",
+                        "IPX0 ordinario",
+                        "IPX7 sumergible",
+                        "IP20 contra polvo"
+                    ),
+                    a = 0,
+                    exp = "En las instalaciones de saunas, los equipos eléctricos y envolventes que puedan quedar expuestos al vapor o agua deben garantizar un grado de protección estanco no inferior a IPX4 (o IP24 según ubicación).",
+                    ref = "ITC-BT-50 §2"
+                ),
+                Question(
+                    q = "¿Qué protección diferencial obligatoria debe preverse para los circuitos de alimentación de la cabina de sauna?",
+                    opts = listOf(
+                        "Diferencial industrial de 300 mA",
+                        "Dispositivo diferencial-residual de alta sensibilidad no superior a 30 mA",
+                        "Diferencial selectivo de 500 mA",
+                        "No se requiere diferencial si hay limitador térmico"
+                    ),
+                    a = 1,
+                    exp = "Para la protección contra contactos indirectos en saunas se exige que todos los circuitos estén protegidos por uno o varios dispositivos diferenciales de alta sensibilidad con corriente residual asignada no mayor de 30 mA.",
+                    ref = "ITC-BT-50 §2"
+                ),
+                Question(
+                    q = "En la zona 1 de una sauna (espacio ocupado por el calentador hasta el techo), ¿qué equipos eléctricos se permiten?",
+                    opts = listOf(
+                        "Tomas de corriente estancas",
+                        "Luminarias de lectura",
+                        "Únicamente el calefactor de sauna y sus elementos de regulación directa",
+                        "Cualquier receptor de clase II"
+                    ),
+                    a = 2,
+                    exp = "En la zona 1 de la cabina sólo se permite instalar el propio calentador de sauna y los componentes directamente asociados a su funcionamiento y fijación, quedando excluido cualquier otro receptor.",
+                    ref = "ITC-BT-50 §2"
+                ),
+                Question(
+                    q = "¿Qué dispositivo de seguridad debe incorporar el calefactor de sauna para evitar incendios por sobrecalentamiento?",
+                    opts = listOf(
+                        "Un interruptor horario de rearme automático",
+                        "Un fusible unipolar en la fase L1",
+                        "Un limitador térmico de seguridad con corte automático e independiente del termostato",
+                        "Un voltímetro analógico"
+                    ),
+                    a = 2,
+                    exp = "Los calefactores de sauna deben incorporar un limitador de temperatura de seguridad no autorrearmable que corte la alimentación eléctrica si se sobrepasa la temperatura máxima de seguridad admisible.",
+                    ref = "ITC-BT-50 §2"
+                ),
+                Question(
+                    q = "En la zona 3 de la cabina de sauna (porción superior a más de 1 metro del suelo), ¿qué temperatura nominal mínima deben soportar los materiales aislantes?",
+                    opts = listOf(
+                        "Al menos 125 ºC a 170 ºC",
+                        "60 ºC",
+                        "70 ºC",
+                        "90 ºC"
+                    ),
+                    a = 0,
+                    exp = "En la zona 3 de la sauna, donde se acumula la masa de aire más caliente, los conductores y aislamientos deben estar clasificados para soportar temperaturas de servicio elevadas (125 ºC a 170 ºC).",
+                    ref = "ITC-BT-50 §2"
+                ),
+                Question(
+                    q = "¿Dónde deben situarse preferentemente los órganos de accionamiento y mando del calentador de la sauna?",
+                    opts = listOf(
+                        "Bajo las bancadas de madera",
+                        "Fuera de la cabina de sauna en un panel de control exterior",
+                        "Junto al calefactor en el suelo",
+                        "En el techo sobre el calefactor"
+                    ),
+                    a = 1,
+                    exp = "Los cuadros de control, termostatos de maniobra manual y dispositivos de encendido deben colocarse fuera del recinto de la cabina de sauna para protegerlos del calor excesivo y facilitar su operación segura.",
+                    ref = "ITC-BT-50 §2"
+                ),
+                Question(
+                    q = "¿Cuál es el campo de aplicación principal de la instrucción técnica ITC-BT-51 del REBT?",
+                    opts = listOf(
+                        "Instalaciones de sistemas de automatización, gestión técnica de la energía y seguridad para viviendas y edificios",
+                        "Redes de distribución de telecomunicaciones por fibra óptica",
+                        "Sistemas de iluminación exterior con temporizador mecánico",
+                        "Circuitos de potencia de tracción de ascensores"
+                    ),
+                    a = 0,
+                    exp = "La ITC-BT-51 apartado 1 define su ámbito para las instalaciones de sistemas de automatización, gestión técnica de la energía y seguridad (sistemas domóticos e inmóticos) en viviendas y edificios.",
+                    ref = "ITC-BT-51 §1"
+                ),
+                Question(
+                    q = "Según su topología física y funcional, ¿cómo se clasifican las arquitecturas de los sistemas de automatización en la ITC-BT-51?",
+                    opts = listOf(
+                        "Sistemas analógicos, digitales y mixtos",
+                        "Sistemas centralizados, descentralizados y distribuidos",
+                        "Sistemas trifásicos, monofásicos y bipolares",
+                        "Sistemas alámbricos de cobre y ópticos"
+                    ),
+                    a = 1,
+                    exp = "La ITC-BT-51 apartado 2 clasifica las instalaciones domóticas según su estructura funcional en tres tipologías básicas: sistemas centralizados, sistemas descentralizados y sistemas distribuidos.",
+                    ref = "ITC-BT-51 §2"
+                ),
+                Question(
+                    q = "¿Qué niveles de tensión pueden utilizar los circuitos de control y bus de los sistemas de automatización según la ITC-BT-51?",
+                    opts = listOf(
+                        "Únicamente tensión continua de 12 V",
+                        "Exclusivamente alta tensión de 1.000 V",
+                        "Muy Baja Tensión de Seguridad (MBTS), Muy Baja Tensión de Protección (MBTP) o 230 V",
+                        "Solo tensiones inferiores a 5 V TTL"
+                    ),
+                    a = 2,
+                    exp = "La ITC-BT-51 apartado 3 admite circuitos de bus y control que operen a Muy Baja Tensión de Seguridad (MBTS), Muy Baja Tensión de Protección (MBTP) o a tensión de red (230 V), según las especificaciones del fabricante.",
+                    ref = "ITC-BT-51 §3"
+                ),
+                Question(
+                    q = "Para que los cables de un bus domótico coexistan con cables de energía de 230/400 V en el mismo tubo o canal, ¿qué condición se exige?",
+                    opts = listOf(
+                        "Que los cables de energía sean de aluminio",
+                        "Que la longitud del tendido sea menor de 5 metros",
+                        "Que el circuito domótico sea alimentado con corriente continua",
+                        "Que los cables del bus domótico dispongan de aislamiento para la tensión más elevada presente (mínimo 450/750 V) o separación física"
+                    ),
+                    a = 3,
+                    exp = "Según la ITC-BT-51 par. 4.1 e ITC-BT-20, los cables de señales o bus pueden compartir canalización con cables de energía de BT solo si están aislados para la tensión más alta presente o si existe un tabique separador continuo.",
+                    ref = "ITC-BT-51 §4.1"
+                ),
+                Question(
+                    q = "¿Qué grado de protección mínimo deben proporcionar las envolventes o cuadros de distribución donde se ubiquen actuadores y pasarelas domóticas?",
+                    opts = listOf(
+                        "Mínimo IP30 e IK07 en el interior de viviendas",
+                        "IP20 e IK02 sin requisitos mecánicos",
+                        "IP55 e IK10 obligatorio siempre",
+                        "IP65 estanco para cualquier estancia"
+                    ),
+                    a = 0,
+                    exp = "La ITC-BT-51 par. 4.2 remite a las condiciones generales de cuadros (ITC-BT-17), exigiendo para los módulos de control domótico en interior un grado de protección no inferior a IP30 contra sólidos e IK07 contra impactos.",
+                    ref = "ITC-BT-51 §4.2"
+                ),
+                Question(
+                    q = "¿Qué normativa deben cumplir los equipos y dispositivos de automatización respecto a la compatibilidad electromagnética (CEM)?",
+                    opts = listOf(
+                        "Solo normas ISO de calidad",
+                        "Normas armonizadas de la serie UNE-EN 50090 y directivas de compatibilidad electromagnética",
+                        "Ninguna si funcionan a baterías",
+                        "El código técnico de edificación exclusivamente"
+                    ),
+                    a = 1,
+                    exp = "La ITC-BT-51 par. 5 exige que los equipos cumplan las directivas europeas de CEM y las normas de la serie UNE-EN 50090 para garantizar inmunidad frente a perturbaciones y no inducir ruidos en la red eléctrica.",
+                    ref = "ITC-BT-51 §5"
+                ),
+                Question(
+                    q = "En sistemas domóticos cuya fuente de alimentación entrega Muy Baja Tensión de Seguridad (MBTS), ¿qué condición rige para las partes activas?",
+                    opts = listOf(
+                        "Deben conectarse sólidamente al conductor neutro",
+                        "Deben conectarse a la red de tierra del edificio",
+                        "No deben estar conectadas a tierra en ningún punto",
+                        "Deben unirse al chasis metálico del cuadro"
+                    ),
+                    a = 2,
+                    exp = "En conformidad con la ITC-BT-36 e ITC-BT-51 par. 3.1, las partes activas y masas de los circuitos alimentados mediante MBTS no deben conectarse a tierra para mantener el aislamiento galvánico de seguridad.",
+                    ref = "ITC-BT-51 §3.1"
+                ),
+                Question(
+                    q = "Al implementar sistemas automáticos de desconexión o gestión de cargas, ¿qué circuitos no deben desconectarse de forma involuntaria?",
+                    opts = listOf(
+                        "El circuito C2 de tomas de uso general",
+                        "El circuito C4 de lavadora y termo",
+                        "El circuito C9 de aire acondicionado",
+                        "Los circuitos de servicios de seguridad, detección de incendios o alarmas técnicas"
+                    ),
+                    a = 3,
+                    exp = "La ITC-BT-51 par. 6 prohíbe que los sistemas de gestión de demanda o racionalización energética desconecten circuitos prioritarios o destinados a servicios de seguridad y protección de las personas.",
+                    ref = "ITC-BT-51 §6"
+                ),
+                Question(
+                    q = "En viviendas, ¿a qué circuito interno normalizado de la ITC-BT-25 corresponde la alimentación de los sistemas de automatización?",
+                    opts = listOf(
+                        "Circuito C11",
+                        "Circuito C1",
+                        "Circuito C3",
+                        "Circuito C8"
+                    ),
+                    a = 0,
+                    exp = "La ITC-BT-25 par. 2.3.2 y la ITC-BT-51 indican que la alimentación de la central y actuadores de domótica se realiza mediante el circuito C11 específico para automatización, con potencia prevista de hasta 2.300 W.",
+                    ref = "ITC-BT-51 §3"
+                ),
+                Question(
+                    q = "Cuando se utilicen cables apantallados para el bus domótico frente a interferencias, ¿cómo debe conectarse la pantalla metálica?",
+                    opts = listOf(
+                        "Debe dejarse aislada en ambos extremos",
+                        "Debe conectarse a tierra en un único punto para evitar bucles de corriente",
+                        "Debe conectarse al conductor neutro",
+                        "Debe unirse a las fases mediante varistores"
+                    ),
+                    a = 1,
+                    exp = "Para evitar corrientes inducidas por bucles de masa, la pantalla metálica de los cables de datos domóticos se conectará a tierra en un solo punto, preferentemente en el cuadro principal de mando.",
+                    ref = "ITC-BT-51 §4.1"
                 )
             )
         ),
@@ -10664,6 +11504,126 @@ object Content {
                     a = 0,
                     exp = "Para activar el contrato de acceso y la compensación simplificada de excedentes, la distribuidora y comercializadora exigen el CIE registrado de la instalación generadora conforme a la ITC-BT-40 y RD 244/2019.",
                     ref = "ITC-BT-40 y RD 244/2019"
+                ),
+                Question(
+                    q = "¿Cuál es la altura mínima reglamentaria que deben guardar los conductores desnudos de una red aérea de baja tensión sobre calles o carreteras transitables por vehículos?",
+                    opts = listOf(
+                        "6 metros",
+                        "5 metros",
+                        "4 metros",
+                        "7 metros"
+                    ),
+                    a = 0,
+                    exp = "Según la ITC-BT-06 apartado 3.1, en el cruce de vías de comunicación, calles o carreteras transitables por vehículos, la altura mínima de los conductores sobre el suelo en las condiciones más desfavorables de flecha no será inferior a 6 metros.",
+                    ref = "ITC-BT-06 §3.1"
+                ),
+                Question(
+                    q = "En redes aéreas de distribución de baja tensión no transitables por vehículos, ¿cuál es la distancia vertical mínima al suelo?",
+                    opts = listOf(
+                        "4 metros",
+                        "5 metros",
+                        "6 metros",
+                        "3,5 metros"
+                    ),
+                    a = 1,
+                    exp = "La ITC-BT-06 par. 3.1 establece que en zonas no transitables por vehículos, los conductores aéreos mantendrán una altura mínima sobre el terreno de 5 metros para garantizar la seguridad frente a contactos accidentales.",
+                    ref = "ITC-BT-06 §3.1"
+                ),
+                Question(
+                    q = "¿Qué sección mínima deben tener los conductores de cobre en redes aéreas de baja tensión tensadas sobre apoyos?",
+                    opts = listOf(
+                        "6 mm²",
+                        "16 mm²",
+                        "10 mm²",
+                        "25 mm²"
+                    ),
+                    a = 2,
+                    exp = "Conforme a la tabla de conductores de la ITC-BT-06 par. 2.1, la sección mínima de los conductores de cobre para redes aéreas de distribución tensadas entre apoyos es de 10 mm², asegurando resistencia mecánica y capacidad eléctrica.",
+                    ref = "ITC-BT-06 §2.1"
+                ),
+                Question(
+                    q = "¿Cuál es el coeficiente de seguridad mecánico mínimo exigido a los conductores de una línea aérea en la hipótesis más desfavorable de tracción?",
+                    opts = listOf(
+                        "1,5",
+                        "2,0",
+                        "3,0",
+                        "2,5"
+                    ),
+                    a = 3,
+                    exp = "La ITC-BT-06 par. 2.2 prescribe que los conductores de líneas aéreas se calcularán con un coeficiente de seguridad mecánico no inferior a 2,5 respecto a su carga de rotura para la hipótesis más desfavorable de viento o hielo.",
+                    ref = "ITC-BT-06 §2.2"
+                ),
+                Question(
+                    q = "En cables trenzados en haz con neutro fiador para redes aéreas, ¿de qué material debe ser dicho fiador portante?",
+                    opts = listOf(
+                        "Aleación de aluminio (Almelec)",
+                        "Cobre recocido",
+                        "Acero galvanizado desnudo",
+                        "Aluminio puro al 99%"
+                    ),
+                    a = 0,
+                    exp = "La ITC-BT-06 par. 2.3 establece que los cables en haz trenzado con neutro fiador portante utilizarán para el conductor neutro una aleación de aluminio de alta resistencia mecánica (tipo Almelec), que asume la tracción de la línea.",
+                    ref = "ITC-BT-06 §2.3"
+                ),
+                Question(
+                    q = "En el cruce de una línea aérea de baja tensión con una línea de alta tensión, ¿cómo deben disponerse las líneas?",
+                    opts = listOf(
+                        "La de BT debe cruzar siempre por encima de la de AT",
+                        "La de BT debe cruzar siempre por debajo de la de AT",
+                        "Pueden cruzarse a la misma altura en apoyos comunes",
+                        "Es indiferente según la topografía del terreno"
+                    ),
+                    a = 1,
+                    exp = "La ITC-BT-06 par. 4.1 estipula que en cruzamientos entre líneas aéreas de distinta tensión, las líneas de baja tensión deberán pasar siempre por debajo de las líneas de alta tensión, manteniendo las distancias de aislamiento prescritas.",
+                    ref = "ITC-BT-06 §4.1"
+                ),
+                Question(
+                    q = "Para conductores desnudos en apoyos con vano no superior a 40 metros, ¿cuál es la separación mínima horizontal entre conductores?",
+                    opts = listOf(
+                        "0,20 metros",
+                        "0,30 metros",
+                        "0,40 metros",
+                        "0,60 metros"
+                    ),
+                    a = 2,
+                    exp = "Según la ITC-BT-06 par. 3.2, la separación mínima entre conductores desnudos fijados sobre apoyos para vanos de hasta 40 metros será de 0,40 metros, evitando acercamientos peligrosos por oscilación producida por el viento.",
+                    ref = "ITC-BT-06 §3.2"
+                ),
+                Question(
+                    q = "¿Qué altura mínima sobre el suelo deben guardar los cables aislados posados sobre fachadas en zonas accesibles?",
+                    opts = listOf(
+                        "1,5 metros",
+                        "2,0 metros",
+                        "3,0 metros",
+                        "2,5 metros"
+                    ),
+                    a = 3,
+                    exp = "La ITC-BT-06 par. 3.3 fija que los cables aislados posados sobre fachada o muros se dispondrán a una altura mínima de 2,5 metros respecto al suelo para quedar fuera del alcance normal de las personas y vehículos.",
+                    ref = "ITC-BT-06 §3.3"
+                ),
+                Question(
+                    q = "¿En qué puntos de la red aérea de distribución en baja tensión debe ponerse a tierra el conductor neutro?",
+                    opts = listOf(
+                        "En el centro de transformación y en los extremos de ramas superiores a 200 m",
+                        "Únicamente en el cuadro del usuario final",
+                        "Solo en el apoyo central de la línea",
+                        "En todos y cada uno de los apoyos sin excepción"
+                    ),
+                    a = 0,
+                    exp = "La ITC-BT-06 par. 2.4 en concordancia con la ITC-BT-08 exige que el conductor neutro de distribución aérea esté puesto a tierra en el centro de transformación y, además, en los extremos de líneas cuya longitud supere los 200 metros.",
+                    ref = "ITC-BT-06 §2.4"
+                ),
+                Question(
+                    q = "En conductores de aluminio para redes aéreas tensadas, ¿cuál es la sección mínima reglamentaria?",
+                    opts = listOf(
+                        "10 mm²",
+                        "16 mm²",
+                        "25 mm²",
+                        "35 mm²"
+                    ),
+                    a = 1,
+                    exp = "La ITC-BT-06 par. 2.1 determina que la sección mínima admisible para conductores de aluminio en líneas aéreas tensadas sobre apoyos es de 16 mm², garantizando la integridad mecánica y térmica ante cortocircuitos.",
+                    ref = "ITC-BT-06 §2.1"
                 )
             )
         ),

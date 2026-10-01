@@ -37,3 +37,15 @@ fun Question.isArticulado(): Boolean {
     }
     return false
 }
+
+// Regex para detectar expresiones dependientes del orden de las opciones
+private val ORDER_DEPENDENT_REGEX = """\b(todas\s+las\s+anteriores|ninguna\s+de\s+las\s+anteriores|todas\s+son\s+correctas|ninguna\s+es\s+correcta|a\s+y\s+b|b\s+y\s+c|a\s+y\s+c|las\s+dos\s+primeras|las\s+tres\s+anteriores)\b""".toRegex(RegexOption.IGNORE_CASE)
+
+/**
+ * Retorna true si alguna de las opciones depende del orden posicional
+ * (ej. "todas las anteriores", "ninguna de las anteriores", "A y B", etc.).
+ */
+fun Question.hasOrderDependentOptions(): Boolean {
+    return opts.any { ORDER_DEPENDENT_REGEX.containsMatchIn(it) }
+}
+
