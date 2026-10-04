@@ -155,12 +155,17 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     var labActiveSubTab by mutableStateOf(0) // 0: Conductor, 1: Previsión Edificio, 2: Tubos, 3: Tierra
     var labIsThreePhase by mutableStateOf(false)
     var labCableMaterial by mutableStateOf("cobre") // "cobre" or "aluminio"
-    var labInstallMethod by mutableStateOf("tubo") // "tubo" or "aire"
+    var labInstallMethod by mutableStateOf("A2") // A2, B1, B2, C, E, D
+    var labInsulationType by mutableStateOf("XLPE (90ºC)") // XLPE (90ºC) or PVC (70ºC)
+    var labAmbientTemp by mutableStateOf("30") // ºC
+    var labGroupingFactor by mutableStateOf("1.0") // f_a
     var labPowerKw by mutableStateOf("5.75")
     var labLengthM by mutableStateOf("25")
     var labMaxDropPct by mutableStateOf("1.5")
     var labCalculatedSection by mutableStateOf(1.5)
     var labIzCapacity by mutableStateOf(16.0)
+    var labCorrectedIz by mutableStateOf(16.0)
+    var labCalculatedPeSection by mutableStateOf(1.5)
     var labStatusMessage by mutableStateOf("")
 
     // Building load forecasting
@@ -674,6 +679,39 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         val power = labPowerKw.toDoubleOrNull() ?: 5.75
         val length = labLengthM.toDoubleOrNull() ?: 25.0
         val maxDrop = labMaxDropPct.toDoubleOrNull() ?: 1.5
+        val ambientT = labAmbientTemp.toDoubleOrNull() ?: 30.0
+        val fa = labGroupingFactor.toDoubleOrNull() ?: 1.0
+
+        // Temperature correction factor ft (approximate standard UNE-HD 60364-5-52)
+        val isXlpe = labInsulationType.contains("XLPE", ignoreCase = true)
+        val ft = when {
+            isXlpe -> when {
+                ambientT <= 10 -> 1.15
+                ambientT <= 20 -> 1.08
+                ambientT <= 30 -> 1.00
+                ambientT <= 40 -> 0.91
+                ambientT <= 50 -> 0.82
+                else -> 0.71
+            }
+            else -> when { // PVC 70ºC
+                ambientT <= 10 -> 1.22
+                ambientT <= 20 -> 1.11
+                ambientT <= 30 -> 1.00
+                ambientT <= 40 -> 0.87
+                ambientT <= 50 -> 0.71
+                else -> 0.50
+            }
+        }
+
+        // Installation method multiplier relative to A2 base
+        val methodMultiplier = when (labInstallMethod) {
+            "A2" -> 1.0
+            "B1", "B2" -> 1.15
+            "C" -> 1.28
+            "E" -> 1.45
+            "D" -> 1.35
+            else -> 1.0
+        }
 
         val u = if (labIsThreePhase) 400.0 else 230.0
         val deltaU = (maxDrop / 100.0) * u
@@ -695,16 +733,16 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             }
         }
 
-        val ampCapacityTable = mapOf(
-            1.5 to (if (labInstallMethod == "tubo") 14.0 else 18.0),
-            2.5 to (if (labInstallMethod == "tubo") 18.0 else 24.0),
-            4.0 to (if (labInstallMethod == "tubo") 24.0 else 32.0),
-            6.0 to (if (labInstallMethod == "tubo") 31.0 else 41.0),
-            10.0 to (if (labInstallMethod == "tubo") 42.0 else 57.0),
-            16.0 to (if (labInstallMethod == "tubo") 56.0 else 76.0),
-            25.0 to (if (labInstallMethod == "tubo") 73.0 else 101.0),
-            35.0 to (if (labInstallMethod == "tubo") 89.0 else 125.0),
-            50.0 to (if (labInstallMethod == "tubo") 108.0 else 151.0)
+        val baseAmpCapacityTable = mapOf(
+            1.5 to 14.0,
+            2.5 to 18.0,
+            4.0 to 24.0,
+            6.0 to 31.0,
+            10.0 to 42.0,
+            16.0 to 56.0,
+            25.0 to 73.0,
+            35.0 to 89.0,
+            50.0 to 108.0
         )
 
         val currentAmps = if (labIsThreePhase) {
@@ -714,26 +752,42 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
 
         var finalSec = selectedSec
-        var finalIz = ampCapacityTable[finalSec] ?: (finalSec * 3.0)
-        while (finalIz < currentAmps && finalSec < 50.0) {
+        var baseIz = baseAmpCapacityTable[finalSec] ?: (finalSec * 3.0)
+        var finalIz = baseIz * methodMultiplier
+        var correctedIz = finalIz * ft * fa
+
+        while (correctedIz < currentAmps && finalSec < 50.0) {
             val idx = standardSections.indexOf(finalSec)
             if (idx == -1 || idx == standardSections.lastIndex) break
             finalSec = standardSections[idx + 1]
-            finalIz = ampCapacityTable[finalSec] ?: (finalSec * 3.0)
+            baseIz = baseAmpCapacityTable[finalSec] ?: (finalSec * 3.0)
+            finalIz = baseIz * methodMultiplier
+            correctedIz = finalIz * ft * fa
         }
 
         labCalculatedSection = finalSec
         labIzCapacity = finalIz
+        labCorrectedIz = correctedIz
+
+        // PE Conductor minimum section calculation according to REBT
+        val peSec = when {
+            finalSec <= 16.0 -> finalSec
+            finalSec <= 35.0 -> 16.0
+            else -> finalSec / 2.0
+        }
+        labCalculatedPeSection = peSec
 
         val formattedAmps = String.format("%.2f", currentAmps)
         val formattedDrop = String.format("%.2f", sCalc)
         val phaseLabel = if (labIsThreePhase) "Trifásica 400V" else "Monofásica 230V"
         val matLabel = if (labCableMaterial == "cobre") "Cobre" else "Aluminio"
 
-        labStatusMessage = "Sección Reglamentaria ($matLabel - $phaseLabel):\n" +
+        labStatusMessage = "Informe Técnico de Obra ($matLabel - $phaseLabel):\n" +
                 "• Caída de tensión teórica ($maxDrop%): $formattedDrop mm²\n" +
-                "• Intensidad calculada: $formattedAmps A\n" +
-                "• Sección comercial elegida: $finalSec mm² (Iz = $finalIz A)"
+                "• Intensidad de diseño ($currentAmps A) vs Iz Corr ($correctedIz A)\n" +
+                "• Método ($labInstallMethod) | T. Amb (${ambientT}ºC, ft=$ft) | Agrup. (fa=$fa)\n" +
+                "• Sección Fase Comercial: $finalSec mm²\n" +
+                "• Conductor de Protección (PE) Mínimo: $peSec mm²"
     }
 
     fun runBuildingForecastingCalculation() {

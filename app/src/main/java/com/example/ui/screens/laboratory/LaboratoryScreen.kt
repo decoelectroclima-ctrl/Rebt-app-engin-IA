@@ -30,7 +30,8 @@ fun LaboratoryScreen(viewModel: MainViewModel) {
         "Conductores",
         if (isPremium) "Previsión Cargas" else "Previsión Cargas 🔒",
         "Tubos ITC-21",
-        if (isPremium) "Tierras ITC-18" else "Tierras ITC-18 🔒"
+        if (isPremium) "Tierras ITC-18" else "Tierras ITC-18 🔒",
+        if (isPremium) "Protecciones ITC-22/24" else "Protecciones ITC-22/24 🔒"
     )
 
     Column(
@@ -112,6 +113,26 @@ fun LaboratoryScreen(viewModel: MainViewModel) {
                         "Resistividad del terreno según tipo de suelo (roca, arcilla, caliza)",
                         "Sensibilidad diferencial requerida (30 mA, 300 mA)",
                         "Comprobación automática de seguridad frente a contactos indirectos"
+                    ),
+                    onUnlock = {
+                        FeedbackManager.playClick(context)
+                        viewModel.activeTab = "subscription"
+                    },
+                    isDarkTheme = viewModel.isDarkTheme
+                )
+            }
+            4 -> if (isPremium) {
+                ProtectionsTab(viewModel)
+            } else {
+                LockedLabCalculatorCard(
+                    title = "Coordinación y Protecciones Eléctricas",
+                    itcReference = "ITC-BT-22 y ITC-BT-24 Oficial",
+                    description = "Dimensionamiento y comprobación reglamentaria de interruptores automáticos (PIA / IGA), poder de corte, curvas de disparo y sensibilidad de interruptores diferenciales.",
+                    keyFeatures = listOf(
+                        "Reglas de coordinación conductor-protección (Ib ≤ In ≤ Iz' y I2 ≤ 1.45 · Iz')",
+                        "Calibres comerciales estándar recomendados (10A, 16A, 20A, 25A, 32A, 40A, 50A, 63A)",
+                        "Sensibilidad de interruptores diferenciales (30 mA y 300 mA)",
+                        "Verificación de cumplimiento frente a sobreintensidades y contactos indirectos"
                     ),
                     onUnlock = {
                         FeedbackManager.playClick(context)
@@ -254,6 +275,77 @@ fun CableSizingTab(viewModel: MainViewModel) {
             Card(
                 shape = RoundedCornerShape(14.dp),
                 colors = CardDefaults.cardColors(
+                    containerColor = if (viewModel.isDarkTheme) Color(0xFF161B22) else Color(0xFFF8FAFC)
+                ),
+                border = BorderStroke(1.5.dp, Color(0xFF2563EB).copy(alpha = 0.3f))
+            ) {
+                Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            imageVector = Icons.Default.Build,
+                            contentDescription = null,
+                            tint = Color(0xFF2563EB),
+                            modifier = Modifier.size(22.dp)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = "Método de Instalación y Guía de Obra",
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+
+                    Text(
+                        text = "Se toman en obra ante una línea existente, una ampliación, una nueva carga, una modificación de cuadro o una instalación que necesitamos comprobar en ese mismo momento.",
+                        fontSize = 13.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+
+                    HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
+
+                    Text(
+                        text = "Método A2 (ITC-BT-19):",
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+
+                    BulletPoint("Cable multipolar en pared aislante")
+                    BulletPoint("Cable multiconductor dentro de tubo en pared térmicamente aislante")
+
+                    Spacer(modifier = Modifier.height(2.dp))
+
+                    Text(
+                        text = "Selección de Conductor:",
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+
+                    BulletPoint("Cobre: Tabla 1 ITC-BT-19")
+                    BulletPoint("Aluminio: Excepción UNE desde 10 mm²")
+
+                    Spacer(modifier = Modifier.height(2.dp))
+
+                    Text(
+                        text = "Con Sección BT podemos trabajar directamente sobre el terreno:",
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+
+                    BulletPoint("Comprobar rápidamente si una instalación existente es correcta.")
+                    BulletPoint("Predimensionar conductores y protecciones antes de ejecutar una nueva línea o una modificación.")
+                    BulletPoint("Calcular de forma precisa secciones, intensidades, protecciones y caídas de tensión.")
+                }
+            }
+        }
+
+        item {
+            Card(
+                shape = RoundedCornerShape(14.dp),
+                colors = CardDefaults.cardColors(
                     containerColor = if (viewModel.isDarkTheme) Color(0xFF161B22) else Color.White
                 ),
                 border = BorderStroke(1.dp, if (viewModel.isDarkTheme) Color(0xFF30363D) else Color(0xFFE1E4E8))
@@ -300,6 +392,70 @@ fun CableSizingTab(viewModel: MainViewModel) {
                         modifier = Modifier.fillMaxWidth().testTag("lab_drop_input")
                     )
 
+                    // Installation method selector A2, B1, B2, C, E, D
+                    Text(
+                        text = "Método de Instalación (UNE-HD 60364-5-52)",
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        listOf("A2", "B1", "B2", "C", "E", "D").forEach { method ->
+                            FilterChip(
+                                selected = viewModel.labInstallMethod == method,
+                                onClick = {
+                                    viewModel.labInstallMethod = method
+                                    viewModel.runLaboratoryCalculation()
+                                },
+                                label = { Text(method, fontSize = 11.sp) },
+                                modifier = Modifier.weight(1f)
+                            )
+                        }
+                    }
+
+                    // Insulation Type Switch
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text("Aislamiento XLPE (90ºC) vs PVC (70ºC)", fontSize = 13.sp)
+                        Switch(
+                            checked = viewModel.labInsulationType.contains("XLPE"),
+                            onCheckedChange = {
+                                viewModel.labInsulationType = if (it) "XLPE (90ºC)" else "PVC (70ºC)"
+                                viewModel.runLaboratoryCalculation()
+                            }
+                        )
+                    }
+
+                    OutlinedTextField(
+                        value = viewModel.labAmbientTemp,
+                        onValueChange = {
+                            viewModel.labAmbientTemp = it
+                            viewModel.runLaboratoryCalculation()
+                        },
+                        label = { Text("Temperatura Ambiente (ºC)") },
+                        supportingText = { Text("Base estándar: 30ºC") },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+
+                    OutlinedTextField(
+                        value = viewModel.labGroupingFactor,
+                        onValueChange = {
+                            viewModel.labGroupingFactor = it
+                            viewModel.runLaboratoryCalculation()
+                        },
+                        label = { Text("Factor de Agrupamiento (fa)") },
+                        supportingText = { Text("Circuitos agrupados en tubo/bandeja (ej: 0.80)") },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+
                     // Switch 1: Monofásica / Trifásica
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -327,22 +483,6 @@ fun CableSizingTab(viewModel: MainViewModel) {
                             checked = viewModel.labCableMaterial == "cobre",
                             onCheckedChange = {
                                 viewModel.labCableMaterial = if (it) "cobre" else "aluminio"
-                                viewModel.runLaboratoryCalculation()
-                            }
-                        )
-                    }
-
-                    // Installation method
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text("Bajo Tubo Empotrado (vs Aire Libre)", fontSize = 13.sp)
-                        Switch(
-                            checked = viewModel.labInstallMethod == "tubo",
-                            onCheckedChange = {
-                                viewModel.labInstallMethod = if (it) "tubo" else "aire"
                                 viewModel.runLaboratoryCalculation()
                             }
                         )
@@ -388,10 +528,18 @@ fun CableSizingTab(viewModel: MainViewModel) {
 
                     Spacer(modifier = Modifier.height(10.dp))
                     Text(
-                        text = viewModel.labStatusMessage,
+                        text = "• Intensidad Corregida (Iz'): ${String.format("%.1f", viewModel.labCorrectedIz)} A\n" +
+                                "• Sección Mínima PE (Tierra): ${viewModel.labCalculatedPeSection} mm²",
                         fontSize = 13.sp,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        lineHeight = 18.sp
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                    Spacer(modifier = Modifier.height(6.dp))
+                    Text(
+                        text = viewModel.labStatusMessage,
+                        fontSize = 12.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        lineHeight = 16.sp
                     )
                 }
             }
@@ -679,6 +827,91 @@ fun GroundingTab(viewModel: MainViewModel) {
                         color = MaterialTheme.colorScheme.onSurface,
                         lineHeight = 18.sp
                     )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun BulletPoint(text: String) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Box(
+            modifier = Modifier
+                .size(6.dp)
+                .clip(androidx.compose.foundation.shape.CircleShape)
+                .background(Color(0xFF2563EB))
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        Text(
+            text = text,
+            fontSize = 12.sp,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+    }
+}
+
+@Composable
+fun ProtectionsTab(viewModel: MainViewModel) {
+    LazyColumn(
+        verticalArrangement = Arrangement.spacedBy(14.dp),
+        contentPadding = PaddingValues(bottom = 32.dp)
+    ) {
+        item {
+            Card(
+                shape = RoundedCornerShape(14.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = if (viewModel.isDarkTheme) Color(0xFF161B22) else Color.White
+                ),
+                border = BorderStroke(1.dp, if (viewModel.isDarkTheme) Color(0xFF30363D) else Color(0xFFE1E4E8))
+            ) {
+                Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Text(
+                        text = "Coordinación y Protecciones (ITC-BT-22 / ITC-BT-24)",
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+
+                    Text(
+                        text = "Selección de interruptores automáticos (PIA / IGA) y diferenciales reglamentarios.",
+                        fontSize = 13.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+
+                    HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
+
+                    Text(
+                        text = "Regla de Coordinación Conductor-Protección (ITC-BT-22):",
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                    BulletPoint("Ib ≤ In ≤ Iz' (La corriente de diseño debe ser menor o igual al calibre del protector, y este menor o igual a la intensidad admisible corregida del cable).")
+                    BulletPoint("I2 ≤ 1.45 · Iz' (La corriente convencional de operación del dispositivo asegura la protección térmica contra sobrecargas).")
+
+                    Spacer(modifier = Modifier.height(4.dp))
+
+                    Text(
+                        text = "Calibres comerciales estándar recomendados (In):",
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                    BulletPoint("Alumbrado / Tomas generales: 10 A, 16 A, 20 A")
+                    BulletPoint("Cocinas / Hornos / Lavadoras: 20 A, 25 A")
+                    BulletPoint("Acometidas y Cuadro General (IGA): 25 A, 32 A, 40 A, 50 A, 63 A")
+
+                    Spacer(modifier = Modifier.height(4.dp))
+
+                    Text(
+                        text = "Sensibilidad de Interruptores Diferenciales (ITC-BT-24):",
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                    BulletPoint("Alta Sensibilidad (30 mA): Obligatorio para protección de personas, tomas de corriente y cuartos de baño.")
+                    BulletPoint("Sensibilidad General (300 mA): Uso en cabecera para protección contra incendios por corrientes de fuga.")
                 }
             }
         }
