@@ -1227,16 +1227,16 @@ Question(
                     ref = "ITC-BT-33 §1"
                 ),
 Question(
-                    q = "¿Cuál es el objeto de la instrucción ITC-BT-33 del REBT?",
+                    q = "¿Quién es el responsable de la seguridad de la instalación eléctrica temporal en una obra según la ITC-BT-33?",
                     opts = listOf(
-                        "Regular las instalaciones de alta tensión en industrias",
-                        "Establecer las prescripciones para las instalaciones eléctricas provisionales y temporales de obra",
-                        "Normar la instalación de piscinas",
-                        "Definir el alumbrado en estadios deportivos"
+                        "El titular de la obra y el instalador autorizado ejecutor",
+                        "Únicamente el ayuntamiento",
+                        "El fabricante de los cables",
+                        "La compañía distribuidora exclusivamente"
                     ),
-                    a = 1,
-                    exp = "La ITC-BT-33 tiene por objeto establecer las prescripciones para las instalaciones eléctricas provisionales y temporales de obra (públicas o privadas) destinadas a suministrar energía durante la ejecución de los trabajos.",
-                    ref = "ITC-BT-33 §1"
+                    a = 0,
+                    exp = "Según la ITC-BT-33, el titular de la obra y el instalador o empresa instaladora autorizada que ejecute la instalación son responsables de que esta cumpla con las prescripciones de seguridad establecidas.",
+                    ref = "ITC-BT-33 §2"
                 ),
 Question(
                     q = "¿Qué grado de protección mínimo deben poseer las envolventes de los cuadros eléctricos instalados a la intemperie en una obra según la ITC-BT-33?",

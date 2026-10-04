@@ -185,96 +185,96 @@ Question(
 Question(
                     q = "Según el REBT, la ITC-BT-44 no incluye prescripciones relativas a:",
                     opts = listOf(
-                        "El alumbrado exterior y el alumbrado de emergencia en locales de pública concurrencia",
                         "Las luminarias interiores",
+                        "El alumbrado exterior y el alumbrado de emergencia en locales de pública concurrencia",
                         "Los rótulos luminosos",
                         "La utilización de muy bajas tensiones"
                     ),
-                    a = 0,
+                    a = 1,
                     exp = "ITC-BT-44, apartado 1: «En esta instrucción no se incluyen prescripciones relativas al alumbrado exterior recogido en la ITC-BT-09 ni al alumbrado de emergencia…»",
                     ref = "ITC-BT-44"
                 ),
 Question(
                     q = "Según el REBT, las luminarias deberán ser conformes a los requisitos establecidos en las normas de la serie:",
                     opts = listOf(
-                        "UNE-EN 60598",
-                        "UNE-EN 60309",
                         "La ITC-BT-24",
+                        "UNE-EN 60309",
+                        "UNE-EN 60598",
                         "UNE-EN 50107"
                     ),
-                    a = 0,
+                    a = 2,
                     exp = "ITC-BT-44, apartado 2.1: «Las luminarias serán conformes a los requisitos establecidos en las normas de la serie UNE-EN 60598.»",
                     ref = "ITC-BT-44"
                 ),
 Question(
                     q = "Según el REBT, la masa máxima de las luminarias suspendidas excepcionalmente de cables flexibles será de:",
                     opts = listOf(
-                        "5 kg",
+                        "15 kg",
                         "3 kg",
                         "10 kg",
-                        "15 kg"
+                        "5 kg"
                     ),
-                    a = 0,
+                    a = 3,
                     exp = "ITC-BT-44, apartado 2.1.1: «La masa de las luminarias suspendidas excepcionalmente de cables flexibles no deben exceder de 5 kg.»",
                     ref = "ITC-BT-44"
                 ),
 Question(
                     q = "Según el REBT, los conductores de luminarias suspendidas:",
                     opts = listOf(
-                        "No deben presentar empalmes intermedios",
                         "Pueden presentar empalmes",
+                        "No deben presentar empalmes intermedios",
                         "Deben ser de aluminio",
                         "Deben ir siempre canalizados"
                     ),
-                    a = 0,
+                    a = 1,
                     exp = "ITC-BT-44, apartado 2.1.1: «Los conductores… no deben presentar empalmes intermedios…»",
                     ref = "ITC-BT-44"
                 ),
 Question(
                     q = "Según el REBT, la tracción máxima admisible en los conductores de suspensión será inferior a:",
                     opts = listOf(
-                        "15 N/mm²",
-                        "10 N/mm²",
                         "20 N/mm²",
+                        "10 N/mm²",
+                        "15 N/mm²",
                         "25 N/mm²"
                     ),
-                    a = 0,
+                    a = 2,
                     exp = "ITC-BT-44, apartado 2.1.1: «…la tracción máxima a la que estén sometidos los conductores sea inferior a 15 N/mm2.»",
                     ref = "ITC-BT-44"
                 ),
 Question(
                     q = "Según el REBT, la tensión asignada mínima de los cables del cableado interno será:",
                     opts = listOf(
-                        "300/300 V",
+                        "1000 V",
                         "230/400 V",
                         "450/750 V",
-                        "1000 V"
+                        "300/300 V"
                     ),
-                    a = 0,
+                    a = 3,
                     exp = "ITC-BT-44, apartado 2.1.2: «…nunca inferior a 300/300 V.»",
                     ref = "ITC-BT-44"
                 ),
 Question(
                     q = "Según el REBT, el cableado externo que penetra en la luminaria deberá tener:",
                     opts = listOf(
-                        "Aislamiento eléctrico y térmico adecuados",
                         "Únicamente aislamiento eléctrico",
+                        "Aislamiento eléctrico y térmico adecuados",
                         "Protección mecánica únicamente",
                         "Pantalla metálica"
                     ),
-                    a = 0,
+                    a = 1,
                     exp = "ITC-BT-44, apartado 2.1.3: «…tenga el adecuado aislamiento eléctrico y térmico.»",
                     ref = "ITC-BT-44"
                 ),
 Question(
                     q = "Según el REBT, deberán disponer de conexión a tierra las luminarias que:",
                     opts = listOf(
-                        "No sean de Clase II ni Clase III",
-                        "Sean de Clase II",
                         "Sean de Clase III",
+                        "Sean de Clase II",
+                        "No sean de Clase II ni Clase III",
                         "Funcionen a muy baja tensión"
                     ),
-                    a = 0,
+                    a = 2,
                     exp = "ITC-BT-44, apartado 2.1.4: «Las partes metálicas accesibles de las luminarias que no sean de Clase II o Clase III, deberán tener un elemento de conexión para su puesta a tierra.»",
                     ref = "ITC-BT-44"
                 ),
@@ -533,84 +533,84 @@ Question(
 Question(
                     q = "Según el REBT, los esquemas de distribución se definen en función de:",
                     opts = listOf(
-                        "Las conexiones a tierra de la red de distribución y de las masas de la instalación receptora",
+                        "La tensión nominal y el número de fases",
                         "El tipo de protección diferencial utilizado",
                         "La sección del conductor neutro y de fase",
-                        "La tensión nominal y el número de fases"
+                        "Las conexiones a tierra de la red de distribución y de las masas de la instalación receptora"
                     ),
-                    a = 0,
+                    a = 3,
                     exp = "ITC-BT-08, apartado 1 (Esquemas de distribución): indica que los esquemas de distribución se establecen en función de las conexiones a tierra de la red de distribución o de la alimentación, por un lado, y de las masas de la instalación receptora, por otro.",
                     ref = "ITC-BT-08"
                 ),
 Question(
                     q = "Según el REBT, la primera letra del código de un esquema de distribución indica:",
                     opts = listOf(
-                        "La situación de la alimentación con respecto a tierra",
                         "La disposición del neutro en el cuadro general",
+                        "La situación de la alimentación con respecto a tierra",
                         "La protección frente a contactos indirectos",
                         "La forma de conexión del conductor de protección"
                     ),
-                    a = 0,
+                    a = 1,
                     exp = "ITC-BT-08, apartado 1: bajo el epígrafe 'Primera letra', se indica que se refiere a la situación de la alimentación con respecto a tierra.",
                     ref = "ITC-BT-08"
                 ),
 Question(
                     q = "Según el REBT, la letra 'T' en la primera posición del código del esquema significa:",
                     opts = listOf(
-                        "Conexión directa de un punto de la alimentación a tierra",
-                        "Aislamiento de la alimentación respecto a tierra",
                         "Masas conectadas directamente al neutro",
+                        "Aislamiento de la alimentación respecto a tierra",
+                        "Conexión directa de un punto de la alimentación a tierra",
                         "Neutro puesto a tierra a través de una impedancia"
                     ),
-                    a = 0,
+                    a = 2,
                     exp = "ITC-BT-08, apartado 1: en la definición de la primera letra, indica 'T = Conexión directa de un punto de la alimentación a tierra'.",
                     ref = "ITC-BT-08"
                 ),
 Question(
                     q = "Según el REBT, la letra 'I' en la primera posición del código indica:",
                     opts = listOf(
-                        "Aislamiento de todas las partes activas de la alimentación respecto a tierra o conexión a tierra mediante impedancia",
+                        "Instalación interior sin conductor de protección",
                         "Masas conectadas directamente al punto neutro de la alimentación",
                         "Sistema interconectado de neutros y tierras",
-                        "Instalación interior sin conductor de protección"
+                        "Aislamiento de todas las partes activas de la alimentación respecto a tierra o conexión a tierra mediante impedancia"
                     ),
-                    a = 0,
+                    a = 3,
                     exp = "ITC-BT-08, apartado 1: para la primera letra, 'I = Aislamiento de todas las partes activas de la alimentación con respecto a tierra o conexión de un punto a tierra a través de una impedancia'.",
                     ref = "ITC-BT-08"
                 ),
 Question(
                     q = "Según el REBT, la segunda letra del código de un esquema se refiere a:",
                     opts = listOf(
-                        "La situación de las masas de la instalación receptora respecto a tierra",
                         "El tipo de aislamiento de los conductores",
+                        "La situación de las masas de la instalación receptora respecto a tierra",
                         "La protección frente a sobretensiones",
                         "El número de conductores activos del sistema"
                     ),
-                    a = 0,
+                    a = 1,
                     exp = "ITC-BT-08, apartado 1: bajo 'Segunda letra' se indica que se refiere a la situación de las masas de la instalación receptora con respecto a tierra.",
                     ref = "ITC-BT-08"
                 ),
 Question(
                     q = "Según el REBT, la letra 'N' en la segunda posición del código indica:",
                     opts = listOf(
-                        "Masas conectadas directamente al punto de la alimentación puesto a tierra",
-                        "Masas conectadas a tierra independiente del neutro",
                         "Masas conectadas mediante una impedancia de tierra",
+                        "Masas conectadas a tierra independiente del neutro",
+                        "Masas conectadas directamente al punto de la alimentación puesto a tierra",
                         "Masas sin conexión a tierra directa"
                     ),
-                    a = 0,
+                    a = 2,
                     exp = "ITC-BT-08, apartado 1, 'Segunda letra': 'N = Masas conectadas directamente al punto de la alimentación puesto a tierra (en corriente alterna, este punto es normalmente el punto neutro)'.",
                     ref = "ITC-BT-08"
                 ),
 Question(
                     q = "Según el REBT, la letra 'S' añadida al código significa:",
                     opts = listOf(
-                        "Conductor de neutro y conductor de protección separados",
+                        "Instalación sin neutro accesible",
                         "Neutro y protección combinados en un solo conductor",
                         "Sistema con doble puesta a tierra",
-                        "Instalación sin neutro accesible"
+                        "Conductor de neutro y conductor de protección separados"
                     ),
-                    a = 0,
+                    a = 3,
                     exp = "ITC-BT-08, apartado 1, 'Otras letras': 'S = Las funciones de neutro y de protección, aseguradas por conductores separados'.",
                     ref = "ITC-BT-08"
                 ),
@@ -629,72 +629,72 @@ Question(
 Question(
                     q = "Según el REBT, en el esquema TN las masas están conectadas:",
                     opts = listOf(
-                        "Al punto de la alimentación puesto a tierra",
                         "A una toma de tierra independiente del neutro",
+                        "Al punto de la alimentación puesto a tierra",
                         "A través de una impedancia de protección",
                         "A una tierra común con el sistema IT"
                     ),
-                    a = 0,
+                    a = 1,
                     exp = "ITC-BT-08, apartado 1.1 Esquema TN: los esquemas TN tienen un punto de la alimentación conectado directamente a tierra y 'las masas de la instalación receptora conectadas a dicho punto mediante conductores de protección'.",
                     ref = "ITC-BT-08"
                 ),
 Question(
                     q = "Según el REBT, en el esquema TN-C las funciones de neutro y protección:",
                     opts = listOf(
-                        "Se combinan en un solo conductor denominado CPN",
-                        "Se separan en toda la instalación",
                         "Se aíslan del neutro de la red",
+                        "Se separan en toda la instalación",
+                        "Se combinan en un solo conductor denominado CPN",
                         "Se conectan mediante transformador de aislamiento"
                     ),
-                    a = 0,
+                    a = 2,
                     exp = "ITC-BT-08, apartado 1.1: define el esquema TN-C como aquel 'en el que las funciones de neutro y protección están combinados en un solo conductor en todo el esquema'; y en la definición de la letra C se indica que es el conductor CPN.",
                     ref = "ITC-BT-08"
                 ),
 Question(
                     q = "Según el REBT, en el esquema TN-S las funciones de neutro y protección:",
                     opts = listOf(
-                        "Se aseguran mediante conductores separados",
+                        "Se conectan a tierra a través de impedancia",
                         "Se combinan en un único conductor hasta el receptor",
                         "No requieren conexión equipotencial",
-                        "Se conectan a tierra a través de impedancia"
+                        "Se aseguran mediante conductores separados"
                     ),
-                    a = 0,
+                    a = 3,
                     exp = "ITC-BT-08, apartado 1.1: define el esquema TN-S como aquel 'en el que el conductor neutro y el de protección son distintos en todo el esquema'.",
                     ref = "ITC-BT-08"
                 ),
 Question(
                     q = "Según el REBT, en el esquema TT las masas de la instalación están:",
                     opts = listOf(
-                        "Conectadas directamente a una toma de tierra independiente de la alimentación",
                         "Unidas al neutro de la red de distribución",
+                        "Conectadas directamente a una toma de tierra independiente de la alimentación",
                         "Aisladas completamente de tierra",
                         "Conectadas al conductor de protección del generador"
                     ),
-                    a = 0,
+                    a = 1,
                     exp = "ITC-BT-08, apartado 1.2 Esquema TT: 'Las masas de la instalación receptora están conectadas a una toma de tierra separada de la toma de tierra de la alimentación'.",
                     ref = "ITC-BT-08"
                 ),
 Question(
                     q = "Según el REBT, en el esquema IT las masas están conectadas:",
                     opts = listOf(
-                        "A una toma de tierra propia de la instalación receptora",
-                        "Directamente al punto neutro de la red",
                         "A una impedancia común con el neutro",
+                        "Directamente al punto neutro de la red",
+                        "A una toma de tierra propia de la instalación receptora",
                         "A una red equipotencial flotante"
                     ),
-                    a = 0,
+                    a = 2,
                     exp = "ITC-BT-08, apartado 1.3 Esquema IT: 'Las masas de la instalación receptora están puestas directamente a tierra'.",
                     ref = "ITC-BT-08"
                 ),
 Question(
                     q = "Según el REBT, en el esquema IT, respecto al neutro de la instalación:",
                     opts = listOf(
-                        "Se recomienda no distribuir el neutro",
+                        "Debe conectarse a tierra mediante resistencia de 5 Ω",
                         "Debe estar siempre conectado directamente a tierra",
                         "Debe estar siempre aislado de cualquier puesta a tierra",
-                        "Debe conectarse a tierra mediante resistencia de 5 Ω"
+                        "Se recomienda no distribuir el neutro"
                     ),
-                    a = 0,
+                    a = 3,
                     exp = "ITC-BT-08, apartado 1.3 Esquema IT: después de describir la limitación de la intensidad de defecto, se indica expresamente que 'En este tipo de esquema se recomienda no distribuir el neutro'.",
                     ref = "ITC-BT-08"
                 ),
@@ -713,132 +713,132 @@ Question(
 Question(
                     q = "Según el REBT, el esquema TT se aplica habitualmente en:",
                     opts = listOf(
-                        "Redes de distribución públicas y suministros individuales",
                         "Sistemas trifásicos sin neutro",
+                        "Redes de distribución públicas y suministros individuales",
                         "Instalaciones de potencia superior a 1 kV",
                         "Redes subterráneas con conductor neutro aislado"
                     ),
-                    a = 0,
+                    a = 1,
                     exp = "ITC-BT-08, apartado 1.4 a): al hablar de redes de distribución pública de baja tensión y de las instalaciones receptoras alimentadas directamente de ellas, se establece que el esquema de distribución es el TT; de ahí que se aplique en los suministros individuales conectados a estas redes.",
                     ref = "ITC-BT-08"
                 ),
 Question(
                     q = "Según el REBT, en el esquema TN la corriente de defecto regresa a la fuente a través de:",
                     opts = listOf(
-                        "El conductor de protección o del neutro puesto a tierra",
-                        "El terreno circundante",
                         "Una impedancia de fuga",
+                        "El terreno circundante",
+                        "El conductor de protección o del neutro puesto a tierra",
                         "Un transformador de aislamiento"
                     ),
-                    a = 0,
+                    a = 2,
                     exp = "ITC-BT-08, apartado 1.1: se indica que en los esquemas TN cualquier intensidad de defecto franco fase-masa es una intensidad de cortocircuito y que el bucle de defecto está constituido exclusivamente por elementos conductores metálicos. Esto implica que la corriente de defecto vuelve a la fuente por los conductores de protección y/o neutro puestos a tierra, sin pasar por el terreno.",
                     ref = "ITC-BT-08"
                 ),
 Question(
                     q = "Según el REBT, en el esquema IT la corriente de defecto tiene un valor:",
                     opts = listOf(
-                        "Muy reducido, limitado por la alta impedancia de puesta a tierra del sistema",
+                        "Variable según la carga conectada",
                         "Elevado debido a la baja resistencia del neutro",
                         "Igual al de un cortocircuito entre fases",
-                        "Variable según la carga conectada"
+                        "Muy reducido, limitado por la alta impedancia de puesta a tierra del sistema"
                     ),
-                    a = 0,
+                    a = 3,
                     exp = "ITC-BT-08, apartado 1.3: se establece que en el esquema IT la intensidad resultante de un primer defecto fase-masa o fase-tierra tiene un valor suficientemente reducido para no provocar tensiones de contacto peligrosas, y que dicha limitación se obtiene por ausencia de conexión a tierra o por la inserción de una impedancia suficiente entre la alimentación y tierra.",
                     ref = "ITC-BT-08"
                 ),
 Question(
                     q = "Según el REBT, para aplicar el esquema TN en redes de distribución la sección del conductor neutro debe ser:",
                     opts = listOf(
-                        "Como mínimo la indicada en la tabla 1, en función de la sección de los conductores de fase",
                         "Siempre igual a la sección de fase",
+                        "Como mínimo la indicada en la tabla 1, en función de la sección de los conductores de fase",
                         "La mitad de la sección de los conductores de fase",
                         "Indiferente, ya que solo se usa como conductor de protección"
                     ),
-                    a = 0,
+                    a = 1,
                     exp = "ITC-BT-08, apartado 2, prescripción a): 'La sección del conductor neutro debe, en todo su recorrido, ser como mínimo igual a la indicada en la tabla siguiente, en función de la sección de los conductores de fase.'",
                     ref = "ITC-BT-08"
                 ),
 Question(
                     q = "Según el REBT, en el esquema TN la resistencia de tierra del neutro no será superior a:",
                     opts = listOf(
-                        "5 Ω en la proximidad del centro y 2 Ω global",
-                        "10 Ω en la proximidad del centro",
                         "2 Ω en todos los puntos de la red",
+                        "10 Ω en la proximidad del centro",
+                        "5 Ω en la proximidad del centro y 2 Ω global",
                         "1 Ω en cualquier punto de la instalación"
                     ),
-                    a = 0,
+                    a = 2,
                     exp = "ITC-BT-08, apartado 2, prescripciones d) y e): la resistencia de tierra del neutro no será superior a 5 Ω en las proximidades de la central generadora o del centro de transformación y en los 200 últimos metros de cualquier derivación, y la resistencia global de todas las tomas de tierra del neutro no será superior a 2 Ω.",
                     ref = "ITC-BT-08"
                 ),
 Question(
                     q = "Según el REBT, las instalaciones de alumbrado exterior se aplican a la iluminación de:",
                     opts = listOf(
-                        "Autopistas, calles, plazas, parques y zonas análogas",
+                        "Fachadas interiores de viviendas",
                         "Locales de pública concurrencia",
                         "Interiores de edificios industriales",
-                        "Fachadas interiores de viviendas"
+                        "Autopistas, calles, plazas, parques y zonas análogas"
                     ),
-                    a = 0,
+                    a = 3,
                     exp = "ITC-BT-09, punto 1 (Campo de aplicación): se indica que esta instrucción se aplicará a instalaciones de alumbrado exterior destinadas a iluminar autopistas, carreteras, calles, plazas, parques, jardines, pasos elevados o subterráneos, caminos, etc.",
                     ref = "ITC-BT-09"
                 ),
 Question(
                     q = "Según el REBT, se incluyen también en el alumbrado exterior las instalaciones destinadas a:",
                     opts = listOf(
-                        "Cabinas telefónicas, anuncios publicitarios y monumentos",
                         "Piscinas y fuentes ornamentales",
+                        "Cabinas telefónicas, anuncios publicitarios y monumentos",
                         "Balizas autónomas",
                         "Semáforos de tráfico"
                     ),
-                    a = 0,
+                    a = 1,
                     exp = "ITC-BT-09, punto 1 (Campo de aplicación): se incluyen las instalaciones de alumbrado para cabinas telefónicas, anuncios publicitarios, mobiliario urbano en general, monumentos o similares y todos los receptores que se conecten a la red de alumbrado exterior.",
                     ref = "ITC-BT-09"
                 ),
 Question(
                     q = "Según el REBT, se excluyen del ámbito de aplicación de esta instrucción las instalaciones de:",
                     opts = listOf(
-                        "Fuentes, piscinas, semáforos y balizas autónomas",
-                        "Parques públicos y jardines",
                         "Pasos subterráneos y elevados",
+                        "Parques públicos y jardines",
+                        "Fuentes, piscinas, semáforos y balizas autónomas",
                         "Calles y plazas"
                     ),
-                    a = 0,
+                    a = 2,
                     exp = "ITC-BT-09, punto 1 (Campo de aplicación): se excluyen la instalación para la iluminación de fuentes y piscinas y las de los semáforos y las balizas cuando sean completamente autónomos.",
                     ref = "ITC-BT-09"
                 ),
 Question(
                     q = "Según el REBT, la acometida de las instalaciones de alumbrado exterior podrá ser:",
                     opts = listOf(
-                        "Subterránea o aérea con cables aislados",
+                        "Mediante cable coaxial protegido",
                         "Solo aérea con cables desnudos",
                         "Por canalización empotrada exclusivamente",
-                        "Mediante cable coaxial protegido"
+                        "Subterránea o aérea con cables aislados"
                     ),
-                    a = 0,
+                    a = 3,
                     exp = "ITC-BT-09, punto 2 (Acometidas): se indica que la acometida podrá ser subterránea o aérea con cables aislados y se realizará según las prescripciones particulares de la compañía suministradora.",
                     ref = "ITC-BT-09"
                 ),
 Question(
                     q = "Según el REBT, la potencia aparente mínima en VA se considerará:",
                     opts = listOf(
-                        "1,8 veces la potencia en vatios de las lámparas o tubos de descarga",
                         "Igual a la potencia en vatios de las lámparas",
+                        "1,8 veces la potencia en vatios de las lámparas o tubos de descarga",
                         "1,5 veces la potencia nominal de la instalación",
                         "El doble de la potencia reactiva de los equipos"
                     ),
-                    a = 0,
+                    a = 1,
                     exp = "ITC-BT-09, punto 3 (Dimensionamiento de las instalaciones): se establece que la potencia aparente mínima en VA se considerará 1,8 veces la potencia en vatios de las lámparas o tubos de descarga.",
                     ref = "ITC-BT-09"
                 ),
 Question(
                     q = "Según el REBT, el factor de potencia de cada punto de luz deberá corregirse hasta un valor:",
                     opts = listOf(
-                        "Mayor o igual a 0,90",
-                        "Igual a 0,80",
                         "No inferior a 0,85",
+                        "Igual a 0,80",
+                        "Mayor o igual a 0,90",
                         "Exactamente 1,00"
                     ),
-                    a = 0,
+                    a = 2,
                     exp = "ITC-BT-09, punto 3: se indica que el factor de potencia de cada punto de luz deberá corregirse hasta un valor mayor o igual a 0,90.",
                     ref = "ITC-BT-09"
                 ),
@@ -857,60 +857,60 @@ Question(
 Question(
                     q = "Según el REBT, con el fin de conseguir ahorros energéticos, las instalaciones se proyectarán:",
                     opts = listOf(
-                        "Con distintos niveles de iluminación que decrezcan en horas de menor necesidad",
+                        "Solo con sistemas de encendido manual",
                         "Con iluminación constante durante toda la noche",
                         "Sin regulación de flujo luminoso",
-                        "Solo con sistemas de encendido manual"
+                        "Con distintos niveles de iluminación que decrezcan en horas de menor necesidad"
                     ),
-                    a = 0,
+                    a = 3,
                     exp = "ITC-BT-09, punto 3: se indica que, para conseguir ahorros energéticos, las instalaciones de alumbrado público se proyectarán con distintos niveles de iluminación, de forma que ésta decrezca durante las horas de menor necesidad.",
                     ref = "ITC-BT-09"
                 ),
 Question(
                     q = "Según el REBT, la intensidad máxima de defecto para los diferenciales en alumbrado exterior será de:",
                     opts = listOf(
-                        "300 mA",
                         "30 mA",
+                        "300 mA",
                         "100 mA",
                         "10 A"
                     ),
-                    a = 0,
+                    a = 1,
                     exp = "ITC-BT-09, punto 4 (Cuadros de protección, medida y control): se establece que la intensidad de defecto, umbral de desconexión de los interruptores diferenciales, será como máximo de 300 mA.",
                     ref = "ITC-BT-09"
                 ),
 Question(
                     q = "Según el REBT, se admitirán diferenciales de hasta 500 mA o 1 A cuando la resistencia de tierra sea:",
                     opts = listOf(
-                        "≤ 5 Ω y ≤ 1 Ω respectivamente",
-                        "≤ 10 Ω y ≤ 2 Ω respectivamente",
                         "≤ 15 Ω y ≤ 3 Ω respectivamente",
+                        "≤ 10 Ω y ≤ 2 Ω respectivamente",
+                        "≤ 5 Ω y ≤ 1 Ω respectivamente",
                         "≤ 20 Ω y ≤ 5 Ω respectivamente"
                     ),
-                    a = 0,
+                    a = 2,
                     exp = "ITC-BT-09, punto 4: se admite el uso de interruptores diferenciales de 500 mA o 1 A siempre que la resistencia de puesta a tierra medida en la puesta en servicio sea ≤ 5 Ω y ≤ 1 Ω respectivamente.",
                     ref = "ITC-BT-09"
                 ),
 Question(
                     q = "Según el REBT, la envolvente del cuadro de protección y control tendrá un grado de protección mínimo:",
                     opts = listOf(
-                        "IP55 e IK10",
+                        "IP65 e IK10",
                         "IP44 e IK08",
                         "IP54 e IK08",
-                        "IP65 e IK10"
+                        "IP55 e IK10"
                     ),
-                    a = 0,
+                    a = 3,
                     exp = "ITC-BT-09, punto 4: se indica que la envolvente del cuadro proporcionará un grado de protección mínimo IP55 según UNE 20.324 e IK10 según UNE-EN 50.102.",
                     ref = "ITC-BT-09"
                 ),
 Question(
                     q = "Según el REBT, los cables de alimentación deberán tener conductores de:",
                     opts = listOf(
-                        "Cobre y tensión asignada 0,6/1 kV",
                         "Aluminio y tensión 1,1 kV",
+                        "Cobre y tensión asignada 0,6/1 kV",
                         "Cobre y tensión 450/750 V",
                         "Aluminio y tensión 0,4/0,8 kV"
                     ),
-                    a = 0,
+                    a = 1,
                     exp = "ITC-BT-09, punto 5.1 (Cables): se establece que los cables serán multipolares o unipolares con conductores de cobre y tensión asignada de 0,6/1 kV.",
                     ref = "ITC-BT-09"
                 ),

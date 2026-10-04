@@ -173,12 +173,12 @@ Question(
 Question(
                     q = "¿Qué sección mínima deben tener los conductores de cobre que unen masas individuales al embarrado de equipotencialidad del quirófano?",
                     opts = listOf(
-                        "4 mm²",
                         "1,5 mm²",
+                        "4 mm²",
                         "2,5 mm²",
                         "10 mm²"
                     ),
-                    a = 0,
+                    a = 1,
                     exp = "La ITC-BT-38 apartado 2.2 prescribe que los conductores de equipotencialidad suplementaria que conectan las masas metálicas, tomas de corriente y equipos fijos al embarrado EE deben tener una sección mínima de 4 mm² de cobre. Se suele caer en la trampa de 2,5 mm² por ser el estándar de fuerza general, pero en quirófanos se exige mayor robustez mecánica e impedancia ultrabaja.",
                     ref = "ITC-BT-38"
                 ),
@@ -221,12 +221,12 @@ Question(
 Question(
                     q = "¿Cuántas tomas de corriente como mínimo deben instalarse en cada quirófano según las prescripciones de la ITC-BT-38?",
                     opts = listOf(
-                        "Al menos 16 tomas de corriente",
-                        "8 tomas de corriente",
                         "10 tomas de corriente",
+                        "8 tomas de corriente",
+                        "Al menos 16 tomas de corriente",
                         "24 tomas de corriente"
                     ),
-                    a = 0,
+                    a = 2,
                     exp = "De acuerdo con la ITC-BT-38 apartado 2.1, en cada quirófano se dispondrá como mínimo de 16 tomas de corriente, distribuidas adecuadamente en las zonas de trabajo alrededor de la mesa de operaciones. La opción de 8 o 10 tomas es insuficiente dado el elevado número de equipos electromédicos simultáneos de monitorización, anestesia, electrocirugía y soporte vital requeridos en una intervención.",
                     ref = "ITC-BT-38"
                 ),
@@ -269,12 +269,12 @@ Question(
 Question(
                     q = "¿Qué características de pantalla debe incorporar obligatoriamente el transformador de separación para uso médico según la ITC-BT-38?",
                     opts = listOf(
-                        "Una pantalla electrostática metálica entre los devanados primario y secundario conectada a tierra",
+                        "Una pantalla magnética exterior conectada al polo positivo",
                         "Una carcasa de plástico hermética sin conexión de masa",
                         "Aislamiento de cartón impregnado en aceite dieléctrico inflamable",
-                        "Una pantalla magnética exterior conectada al polo positivo"
+                        "Una pantalla electrostática metálica entre los devanados primario y secundario conectada a tierra"
                     ),
-                    a = 0,
+                    a = 3,
                     exp = "Conforme a la ITC-BT-38 apartado 2.1 y la norma UNE 20615, el transformador de aislamiento debe disponer de una pantalla electrostática intermedia entre el primario y el secundario, conectada al embarrado de equipotencialidad. Esta pantalla drena a tierra cualquier corriente de fuga por capacidad parásita e impide que una perforación del aislamiento primario traslade la red de distribución al circuito médico.",
                     ref = "ITC-BT-38"
                 ),
@@ -317,12 +317,12 @@ Question(
 Question(
                     q = "¿Cuál es la corriente máxima de medida que puede circular a tierra generada por el monitor permanente de aislamiento según la ITC-BT-38?",
                     opts = listOf(
-                        "1 mA",
                         "10 mA",
+                        "1 mA",
                         "30 mA",
                         "0,01 mA"
                     ),
-                    a = 0,
+                    a = 1,
                     exp = "La ITC-BT-38 pto. 2.1 estipula que la corriente máxima de medida emitida por el vigilante de aislamiento en caso de defecto franco a tierra no debe sobrepasar 1 mA. La trampa habitual es contestar 30 mA por asimilación con la sensibilidad de los diferenciales domésticos, pero 30 mA a través del miocardio de un paciente cateterizado resultaría mortal (umbral de fibrilación ventricular).",
                     ref = "ITC-BT-38"
                 ),
@@ -365,12 +365,12 @@ Question(
 Question(
                     q = "¿Qué clase de interruptores diferenciales deben instalarse en los circuitos de quirófano no alimentados por transformador de aislamiento?",
                     opts = listOf(
-                        "Diferenciales de Clase A o B con sensibilidad de 30 mA",
-                        "Diferenciales estándar de Clase AC de 300 mA",
                         "Diferenciales retardados tipo S de 500 mA",
+                        "Diferenciales estándar de Clase AC de 300 mA",
+                        "Diferenciales de Clase A o B con sensibilidad de 30 mA",
                         "No se requiere ningún interruptor diferencial si hay puesta a tierra"
                     ),
-                    a = 0,
+                    a = 2,
                     exp = "Para los circuitos secundarios no críticos del quirófano que no procedan del sistema IT médico (por ejemplo tomas generales auxiliares o alumbrado de ambiente), la ITC-BT-38 apartado 2.1 exige protección diferencial de alta sensibilidad (máx. 30 mA) de clase A o B, capaces de detectar corrientes de defecto continuas o pulsantes generadas por fuentes conmutadas de equipos electrónicos modernos.",
                     ref = "ITC-BT-38"
                 ),
@@ -413,12 +413,12 @@ Question(
 Question(
                     q = "¿Qué control térmico debe incorporarse en los devanados del transformador de aislamiento médico según la ITC-BT-38?",
                     opts = listOf(
-                        "Sondas térmicas de temperatura para supervisión y alarma por sobrecalentamiento",
+                        "No se requiere supervisión térmica si el transformador está bajo tierra",
                         "Un termostato bimetálico que corte automáticamente la energía",
                         "Refrigeración por ventilador forzado directo a 230 V sin alarma",
-                        "No se requiere supervisión térmica si el transformador está bajo tierra"
+                        "Sondas térmicas de temperatura para supervisión y alarma por sobrecalentamiento"
                     ),
-                    a = 0,
+                    a = 3,
                     exp = "El transformador médico debe contar con sensores de temperatura (como sondas PT100 o termistores PTC) embebidos en sus devanados para transmitir una señal de alarma al cuadro de supervisión técnica cuando la temperatura interna alcance límites críticos, alertando de una sobrecarga persistente sin cortar intempestivamente el suministro al paciente intervenido.",
                     ref = "ITC-BT-38"
                 ),
@@ -461,12 +461,12 @@ Question(
 Question(
                     q = "En la clasificación de zonas con riesgo de explosión por gases o vapores inflamables (Clase I), ¿qué define a la ZONA 0?",
                     opts = listOf(
-                        "Emplazamiento en el que la atmósfera explosiva está presente de modo permanente, o por largos períodos de tiempo, o con frecuencia",
                         "Lugar donde es probable que se forme atmósfera explosiva en funcionamiento normal",
+                        "Emplazamiento en el que la atmósfera explosiva está presente de modo permanente, o por largos períodos de tiempo, o con frecuencia",
                         "Lugar donde no es probable que se forme y si se forma dura muy poco tiempo",
                         "Cualquier zona al aire libre a más de 10 metros del suelo"
                     ),
-                    a = 0,
+                    a = 1,
                     exp = "La ITC-BT-29 par. 2.1 define Zona 0 como el área en la que existe una atmósfera explosiva gaseosa de forma continua o durante largos períodos (por ejemplo, el interior de un depósito de gasolina).",
                     ref = "ITC-BT-29 §2.1"
                 ),
@@ -485,12 +485,12 @@ Question(
 Question(
                     q = "¿Cuál de los siguientes esquemas de conexión a tierra está expresamente prohibido dentro de un emplazamiento clasificado con riesgo de incendio o explosión según la ITC-BT-29?",
                     opts = listOf(
-                        "Esquema TN-C",
-                        "Esquema TN-S",
                         "Esquema TT",
+                        "Esquema TN-S",
+                        "Esquema TN-C",
                         "Esquema IT"
                     ),
-                    a = 0,
+                    a = 2,
                     exp = "De acuerdo con el apartado 3 de la ITC-BT-29, en los locales con riesgo de incendio o explosión queda terminantemente prohibido el uso del esquema TN-C (donde el conductor de neutro y el de protección están combinados en un solo conductor PEN). Esto evita que las corrientes de retorno o de desequilibrio circulen por las masas metálicas, pudiendo generar chispas peligrosas.",
                     ref = "ITC-BT-29"
                 ),
@@ -533,12 +533,12 @@ Question(
 Question(
                     q = "Según la ITC-BT-29, los conductos de acero utilizados para la protección de cables en locales con riesgo de incendio o explosión deben ser del tipo:",
                     opts = listOf(
-                        "Rígidos, roscados, sin costura y estancos",
+                        "Tubos flexibles de aluminio con alma de plástico",
                         "Corrugados de PVC flexible",
                         "Metálicos con uniones por simple presión sin rosca",
-                        "Tubos flexibles de aluminio con alma de plástico"
+                        "Rígidos, roscados, sin costura y estancos"
                     ),
-                    a = 0,
+                    a = 3,
                     exp = "El apartado 5 de la ITC-BT-29 dictamina que cuando se utilicen sistemas de protección de conductores mediante tubos metálicos en zonas ATEX, estos deben ser rígidos, roscados, sin costura y estancos, con acoplamientos roscados para evitar que los gases calientes de una explosión interna alcancen la atmósfera exterior.",
                     ref = "ITC-BT-29"
                 ),
@@ -629,12 +629,12 @@ Question(
 Question(
                     q = "En un local con riesgo de incendio o explosión, ¿cuál es el requisito reglamentario para las masas de la instalación según la ITC-BT-29?",
                     opts = listOf(
-                        "Deben conectarse todas a una red de equipotencialidad y a una puesta a tierra eficaz",
                         "Deben mantenerse totalmente aisladas de la toma de tierra general",
+                        "Deben conectarse todas a una red de equipotencialidad y a una puesta a tierra eficaz",
                         "Solo se conectarán a tierra las masas de equipos de potencia superior a 10 kW",
                         "Se permite conectarlas al conductor neutro directamente"
                     ),
-                    a = 0,
+                    a = 1,
                     exp = "Para evitar diferencias de potencial peligrosas que provoquen chispas por descarga electrostática o corrientes de fuga, la ITC-BT-29 prescribe la interconexión de todas las masas metálicas mediante una red de equipotencialidad, conectada de manera segura y directa al borne principal de tierra.",
                     ref = "ITC-BT-29"
                 ),
@@ -761,12 +761,12 @@ Question(
 Question(
                     q = "En instalaciones de cercas eléctricas para ganado (ITC-BT-39), ¿qué requisito de homologación deben cumplir los generadores de impulsos?",
                     opts = listOf(
-                        "Cumplir la norma UNE-EN 60335-2-76 y disponer de limitación de energía de impulso máxima segura",
-                        "Alimentarse directamente de la red a 230 V sin transformador",
                         "Tener una potencia continua superior a 5 kW",
+                        "Alimentarse directamente de la red a 230 V sin transformador",
+                        "Cumplir la norma UNE-EN 60335-2-76 y disponer de limitación de energía de impulso máxima segura",
                         "Conectarse a la toma de tierra del edificio de viviendas"
                     ),
-                    a = 0,
+                    a = 2,
                     exp = "La ITC-BT-39 exige que los electrificadores de cercas estén certificados bajo norma UNE-EN 60335-2-76 para limitar la energía y duración de los impulsos a valores no letales.",
                     ref = "ITC-BT-39"
                 ),
@@ -785,408 +785,408 @@ Question(
 Question(
                     q = "En una instalación temporal de ferias o atracciones (ITC-BT-34), ¿qué sensibilidad deben tener los interruptores diferenciales que protejan los circuitos de tomas de corriente accesibles al público?",
                     opts = listOf(
-                        "Diferenciales de 30 mA de alta sensibilidad",
+                        "No se exigen diferenciales si la atracción tiene estructura metálica",
                         "Diferenciales de 300 mA",
                         "Diferenciales regulables a 1 A",
-                        "No se exigen diferenciales si la atracción tiene estructura metálica"
+                        "Diferenciales de 30 mA de alta sensibilidad"
                     ),
-                    a = 0,
+                    a = 3,
                     exp = "La ITC-BT-34 par. 4 exige protección diferencial de alta sensibilidad ≤ 30 mA para todos los circuitos terminales y tomas de corriente en atracciones, puestos de feria e instalaciones temporales.",
                     ref = "ITC-BT-34 §4"
                 ),
 Question(
                     q = "Según el REBT, en locales húmedos las canalizaciones eléctricas serán:",
                     opts = listOf(
-                        "Estancas y con grado de protección IPX1",
                         "Estancas con grado IPX4",
+                        "Estancas y con grado de protección IPX1",
                         "Protegidas como mínimo IP5X",
                         "De cualquier tipo sin exigencia de protección"
                     ),
-                    a = 0,
+                    a = 1,
                     exp = "ITC-BT-30, apartado 1.1: «Las canalizaciones serán estancas, utilizándose, para terminales, empalmes y conexiones de las mismas, sistemas o dispositivos que presenten el grado de protección correspondiente a la caída vertical de gotas de agua (IPX1).»",
                     ref = "ITC-BT-30"
                 ),
 Question(
                     q = "Según el REBT, la tensión asignada de los conductores instalados en tubos en locales húmedos será de:",
                     opts = listOf(
-                        "450/750 V",
-                        "230/400 V",
                         "0,6/1 kV",
+                        "230/400 V",
+                        "450/750 V",
                         "300/500 V"
                     ),
-                    a = 0,
+                    a = 2,
                     exp = "ITC-BT-30, apartado 1.1.1: «Los conductores tendrán una tensión asignada de 450/750V y discurrirán por el interior de tubos.»",
                     ref = "ITC-BT-30"
                 ),
 Question(
                     q = "Según el REBT, los cables armados sin tubo protector en locales húmedos tendrán una tensión asignada de:",
                     opts = listOf(
-                        "0,6/1 kV",
+                        "300/500 V",
                         "450/750 V",
                         "230/400 V",
-                        "300/500 V"
+                        "0,6/1 kV"
                     ),
-                    a = 0,
+                    a = 3,
                     exp = "ITC-BT-30, apartado 1.1.3: «Los conductores tendrán una tensión asignada de 0,6/1 kV.»",
                     ref = "ITC-BT-30"
                 ),
 Question(
                     q = "Según el REBT, la aparamenta en locales húmedos deberá presentar un grado de protección:",
                     opts = listOf(
-                        "IPX1",
                         "IPX4",
+                        "IPX1",
                         "IP5X",
                         "IPXXB"
                     ),
-                    a = 0,
+                    a = 1,
                     exp = "ITC-BT-30, apartado 1.2: «Toda la aparamenta utilizada, deberá presentar el grado de protección correspondiente a la caída vertical de gotas de agua, IPX1.»",
                     ref = "ITC-BT-30"
                 ),
 Question(
                     q = "Según el REBT, los aparatos portátiles de alumbrado en locales húmedos serán:",
                     opts = listOf(
-                        "De la Clase II",
-                        "De la Clase 0",
                         "De la Clase I",
+                        "De la Clase 0",
+                        "De la Clase II",
                         "Sin exigencia de clase"
                     ),
-                    a = 0,
+                    a = 2,
                     exp = "ITC-BT-30, apartado 1.3: «Los aparatos de alumbrado portátiles serán de la Clase II, según la Instrucción ITC-BT-43.»",
                     ref = "ITC-BT-30"
                 ),
 Question(
                     q = "Según el REBT, se consideran locales o emplazamientos mojados aquellos en que:",
                     opts = listOf(
-                        "Los suelos, techos y paredes estén o puedan estar impregnados de humedad",
+                        "Únicamente estén situados a la intemperie",
                         "Exista únicamente condensación ligera",
                         "Solo aparezcan manchas salinas",
-                        "Únicamente estén situados a la intemperie"
+                        "Los suelos, techos y paredes estén o puedan estar impregnados de humedad"
                     ),
-                    a = 0,
+                    a = 3,
                     exp = "ITC-BT-30, apartado 2: «Locales o emplazamientos mojados son aquellos en que los suelos, techos y paredes estén o puedan estar impregnados de humedad.»",
                     ref = "ITC-BT-30"
                 ),
 Question(
                     q = "Según el REBT, las canalizaciones en locales mojados deberán presentar un grado de protección:",
                     opts = listOf(
-                        "IPX4",
                         "IPX1",
+                        "IPX4",
                         "IP5X",
                         "IPXXB"
                     ),
-                    a = 0,
+                    a = 1,
                     exp = "ITC-BT-30, apartado 2.1: «Las canalizaciones serán estancas… con el grado de protección correspondiente a las proyecciones de agua, IPX4.»",
                     ref = "ITC-BT-30"
                 ),
 Question(
                     q = "Según el REBT, en locales mojados los aparatos de mando y protección:",
                     opts = listOf(
-                        "Se instalarán fuera del local o deberán ser IPX4",
-                        "Se instalarán siempre dentro del local",
                         "No requieren protección especial",
+                        "Se instalarán siempre dentro del local",
+                        "Se instalarán fuera del local o deberán ser IPX4",
                         "Podrán ser de clase 0"
                     ),
-                    a = 0,
+                    a = 2,
                     exp = "ITC-BT-30, apartado 2.2: «Se instalarán los aparatos de mando y protección y tomas de corriente fuera de estos locales… serán del tipo protegido contra las proyecciones de agua, IPX4.»",
                     ref = "ITC-BT-30"
                 ),
 Question(
                     q = "Según el REBT, en locales mojados se instalará un dispositivo de protección:",
                     opts = listOf(
-                        "En el origen de cada circuito que penetre en el local",
+                        "Cuando lo determine el instalador",
                         "Únicamente en el cuadro general",
                         "Solo si el circuito es trifásico",
-                        "Cuando lo determine el instalador"
+                        "En el origen de cada circuito que penetre en el local"
                     ),
-                    a = 0,
+                    a = 3,
                     exp = "ITC-BT-30, apartado 2.3: «Se instalará, en cualquier caso, un dispositivo de protección en el origen de cada circuito derivado de otro que penetre en el local mojado.»",
                     ref = "ITC-BT-30"
                 ),
 Question(
                     q = "Según el REBT, en locales mojados queda prohibida la utilización de aparatos móviles o portátiles:",
                     opts = listOf(
-                        "Excepto cuando se utilice separación de circuitos o MBTS",
                         "En todos los casos sin excepción",
+                        "Excepto cuando se utilice separación de circuitos o MBTS",
                         "Solo si son de clase I",
                         "Solo en corriente alterna"
                     ),
-                    a = 0,
+                    a = 1,
                     exp = "ITC-BT-30, apartado 2.4: «Queda prohibido… excepto cuando se utilice como sistema de protección la separación de circuitos o el empleo de muy bajas tensiones de seguridad, MBTS.»",
                     ref = "ITC-BT-30"
                 ),
 Question(
                     q = "Según el REBT, los receptores de alumbrado en locales mojados estarán protegidos contra:",
                     opts = listOf(
-                        "Las proyecciones de agua, IPX4",
-                        "La caída vertical de gotas, IPX1",
                         "El polvo, IP5X",
+                        "La caída vertical de gotas, IPX1",
+                        "Las proyecciones de agua, IPX4",
                         "Contactos directos exclusivamente"
                     ),
-                    a = 0,
+                    a = 2,
                     exp = "ITC-BT-30, apartado 2.5: «Los receptores de alumbrado estarán protegidos contra las proyecciones de agua, IPX4.»",
                     ref = "ITC-BT-30"
                 ),
 Question(
                     q = "Según el REBT, los locales con riesgo de corrosión son aquellos en los que:",
                     opts = listOf(
-                        "Existan gases o vapores que puedan atacar a los materiales eléctricos",
+                        "Haya polvo en suspensión",
                         "Exista únicamente humedad ambiental",
                         "Se superen los 40 ºC",
-                        "Haya polvo en suspensión"
+                        "Existan gases o vapores que puedan atacar a los materiales eléctricos"
                     ),
-                    a = 0,
+                    a = 3,
                     exp = "ITC-BT-30, apartado 3: «Locales o emplazamientos con riesgo de corrosión son aquellos en los que existan gases o vapores que puedan atacar a los materiales eléctricos utilizados en la instalación.»",
                     ref = "ITC-BT-30"
                 ),
 Question(
                     q = "Según el REBT, en locales polvorientos sin riesgo de incendio el grado mínimo de protección será:",
                     opts = listOf(
-                        "IP5X",
                         "IPX4",
+                        "IP5X",
                         "IPX1",
                         "IP2X"
                     ),
-                    a = 0,
+                    a = 1,
                     exp = "ITC-BT-30, apartado 4: «Las canalizaciones… tendrán un grado de protección mínimo IP5X.»",
                     ref = "ITC-BT-30"
                 ),
 Question(
                     q = "Según el REBT, se consideran locales a temperatura elevada aquellos donde:",
                     opts = listOf(
-                        "La temperatura pueda sobrepasar frecuentemente los 40 ºC",
-                        "La temperatura supere ocasionalmente los 30 ºC",
                         "La temperatura sea inferior a -20 ºC",
+                        "La temperatura supere ocasionalmente los 30 ºC",
+                        "La temperatura pueda sobrepasar frecuentemente los 40 ºC",
                         "Exista condensación permanente"
                     ),
-                    a = 0,
+                    a = 2,
                     exp = "ITC-BT-30, apartado 5: «Locales o emplazamientos a temperatura elevada son aquellos donde la temperatura del aire ambiente es susceptible de sobrepasar frecuentemente los 40 ºC.»",
                     ref = "ITC-BT-30"
                 ),
 Question(
                     q = "Según el REBT, se consideran locales a muy baja temperatura aquellos donde:",
                     opts = listOf(
-                        "Pueden presentarse temperaturas inferiores a -20 ºC",
+                        "La temperatura supere los 50 ºC",
                         "La temperatura no supere los 0 ºC",
                         "Existan corrientes de aire",
-                        "La temperatura supere los 50 ºC"
+                        "Pueden presentarse temperaturas inferiores a -20 ºC"
                     ),
-                    a = 0,
+                    a = 3,
                     exp = "ITC-BT-30, apartado 6: «Locales o emplazamientos a muy baja temperatura son aquellos donde pueden presentarse y mantenerse temperaturas ambientales inferiores a -20 ºC.»",
                     ref = "ITC-BT-30"
                 ),
 Question(
                     q = "Según el REBT, los locales con baterías de acumuladores se considerarán:",
                     opts = listOf(
-                        "Locales con riesgo de corrosión",
                         "Locales mojados",
+                        "Locales con riesgo de corrosión",
                         "Locales polvorientos",
                         "Locales a temperatura elevada"
                     ),
-                    a = 0,
+                    a = 1,
                     exp = "ITC-BT-30, apartado 7: «Los locales en que deban disponerse baterías de acumuladores… se considerarán como locales o emplazamientos con riesgo de corrosión.»",
                     ref = "ITC-BT-30"
                 ),
 Question(
                     q = "Según el REBT, los locales afectos a un servicio eléctrico:",
                     opts = listOf(
-                        "Solo tienen acceso personas cualificadas",
-                        "Pueden ser accesibles al público",
                         "No requieren medidas especiales",
+                        "Pueden ser accesibles al público",
+                        "Solo tienen acceso personas cualificadas",
                         "No necesitan alumbrado de seguridad"
                     ),
-                    a = 0,
+                    a = 2,
                     exp = "ITC-BT-30, apartado 8: «Locales… destinados a la explotación de instalaciones eléctricas y, en general, sólo tienen acceso a los mismos personas cualificadas para ello.»",
                     ref = "ITC-BT-30"
                 ),
 Question(
                     q = "Según el REBT, los locales con personal de servicio permanente estarán dotados de:",
                     opts = listOf(
-                        "Alumbrado de seguridad",
+                        "Iluminación decorativa",
                         "Alumbrado de reemplazamiento",
                         "Iluminación portátil",
-                        "Iluminación decorativa"
+                        "Alumbrado de seguridad"
                     ),
-                    a = 0,
+                    a = 3,
                     exp = "ITC-BT-30, apartado 8: «Los locales que tengan personal de servicio permanente, estarán dotados de un alumbrado de seguridad.»",
                     ref = "ITC-BT-30"
                 ),
 Question(
                     q = "Según el REBT, la norma que establece la clasificación de las influencias externas es:",
                     opts = listOf(
-                        "UNE-HD 60.364-1",
                         "UNE 20.324",
+                        "UNE-HD 60.364-1",
                         "UNE 21.123",
                         "UNE-EN 60598"
                     ),
-                    a = 0,
+                    a = 1,
                     exp = "ITC-BT-30, apartado 9.1: «La norma UNE 20.460-3 (Anulada y sustituida por UNE-HD 60.364-1) establece una clasificación y una codificación de las influencias que deben ser tenidas en cuenta para el proyecto y la ejecución de las instalaciones eléctricas.»",
                     ref = "ITC-BT-30"
                 ),
 Question(
                     q = "Según el REBT, esta ITC trata de las prescripciones de las instalaciones eléctricas de:",
                     opts = listOf(
-                        "Las piscinas, pediluvios y fuentes ornamentales",
-                        "Las piscinas cubiertas exclusivamente",
                         "Las fuentes públicas únicamente",
+                        "Las piscinas cubiertas exclusivamente",
+                        "Las piscinas, pediluvios y fuentes ornamentales",
                         "Las instalaciones deportivas en general"
                     ),
-                    a = 0,
+                    a = 2,
                     exp = "ITC-BT-31, apartado 1: «Esta ITC trata de las prescripciones de las instalaciones eléctricas de las piscinas, pediluvios y fuentes ornamentales.»",
                     ref = "ITC-BT-31"
                 ),
 Question(
                     q = "Según el REBT, la Zona 0 en piscinas comprende:",
                     opts = listOf(
-                        "El interior de los recipientes, incluyendo cualquier canal en paredes o suelos",
+                        "El cuarto de máquinas",
                         "El área hasta 2 m del borde del vaso",
                         "El volumen situado a 2,5 m de altura",
-                        "El cuarto de máquinas"
+                        "El interior de los recipientes, incluyendo cualquier canal en paredes o suelos"
                     ),
-                    a = 0,
+                    a = 3,
                     exp = "ITC-BT-31, apartado 2.1.a): «Esta zona comprende el interior de los recipientes, incluyendo cualquier canal en las paredes o suelos, y los pediluvios o el interior de los inyectores de agua o cascadas.»",
                     ref = "ITC-BT-31"
                 ),
 Question(
                     q = "Según el REBT, la Zona 1 de una piscina está limitada, entre otros, por:",
                     opts = listOf(
-                        "Un plano vertical a 2 m del borde del recipiente",
                         "Un plano vertical a 1 m del borde",
+                        "Un plano vertical a 2 m del borde del recipiente",
                         "Un plano vertical a 3 m del borde",
                         "Únicamente por el borde del vaso"
                     ),
-                    a = 0,
+                    a = 1,
                     exp = "ITC-BT-31, apartado 2.1.b): «Esta zona está limitada por: – un plano vertical a 2 m del borde del recipiente.»",
                     ref = "ITC-BT-31"
                 ),
 Question(
                     q = "Según el REBT, la altura del plano horizontal que limita la Zona 1 es de:",
                     opts = listOf(
-                        "2,5 m por encima del suelo o superficie",
-                        "2 m por encima del suelo",
                         "3 m por encima del suelo",
+                        "2 m por encima del suelo",
+                        "2,5 m por encima del suelo o superficie",
                         "1,25 m por encima del suelo"
                     ),
-                    a = 0,
+                    a = 2,
                     exp = "ITC-BT-31, apartado 2.1.b): «el plano horizontal a 2,5 m por encima del suelo o la superficie.»",
                     ref = "ITC-BT-31"
                 ),
 Question(
                     q = "Según el REBT, la Zona 2 de una piscina está limitada por:",
                     opts = listOf(
-                        "Un plano paralelo situado a 1,5 m del límite de la Zona 1",
+                        "Un plano paralelo situado a 2,5 m del límite de la Zona 1",
                         "Un plano paralelo situado a 2 m del límite de la Zona 1",
                         "Un plano paralelo situado a 0,6 m del límite de la Zona 1",
-                        "Un plano paralelo situado a 2,5 m del límite de la Zona 1"
+                        "Un plano paralelo situado a 1,5 m del límite de la Zona 1"
                     ),
-                    a = 0,
+                    a = 3,
                     exp = "ITC-BT-31, apartado 2.1.c): «el plano vertical externo a la Zona 1 y el plano paralelo a 1,5 m del anterior.»",
                     ref = "ITC-BT-31"
                 ),
 Question(
                     q = "Según el REBT, en las fuentes:",
                     opts = listOf(
-                        "No existe Zona 2",
                         "Existen las Zonas 0, 1 y 2",
+                        "No existe Zona 2",
                         "Solo existe la Zona 2",
                         "Se aplican las mismas zonas que en piscinas"
                     ),
-                    a = 0,
+                    a = 1,
                     exp = "ITC-BT-31, apartado 2.1: «No existe Zona 2 para fuentes.»",
                     ref = "ITC-BT-31"
                 ),
 Question(
                     q = "Según el REBT, el grado de protección mínimo de los equipos eléctricos en la Zona 0 de piscinas será:",
                     opts = listOf(
-                        "IPX8",
-                        "IPX5",
                         "IPX4",
+                        "IPX5",
+                        "IPX8",
                         "IPX2"
                     ),
-                    a = 0,
+                    a = 2,
                     exp = "ITC-BT-31, apartado 2.2: «Zona 0: IP X8.»",
                     ref = "ITC-BT-31"
                 ),
 Question(
                     q = "Según el REBT, el grado de protección exigido en la Zona 1 será:",
                     opts = listOf(
-                        "IPX5",
+                        "IPXXB",
                         "IPX8",
                         "IPX2",
-                        "IPXXB"
+                        "IPX5"
                     ),
-                    a = 0,
+                    a = 3,
                     exp = "ITC-BT-31, apartado 2.2: «Zona 1: IP X5.»",
                     ref = "ITC-BT-31"
                 ),
 Question(
                     q = "Según el REBT, cuando se usa MBTS, la protección contra contactos directos debe proporcionarse mediante:",
                     opts = listOf(
-                        "Barreras o cubiertas con IP2X o IPXXB o aislamiento ensayado a 500 V",
                         "Únicamente mediante obstáculos",
+                        "Barreras o cubiertas con IP2X o IPXXB o aislamiento ensayado a 500 V",
                         "Puesta fuera de alcance",
                         "Locales no conductores"
                     ),
-                    a = 0,
+                    a = 1,
                     exp = "ITC-BT-31, apartado 2.2: «la protección contra los contactos directos debe proporcionarse mediante: – barreras o cubiertas que proporcionen un grado de protección mínimo IP 2X ó IP XXB… o – un aislamiento capaz de soportar una tensión de ensayo de 500 V… durante 1 minuto.»",
                     ref = "ITC-BT-31"
                 ),
 Question(
                     q = "Según el REBT, las medidas de protección por obstáculos o puesta fuera de alcance:",
                     opts = listOf(
-                        "No son admisibles",
-                        "Son obligatorias",
                         "Son preferentes",
+                        "Son obligatorias",
+                        "No son admisibles",
                         "Se admiten en Zona 2"
                     ),
-                    a = 0,
+                    a = 2,
                     exp = "ITC-BT-31, apartado 2.2: «Las medidas de protección contra los contactos directos por medio de obstáculos o por puesta fuera de alcance por alejamiento, no son admisibles.»",
                     ref = "ITC-BT-31"
                 ),
 Question(
                     q = "Según el REBT, todos los elementos conductores de los volúmenes 0, 1 y 2 deben:",
                     opts = listOf(
-                        "Conectarse a una conexión equipotencial suplementaria local",
+                        "Estar conectados al neutro",
                         "Estar aislados del terreno",
                         "Ser de material plástico",
-                        "Estar conectados al neutro"
+                        "Conectarse a una conexión equipotencial suplementaria local"
                     ),
-                    a = 0,
+                    a = 3,
                     exp = "ITC-BT-31, apartado 2.2: «Todos los elementos conductores de los volúmenes 0, 1 y 2… deben conectarse a una conexión equipotencial suplementaria local.»",
                     ref = "ITC-BT-31"
                 ),
 Question(
                     q = "Según el REBT, en las Zonas 0 y 1 solo se admite protección mediante MBTS con tensiones no superiores a:",
                     opts = listOf(
-                        "12 V en corriente alterna o 30 V en corriente continua",
                         "25 V en corriente alterna",
+                        "12 V en corriente alterna o 30 V en corriente continua",
                         "50 V en corriente alterna",
                         "60 V en corriente continua"
                     ),
-                    a = 0,
+                    a = 1,
                     exp = "ITC-BT-31, apartado 2.2: «solo se admite protección mediante MBTS a tensiones asignadas no superiores a 12 V en corriente alterna o 30 V en corriente continua.»",
                     ref = "ITC-BT-31"
                 ),
 Question(
                     q = "Según el REBT, en el volumen 0 no se permitirá:",
                     opts = listOf(
-                        "Ninguna canalización al alcance de los bañistas",
-                        "La instalación de luminarias",
                         "La instalación de bombas",
+                        "La instalación de luminarias",
+                        "Ninguna canalización al alcance de los bañistas",
                         "La conexión equipotencial"
                     ),
-                    a = 0,
+                    a = 2,
                     exp = "ITC-BT-31, apartado 2.2.1: «En el volumen 0 ninguna canalización se encontrará en el interior de la piscina al alcance de los bañistas.»",
                     ref = "ITC-BT-31"
                 ),
 Question(
                     q = "Según el REBT, en los volúmenes 0 y 1 no se admitirán cajas de conexión:",
                     opts = listOf(
-                        "Salvo cajas de MBTS en volumen 1 con IPX5",
+                        "Salvo cajas empotradas",
                         "En ningún caso",
                         "Salvo cajas metálicas",
-                        "Salvo cajas empotradas"
+                        "Salvo cajas de MBTS en volumen 1 con IPX5"
                     ),
-                    a = 0,
+                    a = 3,
                     exp = "ITC-BT-31, apartado 2.2.2: «En los volúmenes 0 y 1 no se admitirán cajas de conexión, salvo que en el volumen 1 se admitirán cajas para muy baja tensión de seguridad (MBTS)… IP X5.»",
                     ref = "ITC-BT-31"
                 ),
