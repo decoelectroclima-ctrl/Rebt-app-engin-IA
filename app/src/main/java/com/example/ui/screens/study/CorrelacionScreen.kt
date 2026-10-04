@@ -52,7 +52,7 @@ fun CorrelacionScreen(viewModel: MainViewModel) {
                 primaryItc = "ITC-BT-19 / ITC-BT-14 / ITC-BT-15",
                 pageGuide = "Sección e intensidades admisibles Iz en Tabla 1 ITC-19. Caídas de tensión: LGA (0,5% local único) en ITC-14, DI (1,5% centralizado) en ITC-15, Interiores (3% luz / 5% fuerza) en ITC-19.",
                 relatedItcs = listOf("ITC-BT-10 (Previsión Cargas)", "ITC-BT-14 (LGA)", "ITC-BT-15 (DI)", "ITC-BT-19 (Cálculo e Iz)", "ITC-BT-21 (Tubos)"),
-                searchKeywords = listOf("caida", "seccion", "conductor", "cobre", "aluminio", "iz", "intensidad", "lga", "di"),
+                searchKeywords = listOf("caida", "seccion", "conductor", "cobre", "aluminio", "iz", "intensidad", "lga", "di", "cable", "grosor", "milimetros", "mm2", "voltaje", "tension", "amperios", "amperaje", "calentamiento", "distancia", "metros", "formula", "resistencia"),
                 tips = "Si la pregunta pide sección comercial por caída de tensión e Iz, busca primero la intensidad en la fórmula, verifica Iz en la tabla ITC-19 y comprueba el tubo mínimo en ITC-21."
             ),
             ItcCorrelation(
@@ -62,7 +62,7 @@ fun CorrelacionScreen(viewModel: MainViewModel) {
                 primaryItc = "ITC-BT-18 / ITC-BT-24",
                 pageGuide = "ITC-18: Electrodos, picas (mín 2m enterrada a ≥0.5m), conductor Cu desnudo (35 mm²), Cu aislado (16 mm²). ITC-24: Regla Ra · IΔn ≤ Ul (50V seco, 24V húmedo).",
                 relatedItcs = listOf("ITC-BT-08 (Regímenes de Neutro TT/TN/IT)", "ITC-BT-18 (Puesta a Tierra)", "ITC-BT-24 (Contactos Directos e Indirectos)", "ITC-BT-26 (Mecanismos)"),
-                searchKeywords = listOf("tierra", "pica", "diferencial", "sensibilidad", "contacto", "indirecto", "directo", "30ma", "50v", "24v"),
+                searchKeywords = listOf("tierra", "pica", "picas", "jabalina", "electrodo", "resistencia", "diferencial", "id", "salto", "salta", "dispara", "disparo", "sensibilidad", "30ma", "300ma", "contacto", "indirecto", "directo", "calambre", "descarga", "seguridad", "tn", "tt", "it", "neutro", "masas", "ohm", "ohmios"),
                 tips = "En esquema TT estándar de España, la protección obligatoria contra contactos indirectos SIEMPRE se realiza con interruptor diferencial de sensibilidad adecuada al valor de tierra."
             ),
             ItcCorrelation(
@@ -72,7 +72,7 @@ fun CorrelacionScreen(viewModel: MainViewModel) {
                 primaryItc = "ITC-BT-17 / ITC-BT-25",
                 pageGuide = "ITC-17: IGA general mín 25A y 4,5 kA poder de corte; máx 5 automáticos (PIAs) por interruptor diferencial. ITC-25: Circuitos C1 al C5 (básica) y C6 al C13 (elevada).",
                 relatedItcs = listOf("ITC-BT-10 (Electrificación)", "ITC-BT-17 (CGMP e IGA)", "ITC-BT-22 (Sobrecargas IB≤In≤Iz)", "ITC-BT-23 (Sobretensiones)", "ITC-BT-25 (Circuitos)"),
-                searchKeywords = listOf("cgmp", "iga", "diferencial", "c1", "c2", "c3", "c4", "c5", "vivienda", "pia", "sobretensiones"),
+                searchKeywords = listOf("cgmp", "iga", "diferencial", "c1", "c2", "c3", "c4", "c5", "vivienda", "pia", "sobretensiones", "enchufe", "enchufes", "toma", "tomas", "bases", "cuadro", "automatico", "automaticos", "magnetotermico", "fusible", "fusibles", "luz", "iluminacion", "cocina", "horno", "lavadora", "termo", "aire acondicionado", "calefaccion", "potencia", "grado"),
                 tips = "Pregunta clásica: ¿Puedo poner 6 circuitos bajo un diferencial? ¡NO! La ITC-17 limita tajantemente a un máximo de 5 interruptores automáticos por cada diferencial."
             ),
             ItcCorrelation(
@@ -82,7 +82,7 @@ fun CorrelacionScreen(viewModel: MainViewModel) {
                 primaryItc = "ITC-BT-04 / ITC-BT-05 / ITC-BT-29",
                 pageGuide = "ITC-04 Tabla 1: Con ventilación forzada mecánica = PROYECTO siempre (incluso 1 plaza). Con ventilación natural = PROYECTO a partir de > 5 plazas. ITC-05: Inspección periódica OCA cada 5 años si > 25 plazas.",
                 relatedItcs = listOf("ITC-BT-04 (Documentación y Proyecto)", "ITC-BT-05 (Inspecciones OCA)", "ITC-BT-10 (Previsión Garajes 20 W/m²)", "ITC-BT-29 (ATEX)", "ITC-BT-52 (Cargadores VE)"),
-                searchKeywords = listOf("garaje", "aparcamiento", "ventilacion", "plazas", "proyecto", "mtd", "oca", "inspeccion"),
+                searchKeywords = listOf("garaje", "garajes", "aparcamiento", "parking", "plazas", "plaza", "ventilacion", "extractor", "extractores", "forzada", "natural", "proyecto", "oca", "inspeccion", "revision", "atex", "fuego", "incendios", "humos", "detectores"),
                 tips = "Si el enunciado menciona 'ventilación forzada', la respuesta inmediata es PROYECTO TÉCNICO sin importar el número de plazas."
             ),
             ItcCorrelation(
@@ -92,7 +92,7 @@ fun CorrelacionScreen(viewModel: MainViewModel) {
                 primaryItc = "ITC-BT-28 / ITC-BT-04 / ITC-BT-05",
                 pageGuide = "ITC-28: Aforo > 100 personas (o cualquier teatro, cine, discoteca, centro comercial). Alumbrado de evacuación mín. 1 lux en ejes de pasillos y 5 lux en cuadros y equipos contra incendios durante 1 hora. Inspección inicial y periódica cada 5 años por OCA.",
                 relatedItcs = listOf("ITC-BT-04 (Proyecto Obligatorio)", "ITC-BT-05 (Inspección Quinquenal)", "ITC-BT-28 (Pública Concurrencia)", "Cables de Alta Seguridad AS (Libres de halógenos)"),
-                searchKeywords = listOf("publica", "concurrencia", "emergencia", "evacuacion", "aforo", "100", "lux", "autonomia", "oca"),
+                searchKeywords = listOf("publica", "concurrencia", "emergencia", "evacuacion", "aforo", "100", "lux", "autonomia", "oca", "local", "locales", "bar", "restaurante", "cine", "teatro", "discoteca", "comercio", "tienda", "salida", "as", "libre de halogenos", "incendios"),
                 tips = "En locales de pública concurrencia es OBLIGATORIO cable no propagador del incendio y con emisión de humos y opacidad reducida (cables tipo AS)."
             ),
             ItcCorrelation(
@@ -102,7 +102,7 @@ fun CorrelacionScreen(viewModel: MainViewModel) {
                 primaryItc = "ITC-BT-52 / ITC-BT-03 / ITC-BT-10",
                 pageGuide = "ITC-52: Esquemas 1 (colectivo contador principal), 2 (individual contador principal), 3a/3b (vivienda unifamiliar/garaje comunitario con contador secundario), 4a/4b (sin contador exclusivo). Instalador Especialista IBTE obligatorio.",
                 relatedItcs = listOf("ITC-BT-03 (Categoría Especialista IBTE)", "ITC-BT-04 (Proyecto Técnico)", "ITC-BT-10 (Previsión de Cargas)", "ITC-BT-52 (Infraestructura VE)"),
-                searchKeywords = listOf("vehiculo", "electrico", "recarga", "cargador", "itc-52", "esquema 1", "esquema 2", "esquema 3", "esquema 4", "irve"),
+                searchKeywords = listOf("vehiculo", "electrico", "recarga", "cargador", "itc-52", "esquema 1", "esquema 2", "esquema 3", "esquema 4", "irve", "coche", "coches", "wallbox", "postes", "garaje comunitario", "especialista", "ibte"),
                 tips = "La instalación de puntos de recarga de vehículos eléctricos es competencia EXCLUSIVA de empresas instaladoras de Categoría Especialista (IBTE)."
             ),
             ItcCorrelation(
@@ -112,7 +112,7 @@ fun CorrelacionScreen(viewModel: MainViewModel) {
                 primaryItc = "ITC-BT-27",
                 pageGuide = "Volumen 0: Interior de bañera/ducha (solo MBTS ≤ 12V e IPX7). Volumen 1: Sobre bañera hasta 2,25m (solo calentadores IPX4). Volumen 2: Franja de 0,60m alrededor del vol. 1 (toma afeitadora con transformador de aislamiento). Volumen 3: Franja de 2,40m (bases protegidas por ID 30 mA).",
                 relatedItcs = listOf("ITC-BT-24 (Protección Contactos)", "ITC-BT-27 (Baños y Duchas)", "ITC-BT-36 (Muy Baja Tensión MBTS)"),
-                searchKeywords = listOf("bano", "ducha", "volumen 0", "volumen 1", "volumen 2", "volumen 3", "ipx7", "ipx4", "afeitadora"),
+                searchKeywords = listOf("bano", "banos", "ducha", "duchas", "plato", "banera", "volumen 0", "volumen 1", "volumen 2", "volumen 3", "ipx7", "ipx4", "afeitadora", "toma de afeitar", "humedad", "agua", "seguridad", "mbts", "muy baja tension", "lavabo", "lavabos", "enchufe", "toma"),
                 tips = "¡Atención a las alturas!: El Volumen 1 llega hasta 2,25 m desde el fondo de la bañera. Si la ducha no tiene plato, el radio es de 1,20 m desde el punto de desagüe."
             ),
             ItcCorrelation(
@@ -122,8 +122,28 @@ fun CorrelacionScreen(viewModel: MainViewModel) {
                 primaryItc = "ITC-BT-11 a ITC-BT-16",
                 pageGuide = "Acometida -> CGP (ITC-13, fachada 0,5-2m) -> LGA (ITC-14, mín 16 mm² Cu / 25 mm² Al, caída 0,5%) -> Contadores (ITC-16, local si > 16 contadores) -> DI (ITC-15, mín 6 mm² Cu, tubo mín 32 mm, caída 1,5%).",
                 relatedItcs = listOf("ITC-BT-11 (Acometidas)", "ITC-BT-12 (Esquemas)", "ITC-BT-13 (CGP)", "ITC-BT-14 (LGA)", "ITC-BT-15 (DI)", "ITC-BT-16 (Contadores)"),
-                searchKeywords = listOf("enlace", "cgp", "lga", "di", "contador", "centralizacion", "derivacion", "acometida"),
+                searchKeywords = listOf("enlace", "cgp", "lga", "di", "contador", "centralizacion", "derivacion", "acometida", "caja general de proteccion", "linea general de alimentacion", "contadores", "fachada", "tubo", "tubos", "seccion"),
                 tips = "Para el cálculo de LGA y DI con conductor termoestable a 90°C (Poliolefina libre de halógenos), la conductividad en caliente a utilizar es γ = 44 para Cobre y γ = 28 para Aluminio."
+            ),
+            ItcCorrelation(
+                title = "Locales Húmedos, Mojados, Cocinas y Zonas con Agua",
+                icon = Icons.Default.WaterDrop,
+                color = Color(0xFF00B4D8),
+                primaryItc = "ITC-BT-30 / ITC-BT-25 / ITC-BT-27",
+                pageGuide = "ITC-30: Prescripciones para locales húmedos, mojados, lavanderías, cocinas industriales y domésticas, lavabos. Grados de protección IP mínimos requeridos y canalizaciones protegidas frente a corrosión e humedad.",
+                relatedItcs = listOf("ITC-BT-25 (Circuitos de Vivienda C3 Cocina y Horno)", "ITC-BT-27 (Baños y Duchas)", "ITC-BT-30 (Locales Húmedos y Mojados)"),
+                searchKeywords = listOf("cocina", "cocinas", "lavabo", "lavabos", "zonas humedas", "humedo", "mojado", "agua", "lavanderia", "ip", "corrosion", "bano", "ducha", "c3", "horno", "fregadero", "industrial", "humedad", "enchufe", "toma"),
+                tips = "En cocinas, lavabos y locales húmedos, los mecanismos e interruptores deben tener grado de protección IP adecuado y los circuitos de fuerza deben estar protegidos por interruptor diferencial de alta sensibilidad (30 mA)."
+            ),
+            ItcCorrelation(
+                title = "Piscinas, Pediluvios y Fuentes Ornamentales",
+                icon = Icons.Default.Pool,
+                color = Color(0xFF023E8A),
+                primaryItc = "ITC-BT-31",
+                pageGuide = "Volúmenes de protección en piscinas. Uso obligatorio de MBTS (Muy Baja Tensión de Seguridad) a 12V CA o 30V CC para iluminación interior de vasos de piscina. Grado de protección mín IPX8.",
+                relatedItcs = listOf("ITC-BT-24 (Protección Contactos)", "ITC-BT-31 (Piscinas y Fuentes)", "ITC-BT-36 (MBTS)"),
+                searchKeywords = listOf("piscina", "piscinas", "fuente", "fuentes", "pediluvio", "vaso", "mbts", "12v", "ipx8", "sumergida", "iluminacion sumergida", "agua"),
+                tips = "Pregunta de examen frecuente: La iluminación sumergida en el interior de piscinas exige obligatoriamente MBTS a 12V con transformador de seguridad situado fuera de los volúmenes 0, 1 y 2."
             )
         )
     }
@@ -187,11 +207,18 @@ fun CorrelacionScreen(viewModel: MainViewModel) {
 
     val filteredCorrelations = remember(searchQuery) {
         if (searchQuery.isBlank()) correlations
-        else correlations.filter { corr ->
-            corr.title.contains(searchQuery, ignoreCase = true) ||
-                    corr.primaryItc.contains(searchQuery, ignoreCase = true) ||
-                    corr.pageGuide.contains(searchQuery, ignoreCase = true) ||
-                    corr.searchKeywords.any { it.contains(searchQuery.trim(), ignoreCase = true) }
+        else {
+            val queryWords = searchQuery.lowercase().trim().split("\\s+".toRegex())
+            correlations.filter { corr ->
+                queryWords.any { word ->
+                    corr.title.contains(word, ignoreCase = true) ||
+                            corr.primaryItc.contains(word, ignoreCase = true) ||
+                            corr.pageGuide.contains(word, ignoreCase = true) ||
+                            corr.tips.contains(word, ignoreCase = true) ||
+                            corr.relatedItcs.any { it.contains(word, ignoreCase = true) } ||
+                            corr.searchKeywords.any { it.contains(word, ignoreCase = true) }
+                }
+            }
         }
     }
 
