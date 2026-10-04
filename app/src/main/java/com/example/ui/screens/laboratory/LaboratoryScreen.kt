@@ -541,10 +541,80 @@ fun CableSizingTab(viewModel: MainViewModel) {
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         lineHeight = 16.sp
                     )
+
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Button(
+                        onClick = {
+                            FeedbackManager.playClick(context)
+                            viewModel.showTechnicalReportDialog = true
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(42.dp),
+                        shape = RoundedCornerShape(10.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2563EB))
+                    ) {
+                        Icon(Icons.Default.Description, contentDescription = null, modifier = Modifier.size(16.dp))
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text("Generar Memoria Técnica (BOE 2026)", fontWeight = FontWeight.Bold, fontSize = 13.sp)
+                    }
                 }
             }
         }
     }
+
+    if (viewModel.showTechnicalReportDialog) {
+        TechnicalReportDialog(viewModel) {
+            viewModel.showTechnicalReportDialog = false
+        }
+    }
+}
+
+@Composable
+fun TechnicalReportDialog(viewModel: MainViewModel, onDismiss: () -> Unit) {
+    val context = LocalContext.current
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = {
+            Column {
+                Text("Memoria Técnica de Cálculo (REBT 2026)", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                Text("Actualizado al Real Decreto / BOE Vigente", fontSize = 11.sp, color = MaterialTheme.colorScheme.primary)
+            }
+        },
+        text = {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Text("• Potencia de Diseño: ${viewModel.labPowerKw} kW (${if (viewModel.labIsThreePhase) "Trifásica 400V" else "Monofásica 230V"})", fontSize = 13.sp)
+                Text("• Longitud del Circuito: ${viewModel.labLengthM} metros", fontSize = 13.sp)
+                Text("• Caída de Tensión Máxima: ${viewModel.labMaxDropPct}%", fontSize = 13.sp)
+                Text("• Método de Instalación: ${viewModel.labInstallMethod} (UNE-HD 60364-5-52)", fontSize = 13.sp)
+                Text("• Material del Conductor: ${viewModel.labCableMaterial.uppercase()}", fontSize = 13.sp)
+                Text("• Aislamiento y Temperatura: ${viewModel.labInsulationType}, Amb: ${viewModel.labAmbientTemp}ºC", fontSize = 13.sp)
+                Text("• Factor de Agrupamiento (fa): ${viewModel.labGroupingFactor}", fontSize = 13.sp)
+                HorizontalDivider()
+                Text("RESULTADOS REGLAMENTARIOS:", fontWeight = FontWeight.Bold, fontSize = 13.sp, color = MaterialTheme.colorScheme.primary)
+                Text("• Sección Fase Calculada / Comercial: ${viewModel.labCalculatedSection} mm²", fontSize = 13.sp, fontWeight = FontWeight.Bold)
+                Text("• Intensidad Admisible Corregida (Iz'): ${String.format("%.1f", viewModel.labCorrectedIz)} A", fontSize = 13.sp)
+                Text("• Conductor de Protección (PE) Mínimo: ${viewModel.labCalculatedPeSection} mm²", fontSize = 13.sp)
+                HorizontalDivider()
+                Text("Cumple estrictamente con las prescripciones de seguridad y directrices del BOE 2026 para instalaciones eléctricas de baja tensión.", fontSize = 11.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            }
+        },
+        confirmButton = {
+            Button(
+                onClick = {
+                    FeedbackManager.playClick(context)
+                    onDismiss()
+                }
+            ) {
+                Text("Cerrar")
+            }
+        }
+    )
 }
 
 // -------------------------------------------------------------

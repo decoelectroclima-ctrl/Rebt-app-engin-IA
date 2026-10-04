@@ -167,6 +167,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     var labCorrectedIz by mutableStateOf(16.0)
     var labCalculatedPeSection by mutableStateOf(1.5)
     var labStatusMessage by mutableStateOf("")
+    var showTechnicalReportDialog by mutableStateOf(false)
 
     // Building load forecasting
     var foreDwellingsBasic by mutableStateOf("8")
