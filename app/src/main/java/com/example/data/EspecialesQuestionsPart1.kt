@@ -483,6 +483,210 @@ Question(
                     ref = "ITC-BT-29 §4"
                 ),
 Question(
+                    q = "¿Cuál de los siguientes esquemas de conexión a tierra está expresamente prohibido dentro de un emplazamiento clasificado con riesgo de incendio o explosión según la ITC-BT-29?",
+                    opts = listOf(
+                        "Esquema TN-C",
+                        "Esquema TN-S",
+                        "Esquema TT",
+                        "Esquema IT"
+                    ),
+                    a = 0,
+                    exp = "De acuerdo con el apartado 3 de la ITC-BT-29, en los locales con riesgo de incendio o explosión queda terminantemente prohibido el uso del esquema TN-C (donde el conductor de neutro y el de protección están combinados en un solo conductor PEN). Esto evita que las corrientes de retorno o de desequilibrio circulen por las masas metálicas, pudiendo generar chispas peligrosas.",
+                    ref = "ITC-BT-29"
+                ),
+Question(
+                    q = "¿Qué define a una 'Zona 1' en emplazamientos con presencia de gases o vapores inflamables (Clase I) según la ITC-BT-29?",
+                    opts = listOf(
+                        "Lugar donde la atmósfera explosiva está presente de forma continua o permanente",
+                        "Lugar donde es probable la formación de una atmósfera explosiva en funcionamiento normal",
+                        "Lugar donde no es probable la formación de atmósfera explosiva en funcionamiento normal, y si ocurre, dura poco tiempo",
+                        "Emplazamiento destinado únicamente al almacenamiento de recipientes herméticamente cerrados"
+                    ),
+                    a = 1,
+                    exp = "Según la clasificación técnica detallada en la ITC-BT-29, la Zona 1 comprende aquellas áreas donde es probable que se forme una atmósfera explosiva en funcionamiento normal (por ejemplo, en las inmediaciones de válvulas de alivio o bocas de llenado de reactores).",
+                    ref = "ITC-BT-29"
+                ),
+Question(
+                    q = "Según la ITC-BT-29, en locales clasificados con riesgo de explosión, las canalizaciones fijas realizadas con cables multiconductores deben tener una tensión asignada mínima de:",
+                    opts = listOf(
+                        "300/500 V",
+                        "450/750 V",
+                        "0,6/1 kV",
+                        "1.500 V"
+                    ),
+                    a = 2,
+                    exp = "El apartado 5 de la ITC-BT-29 especifica que los cables utilizados en instalaciones fijas en locales con riesgo de incendio o explosión deben tener una tensión asignada mínima de 0,6/1 kV para garantizar un espesor de aislamiento y protección mecánica superior, disminuyendo la probabilidad de arcos eléctricos por fallo de aislamiento.",
+                    ref = "ITC-BT-29"
+                ),
+Question(
+                    q = "En la clasificación de atmósferas explosivas debidas a la presencia de polvos combustibles (Clase II), ¿qué designación recibe la zona donde la atmósfera explosiva está presente de modo permanente o durante largos períodos de tiempo?",
+                    opts = listOf(
+                        "Zona 0",
+                        "Zona 1",
+                        "Zona 2",
+                        "Zona 20"
+                    ),
+                    a = 3,
+                    exp = "La ITC-BT-29 establece que para polvos inflamables (Clase II) las zonas se designan como 20, 21 y 22. La Zona 20 es el equivalente de la Zona 0 de gases, caracterizándose por la presencia permanente o muy prolongada de nubes de polvo combustible en el aire, como en el interior de conductos de aspiración de silos.",
+                    ref = "ITC-BT-29"
+                ),
+Question(
+                    q = "Según la ITC-BT-29, los conductos de acero utilizados para la protección de cables en locales con riesgo de incendio o explosión deben ser del tipo:",
+                    opts = listOf(
+                        "Rígidos, roscados, sin costura y estancos",
+                        "Corrugados de PVC flexible",
+                        "Metálicos con uniones por simple presión sin rosca",
+                        "Tubos flexibles de aluminio con alma de plástico"
+                    ),
+                    a = 0,
+                    exp = "El apartado 5 de la ITC-BT-29 dictamina que cuando se utilicen sistemas de protección de conductores mediante tubos metálicos en zonas ATEX, estos deben ser rígidos, roscados, sin costura y estancos, con acoplamientos roscados para evitar que los gases calientes de una explosión interna alcancen la atmósfera exterior.",
+                    ref = "ITC-BT-29"
+                ),
+Question(
+                    q = "¿Cuál es el modo de protección Ex (ATEX) regulado en la ITC-BT-29 que consiste en alojar las partes activas capaces de inflamar una atmósfera en una envolvente resistente a la presión de una explosión interna, sin propagarla al exterior?",
+                    opts = listOf(
+                        "Seguridad aumentada (Ex e)",
+                        "Envolvente antideflagrante (Ex d)",
+                        "Sobrepresión interna (Ex p)",
+                        "Encapsulado (Ex m)"
+                    ),
+                    a = 1,
+                    exp = "La envolvente antideflagrante (Ex d) está diseñada para soportar una explosión interna de la mezcla gaseosa que penetre en su interior sin sufrir deformaciones estructurales, impidiendo que las llamas o los gases de escape calientes provoquen la ignición de la atmósfera explosiva exterior.",
+                    ref = "ITC-BT-29"
+                ),
+Question(
+                    q = "En locales con riesgo de incendio o explosión, ¿cuál es el requisito obligatorio respecto a las bases de toma de corriente según la ITC-BT-29?",
+                    opts = listOf(
+                        "Deben colocarse obligatoriamente a más de 3 metros de altura",
+                        "Deben ser de tipo doméstico estándar con toma de tierra lateral",
+                        "Deben disponer de un interruptor de corte en carga enclavado que impida la inserción o extracción de la clavija si el interruptor está cerrado",
+                        "Queda prohibido el uso de tomas de corriente bajo cualquier circunstancia"
+                    ),
+                    a = 2,
+                    exp = "La ITC-BT-29 determina que para evitar que el arco eléctrico inevitable producido al conectar o desconectar un receptor bajo carga inflame la atmósfera circundante, las tomas de corriente en zonas clasificadas deben estar provistas de enclavamiento mecánico o eléctrico que impida energizar la base sin que la clavija esté completamente introducida.",
+                    ref = "ITC-BT-29"
+                ),
+Question(
+                    q = "¿Cómo deben realizarse los pasos de canalizaciones a través de muros o forjados que separen zonas con riesgo de explosión de zonas seguras según la ITC-BT-29?",
+                    opts = listOf(
+                        "Dejando un espacio libre de ventilación alrededor del cable",
+                        "Rellenando el hueco con yeso o escayola corriente",
+                        "Instalando rejillas de paso de aire comprimido",
+                        "Sellándose herméticamente mediante prensaestopas de bloqueo o materiales cortafuegos estancos al paso de gases y líquidos"
+                    ),
+                    a = 3,
+                    exp = "La ITC-BT-29 exige que la separación física entre zonas seguras y clasificadas mantenga la estanqueidad absoluta. Cualquier penetración de cables o tubos a través de muros debe sellarse herméticamente para evitar la migración de gases o polvos inflamables desde la zona de riesgo a la zona segura.",
+                    ref = "ITC-BT-29"
+                ),
+Question(
+                    q = "Para una zona clasificada como 'Zona 21' (polvos combustibles), ¿qué grado mínimo de protección IP contra la penetración de polvo sólido se exige para los equipos eléctricos?",
+                    opts = listOf(
+                        "IP6X (estanco al polvo)",
+                        "IP20",
+                        "IP44",
+                        "IP3X"
+                    ),
+                    a = 0,
+                    exp = "En emplazamientos con polvos combustibles clasificados como Zona 21 (o Zona 20), el apartado correspondiente exige un grado de protección estanco al polvo IP6X, ya que cualquier acumulación interna de polvo conductor o combustible en partes activas provocaría cortocircuitos o puntos calientes de ignición.",
+                    ref = "ITC-BT-29"
+                ),
+Question(
+                    q = "Según la ITC-BT-29, en los sistemas de protección por sobrepresión interna (Ex p), ¿qué medida de seguridad es obligatoria si cae la presión por debajo del valor mínimo fijado?",
+                    opts = listOf(
+                        "Encender una luz roja parpadeante de señalización municipal únicamente",
+                        "Disparar una alarma o cortar automáticamente la alimentación eléctrica de los equipos no certificados",
+                        "Inundar el local con agua pulverizada de forma automática",
+                        "Sustituir los disyuntores magnetotérmicos por fusibles"
+                    ),
+                    a = 1,
+                    exp = "El modo Ex p mantiene una sobrepresión interna de gas inerte en la envolvente para evitar que penetren los gases explosivos exteriores. Si esta presión desciende del límite de seguridad, el sistema debe cortar automáticamente el suministro eléctrico de la aparamenta o emitir una señal de alarma inmediata que permita actuar de urgencia.",
+                    ref = "ITC-BT-29"
+                ),
+Question(
+                    q = "De acuerdo con la ITC-BT-29, el uso de cables con armadura de hilos de acero o flejes metálicos es obligatorio cuando:",
+                    opts = listOf(
+                        "La instalación discurra por el falso techo de oficinas ordinarias",
+                        "Los cables estén instalados en conductos cerrados de plástico",
+                        "Exista riesgo de daños mecánicos significativos sobre la canalización en la zona clasificada",
+                        "La temperatura ambiente sea constantemente de 0 °C"
+                    ),
+                    a = 2,
+                    exp = "Para proteger la integridad de los cables frente a impactos, aplastamientos u otros esfuerzos mecánicos usuales en entornos industriales con riesgo ATEX, la ITC-BT-29 exige el uso de cables con armadura metálica (como hilos de acero) o, en su defecto, instalados dentro de tubos de acero estancos roscados.",
+                    ref = "ITC-BT-29"
+                ),
+Question(
+                    q = "Según la ITC-BT-29, ¿qué se define como 'temperatura de autoinflamación' de una sustancia presente en un local de riesgo?",
+                    opts = listOf(
+                        "La temperatura de congelación del gas licuado",
+                        "La temperatura a la cual el material se derrite sin producir llama",
+                        "La temperatura mínima que necesita una chispa para saltar entre bornes",
+                        "La temperatura mínima a la que una atmósfera explosiva se inflama espontáneamente sin necesidad de chispa ni llama"
+                    ),
+                    a = 3,
+                    exp = "La temperatura de autoinflamación o de ignición es la temperatura mínima a la cual un gas, vapor o polvo combustible mezclado con el aire entra en combustión espontánea en contacto con una superficie caliente. Los equipos eléctricos deben clasificarse en clases de temperatura (T1 a T6) para no alcanzar nunca dicho umbral.",
+                    ref = "ITC-BT-29"
+                ),
+Question(
+                    q = "En un local con riesgo de incendio o explosión, ¿cuál es el requisito reglamentario para las masas de la instalación según la ITC-BT-29?",
+                    opts = listOf(
+                        "Deben conectarse todas a una red de equipotencialidad y a una puesta a tierra eficaz",
+                        "Deben mantenerse totalmente aisladas de la toma de tierra general",
+                        "Solo se conectarán a tierra las masas de equipos de potencia superior a 10 kW",
+                        "Se permite conectarlas al conductor neutro directamente"
+                    ),
+                    a = 0,
+                    exp = "Para evitar diferencias de potencial peligrosas que provoquen chispas por descarga electrostática o corrientes de fuga, la ITC-BT-29 prescribe la interconexión de todas las masas metálicas mediante una red de equipotencialidad, conectada de manera segura y directa al borne principal de tierra.",
+                    ref = "ITC-BT-29"
+                ),
+Question(
+                    q = "Según la clasificación ATEX de la ITC-BT-29, ¿cuál de los siguientes locales se clasifica de forma generalizada y típica como emplazamiento de Clase II?",
+                    opts = listOf(
+                        "Cabina de pintura a pistola de base disolvente",
+                        "Instalaciones de manipulación y molienda de cereales o harina",
+                        "Garajes de vehículos de combustión",
+                        "Locales de carga de baterías de plomo-ácido"
+                    ),
+                    a = 1,
+                    exp = "Los silos de cereales, harineras, fábricas de piensos o plantas de carbón pulverizado manejan polvos orgánicos o metálicos combustibles en suspensión o capas, lo que corresponde reglamentariamente a un emplazamiento de Clase II. Los garajes o cabinas de pintura corresponden a Clase I (gases/vapores).",
+                    ref = "ITC-BT-29"
+                ),
+Question(
+                    q = "¿Cuál es el valor máximo de resistencia a tierra y aislamiento que prescribe la ITC-BT-29 para asegurar que no se acumulen cargas electrostáticas peligrosas en suelos conductores de locales ATEX?",
+                    opts = listOf(
+                        "Menor de 10 ohmios",
+                        "Menor de 50 ohmios",
+                        "Suelos con una resistencia eléctrica de aislamiento comprendida en rangos que eviten la acumulación estática (típicamente de disipación electrostática)",
+                        "No se contemplan los suelos en el REBT"
+                    ),
+                    a = 2,
+                    exp = "La acumulación de cargas electrostáticas en personas u objetos móviles es una fuente de ignición común. El apartado técnico correspondiente de la ITC-BT-29 señala la necesidad de emplear suelos con características disipativas electrostáticas (resistencias controladas, típicamente menores de 1 megaohmio) para derivar de forma continua estas cargas antes de que se produzca una chispa.",
+                    ref = "ITC-BT-29"
+                ),
+Question(
+                    q = "De acuerdo con la ITC-BT-29, en un local con riesgo de explosión de Clase I, los motores de jaula de ardilla instalados en una Zona 2 deben contar como mínimo con qué nivel de protección Ex?",
+                    opts = listOf(
+                        "No requieren certificación Ex especial por no tener escobillas",
+                        "Únicamente envolvente IP20",
+                        "Protección especial sumergida en gas helio",
+                        "Certificación ATEX adecuada para Zona 2 (como protección por seguridad aumentada Ex e, o antideflagrante Ex d, o protección antichispas Ex n)"
+                    ),
+                    a = 3,
+                    exp = "Aunque los motores de inducción con rotor en jaula de ardilla no produzcan chispas en funcionamiento normal, pueden sufrir calentamientos o fallos que generen un punto de ignición. En Zona 2 de Clase I, la ITC-BT-29 exige que el motor cuente con certificación Ex válida para Zona 2 (categoría 3G), garantizando que no se superará la clase de temperatura idónea.",
+                    ref = "ITC-BT-29"
+                ),
+Question(
+                    q = "¿Qué norma de referencia UNE citada indirectamente en la ITC-BT-29 regula los procedimientos para la clasificación oficial y marcado de los equipos destinados a utilizarse en atmósferas explosivas?",
+                    opts = listOf(
+                        "UNE-EN 60335-1",
+                        "UNE-EN 60898",
+                        "UNE-EN 60529",
+                        "UNE-EN 60079 (especialmente la parte 14 para diseño e instalaciones)"
+                    ),
+                    a = 3,
+                    exp = "La serie de normas UNE-EN 60079 es la referencia técnica internacional y europea para atmósferas explosivas. La parte 14 regula específicamente el diseño, selección y montaje de instalaciones eléctricas en emplazamientos con riesgo ATEX, sirviendo de base técnica complementaria obligatoria a la ITC-BT-29.",
+                    ref = "ITC-BT-29"
+                ),
+Question(
                     q = "¿Cuál es el aforo previsto a partir del cual un bar, cafetería o restaurante se considera legalmente Local de Pública Concurrencia (LPC)?",
                     opts = listOf(
                         "Ocupación prevista superior a 20 personas",
@@ -557,12 +761,12 @@ Question(
 Question(
                     q = "En instalaciones de cercas eléctricas para ganado (ITC-BT-39), ¿qué requisito de homologación deben cumplir los generadores de impulsos?",
                     opts = listOf(
-                        "Alimentarse directamente de la red a 230 V sin transformador",
                         "Cumplir la norma UNE-EN 60335-2-76 y disponer de limitación de energía de impulso máxima segura",
+                        "Alimentarse directamente de la red a 230 V sin transformador",
                         "Tener una potencia continua superior a 5 kW",
                         "Conectarse a la toma de tierra del edificio de viviendas"
                     ),
-                    a = 1,
+                    a = 0,
                     exp = "La ITC-BT-39 exige que los electrificadores de cercas estén certificados bajo norma UNE-EN 60335-2-76 para limitar la energía y duración de los impulsos a valores no letales.",
                     ref = "ITC-BT-39"
                 ),
@@ -1313,36 +1517,36 @@ Question(
 Question(
                     q = "Según el REBT, las partes de edificios que sufran transformaciones importantes serán consideradas como:",
                     opts = listOf(
-                        "Obras durante el tiempo que duren los trabajos",
                         "Instalaciones fijas",
+                        "Obras durante el tiempo que duren los trabajos",
                         "Locales de pública concurrencia",
                         "Locales húmedos"
                     ),
-                    a = 0,
+                    a = 1,
                     exp = "ITC-BT-33, apartado 1: «Las partes de edificios que sufran transformaciones tales como ampliaciones, reparaciones importantes o demoliciones serán consideradas como obras durante el tiempo que duren los trabajos correspondientes.»",
                     ref = "ITC-BT-33"
                 ),
 Question(
                     q = "Según el REBT, en los locales de servicios de las obras serán aplicables:",
                     opts = listOf(
-                        "Las prescripciones técnicas recogidas en la ITC-BT-24",
-                        "Las de la ITC-BT-19",
                         "Las de la ITC-BT-30",
+                        "Las de la ITC-BT-19",
+                        "Las prescripciones técnicas recogidas en la ITC-BT-24",
                         "Las de la ITC-BT-52"
                     ),
-                    a = 0,
+                    a = 2,
                     exp = "ITC-BT-33, apartado 1: «En los locales de servicios de las obras (oficinas, vestuarios, salas de reunión, restaurantes, dormitorios, locales sanitarios, etc.) serán aplicables las prescripciones técnicas recogidas en la ITC-BT-24.»",
                     ref = "ITC-BT-33"
                 ),
 Question(
                     q = "Según el REBT, en las instalaciones de obras las instalaciones fijas están limitadas a:",
                     opts = listOf(
-                        "El cuadro general de mando y los dispositivos de protección principales",
+                        "Las tomas de corriente",
                         "Todos los circuitos de utilización",
                         "Los receptores portátiles",
-                        "Las tomas de corriente"
+                        "El cuadro general de mando y los dispositivos de protección principales"
                     ),
-                    a = 0,
+                    a = 3,
                     exp = "ITC-BT-33, apartado 1: «En las instalaciones de obras, las instalaciones fijas están limitadas al conjunto que comprende el cuadro general de mando y los dispositivos de protección principales.»",
                     ref = "ITC-BT-33"
                 ),
@@ -1361,36 +1565,36 @@ Question(
 Question(
                     q = "Según el REBT, una misma obra puede ser alimentada:",
                     opts = listOf(
-                        "A partir de varias fuentes de alimentación",
                         "Únicamente desde la red pública",
+                        "A partir de varias fuentes de alimentación",
                         "Sólo desde un generador",
                         "Exclusivamente mediante baterías"
                     ),
-                    a = 0,
+                    a = 1,
                     exp = "ITC-BT-33, apartado 2.1: «Una misma obra puede ser alimentada a partir de varias fuentes de alimentación incluidos los generadores fijos o móviles.»",
                     ref = "ITC-BT-33"
                 ),
 Question(
                     q = "Según el REBT, las distintas alimentaciones deben conectarse mediante dispositivos que:",
                     opts = listOf(
-                        "Impidan la interconexión entre ellas",
-                        "Permitan su conexión simultánea",
                         "Unifiquen las fases",
+                        "Permitan su conexión simultánea",
+                        "Impidan la interconexión entre ellas",
                         "Compartan el neutro"
                     ),
-                    a = 0,
+                    a = 2,
                     exp = "ITC-BT-33, apartado 2.1: «Las distintas alimentaciones deben ser conectadas mediante dispositivos diseñados de modo que impidan la interconexión entre ellas.»",
                     ref = "ITC-BT-33"
                 ),
 Question(
                     q = "Según el REBT, deberán preverse instalaciones de seguridad cuando:",
                     opts = listOf(
-                        "Existan riesgos para la seguridad de las personas",
+                        "No haya alumbrado",
                         "La obra sea pequeña",
                         "El suministro sea monofásico",
-                        "No haya alumbrado"
+                        "Existan riesgos para la seguridad de las personas"
                     ),
-                    a = 0,
+                    a = 3,
                     exp = "ITC-BT-33, apartado 3: «Cuando debido al posible fallo de la alimentación normal de un circuito o aparato existan riesgos para la seguridad de las personas, deberán preverse instalaciones de seguridad.»",
                     ref = "ITC-BT-33"
                 ),
@@ -1409,38 +1613,158 @@ Question(
 Question(
                     q = "Según el REBT, los circuitos de seguridad cuya continuidad sea esencial deberán:",
                     opts = listOf(
-                        "Quedar asegurados sin corte automático de la alimentación",
                         "Protegerse exclusivamente con diferenciales",
+                        "Quedar asegurados sin corte automático de la alimentación",
                         "Interrumpirse automáticamente",
                         "Ser alimentados sólo por la red pública"
                     ),
-                    a = 0,
+                    a = 1,
                     exp = "ITC-BT-33, apartado 3.2: «Otros circuitos ... deberán preverse de tal forma que la protección contra los contactos indirectos quede asegurada sin corte automático de la alimentación.»",
                     ref = "ITC-BT-33"
                 ),
 Question(
                     q = "Según el REBT, estos circuitos estarán alimentados por un sistema automático con:",
                     opts = listOf(
-                        "Corte breve",
-                        "Corte largo",
                         "Corte manual",
+                        "Corte largo",
+                        "Corte breve",
                         "Sin corte"
                     ),
-                    a = 0,
+                    a = 2,
                     exp = "ITC-BT-33, apartado 3.2: «Dichos circuitos estarán alimentados por un sistema automático con corte breve.»",
                     ref = "ITC-BT-33"
                 ),
 Question(
                     q = "Según el REBT, uno de los sistemas de alimentación de seguridad admitidos es:",
                     opts = listOf(
-                        "Grupos generadores con motores térmicos",
+                        "UPS domésticos",
                         "Transformadores de aislamiento",
                         "Líneas aéreas",
-                        "UPS domésticos"
+                        "Grupos generadores con motores térmicos"
                     ),
-                    a = 0,
+                    a = 3,
                     exp = "ITC-BT-33, apartado 3.2: «... que podrá ser de uno de los tipos siguientes: – Grupos generadores con motores térmicos, o – Baterías de acumuladores asociadas a un rectificador o un ondulador.»",
                     ref = "ITC-BT-33"
+                ),
+                Question(
+                    q = "¿Qué se entiende por 'atmósfera explosiva' según el ámbito de aplicación de la ITC-BT-29?",
+                    opts = listOf("Una mezcla de aire con sustancias inflamables en forma de gases, vapores, nieblas o polvos, en condiciones atmosféricas", "Cualquier entorno con altas temperaturas", "Una instalación que produce chispas eléctricas", "Un recinto cerrado sin ventilación"),
+                    a = 0,
+                    exp = "La ITC-BT-29 define la atmósfera explosiva como la mezcla de aire con sustancias inflamables en condiciones atmosféricas normales que, bajo condiciones de ignición, causa la propagación de la combustión a la mezcla no quemada.",
+                    ref = "ITC-BT-29 §1"
+                ),
+                Question(
+                    q = "¿En qué clases se divide la clasificación de emplazamientos con riesgo de incendio o explosión según la ITC-BT-29?",
+                    opts = listOf("Clase A y Clase B", "Clase I (gases/vapores) y Clase II (polvos)", "Zona de bajo riesgo y Zona de alto riesgo", "Emplazamientos secos y húmedos"),
+                    a = 1,
+                    exp = "La ITC-BT-29 clasifica los emplazamientos peligrosos en Clase I, cuando el riesgo procede de gases, vapores o nieblas inflamables, y Clase II, cuando el riesgo es debido a la presencia de polvos combustibles.",
+                    ref = "ITC-BT-29 §2"
+                ),
+                Question(
+                    q = "¿Qué grado de estanqueidad mínima se exige para los equipos instalados en emplazamientos de Clase II (polvos combustibles) según la ITC-BT-29?",
+                    opts = listOf("IP20", "IP44", "IP6X", "IP54"),
+                    a = 2,
+                    exp = "Para prevenir la entrada de polvo inflamable en el interior de los envolventes de los equipos, donde podría acumularse y crear puntos calientes, la ITC-BT-29 exige un grado de protección IP6X (estanco al polvo).",
+                    ref = "ITC-BT-29 §5"
+                ),
+                Question(
+                    q = "¿Qué medidas preventivas prescribe la ITC-BT-29 contra las descargas electrostáticas en locales con riesgo ATEX?",
+                    opts = listOf("El uso de calzado aislante de goma", "La conexión equipotencial de todas las partes metálicas y suelos conductores", "La prohibición de usar iluminación artificial", "El uso de aire seco"),
+                    a = 1,
+                    exp = "La acumulación de electricidad estática puede generar chispas de ignición. La ITC-BT-29 obliga a interconectar todas las masas y partes metálicas (incluyendo suelos disipativos) a la red de tierra general para igualar potenciales y descargar la estática.",
+                    ref = "ITC-BT-29 §3"
+                ),
+                Question(
+                    q = "¿Qué norma regula el diseño y construcción de los aparatos (motores, luminarias, etc.) destinados a utilizarse en atmósferas explosivas?",
+                    opts = listOf("UNE-EN 60079", "UNE 20460", "ISO 9001", "Normas de la compañía distribuidora"),
+                    a = 0,
+                    exp = "Los equipos para atmósferas explosivas deben cumplir con las series de normas UNE-EN 60079, que definen los modos de protección (d, e, i, p, etc.) aceptados para evitar la ignición de la atmósfera peligrosa.",
+                    ref = "ITC-BT-29 §4"
+                ),
+                Question(
+                    q = "¿Está permitido utilizar cables unipolares sin protección mecánica adicional (como tubos estancos o armaduras) en zonas clasificadas ATEX?",
+                    opts = listOf("Sí, siempre que sean libres de halógenos", "No, deben ir protegidos mecánicamente o ser armados", "Solo si están suspendidos a más de 3 metros de altura", "Solo en instalaciones temporales"),
+                    a = 1,
+                    exp = "Debido al riesgo de daños mecánicos que podrían derivar en arcos eléctricos, la ITC-BT-29 exige que las canalizaciones fijas tengan protección mecánica reforzada, mediante armaduras o instalación bajo tubo rígido roscado.",
+                    ref = "ITC-BT-29 §5"
+                ),
+                Question(
+                    q = "¿Qué papel cumple el monitor de aislamiento en un sistema IT médico dentro de una zona clasificada ATEX si se requiriera?",
+                    opts = listOf("No tiene papel", "Supervisa que no se produzca un primer fallo a masa que genere chispas o sobrecalentamiento", "Aumenta la tensión del sistema", "Controla el consumo de corriente"),
+                    a = 1,
+                    exp = "En esquemas IT, el primer fallo a masa no interrumpe el suministro, pero es un punto potencial de ignición. El vigilante de aislamiento detecta dicho fallo inmediatamente, permitiendo corregir el defecto antes de que el riesgo sea crítico.",
+                    ref = "ITC-BT-29 §3"
+                ),
+                Question(
+                    q = "¿Qué debe hacerse con los equipos eléctricos situados en una zona clasificada si no pueden retirarse del servicio cuando la atmósfera sea peligrosa?",
+                    opts = listOf("Dejar de usarlos hasta que el aire se limpie", "Sustituirlos por equipos certificados ATEX para dicha zona", "Cambiarlos de sitio por cuenta del usuario", "Pintarlos con barniz aislante"),
+                    a = 1,
+                    exp = "La regla de oro de la ITC-BT-29 es o bien alejar los equipos de la zona de riesgo o, si deben permanecer en ella, asegurar que el equipo esté certificado expresamente para el tipo de riesgo (gas o polvo) y zona correspondiente.",
+                    ref = "ITC-BT-29 §4"
+                ),
+                Question(
+                    q = "¿Qué es una 'atmósfera explosiva gaseosa' según la ITC-BT-29?",
+                    opts = listOf("Mezcla de gas con aire en cualquier proporción", "Mezcla de gas con aire en la que, bajo condiciones atmosféricas, la combustión se propaga a toda la mezcla no quemada", "Mezcla de gas con agua", "Gas puro confinado en un tanque"),
+                    a = 1,
+                    exp = "La ITC-BT-29 precisa técnicamente que la mezcla debe estar en condiciones de propagar la combustión, lo que define el riesgo real de explosión.",
+                    ref = "ITC-BT-29 §1"
+                ),
+                Question(
+                    q = "¿Qué tipo de equipos de iluminación se deben utilizar preferentemente en zonas con riesgo de polvo combustible (Clase II)?",
+                    opts = listOf("Lámparas incandescentes abiertas", "Luminarias cerradas con protección contra el polvo (IP6X) y superficie externa fría (clase de temperatura T)", "Linternas estándar de pilas", "Cualquier luminaria de bajo consumo"),
+                    a = 1,
+                    exp = "La acumulación de polvo sobre la superficie caliente de una luminaria puede causar su ignición. Las luminarias en Clase II deben ser estancas al polvo (IP6X) y asegurar que su temperatura exterior nunca supere el umbral peligroso.",
+                    ref = "ITC-BT-29 §5"
+                ),
+                Question(
+                    q = "¿Qué precaución se debe tener al realizar el mantenimiento de equipos certificados en zonas ATEX?",
+                    opts = listOf("Limpiarlos con aire comprimido", "No realizar ninguna operación que altere las condiciones de certificación (cambio de juntas, tornillos no originales, etc.)", "Pintarlos frecuentemente para evitar corrosión", "Sustituir los cables internos por otros de menor sección"),
+                    a = 1,
+                    exp = "La certificación ATEX es integral. Cualquier modificación no autorizada o empleo de repuestos no certificados invalida la protección y convierte el equipo en un foco potencial de ignición.",
+                    ref = "ITC-BT-29 §6"
+                ),
+                Question(
+                    q = "¿Cuál es el criterio para la selección de la clase de temperatura (T1-T6) de un equipo en zona ATEX?",
+                    opts = listOf("La clase T debe ser inferior a la temperatura de autoinflamación del gas o polvo", "Debe ser siempre T6", "La clase T debe ser superior a la temperatura de ignición del gas", "Depende solo de la potencia"),
+                    a = 0,
+                    exp = "El equipo no debe alcanzar nunca una temperatura superficial superior a la temperatura de autoinflamación de la sustancia inflamable presente. Así, un equipo T3 (200 °C) es seguro para gases con T_ignición > 200 °C.",
+                    ref = "ITC-BT-29 §4"
+                ),
+                Question(
+                    q = "¿Está permitido el uso de baterías de acumuladores en una Zona 0?",
+                    opts = listOf("Sí, en cualquier caso", "No, su uso está restringido debido al riesgo de desprendimiento de gases o chispas", "Solo si son de litio", "Solo si están ventiladas al exterior"),
+                    a = 1,
+                    exp = "La Zona 0 presenta riesgo permanente. Los equipos eléctricos, incluyendo baterías, generan riesgos de arcos, chispas o desprendimientos de hidrógeno que las convierten en focos prohibidos.",
+                    ref = "ITC-BT-29 §4"
+                ),
+                Question(
+                    q = "¿En qué caso la ITC-BT-29 permite el uso de equipos sin certificación ATEX en una zona clasificada?",
+                    opts = listOf("Nunca", "Solo si son de baja tensión", "Solo si se instalan fuera de la zona de riesgo inmediato", "Cuando la instalación sea temporal para mantenimiento"),
+                    a = 0,
+                    exp = "La ITC-BT-29 es tajante: todo equipo instalado en una zona clasificada como peligrosa debe contar con certificación Ex (ATEX) correspondiente para esa zona y tipo de riesgo.",
+                    ref = "ITC-BT-29 §4"
+                ),
+                Question(
+                    q = "¿Qué función tiene el borne de equipotencialidad al que se conectan las masas en ATEX?",
+                    opts = listOf("Proporcionar tensión de alimentación", "Evitar diferencias de potencial y descargar la electricidad estática a tierra", "Aumentar la resistencia del circuito", "Limitar la corriente de cortocircuito"),
+                    a = 1,
+                    exp = "La equipotencialidad es fundamental en ATEX para evitar chispas electrostáticas provocadas por la descarga de objetos metálicos cargados que se ponen a distinto potencial.",
+                    ref = "ITC-BT-29 §3"
+                ),
+                Question(
+                    q = "¿Qué se requiere para realizar una inspección de una instalación en zona ATEX?",
+                    opts = listOf("Solo una inspección visual", "Personal especializado con formación técnica específica en atmósferas explosivas y equipos de medida certificados", "No requiere inspección", "Una revisión por parte del personal de limpieza"),
+                    a = 1,
+                    exp = "La complejidad técnica de los sistemas Ex exige personal con formación específica certificada, capaz de verificar que el montaje cumple estrictamente con las normas Ex sin comprometer el modo de protección.",
+                    ref = "ITC-BT-29 §6"
+                ),
+                Question(
+                    q = "¿Qué factor es el más crítico al elegir un modo de protección ATEX para un motor?",
+                    opts = listOf("El color del motor", "El tipo de gas o polvo, la zona (0, 1, 2) y la clase de temperatura", "La potencia del motor únicamente", "La facilidad de montaje"),
+                    a = 1,
+                    exp = "La selección correcta depende de la clasificación de riesgo del emplazamiento (Zona), el agente inflamable (gas/polvo) y la temperatura de autoinflamación, determinando el nivel de protección (Ex d, Ex e, etc.) necesario.",
+                    ref = "ITC-BT-29 §4"
                 )
     )
 }
+

@@ -1832,6 +1832,513 @@ object Content {
                     a = 1,
                     exp = "Artículo 19: Debe entregarse esquema unifilar y croquis de la instalación al titular.",
                     ref = "Art. 19 RD 842/2002"
+                ),
+                Question(
+                    q = "¿Qué norma UNE de referencia, recogida en la ITC-BT-02, regula de forma general la clasificación de los grados de protección de las envolventes de los equipos eléctricos contra impactos mecánicos externos?",
+                    opts = listOf(
+                        "UNE-EN 50102 (o su equivalente UNE-EN 62262)",
+                        "UNE-EN 60529",
+                        "UNE-EN 60335",
+                        "UNE-EN 20460-3"
+                    ),
+                    a = 0,
+                    exp = "La norma UNE-EN 50102 (posteriormente UNE-EN 62262) establece el código IK, que clasifica los grados de protección que proporcionan las envolventes de materiales eléctricos contra impactos mecánicos externos. Esta norma es citada expresamente en la ITC-BT-02 y otras instrucciones como la ITC-BT-22 o la ITC-BT-30.",
+                    ref = "ITC-BT-02"
+                ),
+                Question(
+                    q = "¿Cuál es el rango de aplicación o papel legal que tiene la lista de normas UNE indicadas en el anexo de la ITC-BT-02?",
+                    opts = listOf(
+                        "Son de carácter meramente informativo y de adopción libre por el instalador",
+                        "Son de obligado cumplimiento en las versiones indicadas en dicho anexo",
+                        "Solo obligan en caso de que existan discrepancias entre el cliente y el instalador",
+                        "Sustituyen completamente al texto articulado del REBT"
+                    ),
+                    a = 1,
+                    exp = "Según el apartado 1 de la ITC-BT-02, las normas UNE que figuran en el listado de este anexo son de obligada observancia en las versiones específicas y años señalados. Su aplicación forma parte de los requisitos reglamentarios obligatorios del REBT.",
+                    ref = "ITC-BT-02"
+                ),
+                Question(
+                    q = "Si el texto de una Instrucción Técnica Complementaria (ITC-BT) entra en contradicción con lo especificado en una norma UNE de las recogidas en la ITC-BT-02, ¿cuál prevalece?",
+                    opts = listOf(
+                        "La norma UNE, por ser un estándar técnico más moderno",
+                        "La interpretación que decida el fabricante del equipo",
+                        "El texto de la Instrucción Técnica Complementaria (ITC-BT) del REBT",
+                        "La norma internacional ISO correspondiente"
+                    ),
+                    a = 2,
+                    exp = "Por principio de jerarquía normativa, el texto del reglamento y de sus Instrucciones Técnicas Complementarias (ITC-BT), aprobados por Real Decreto, prevalece siempre sobre las especificaciones técnicas concretas contenidas en las normas UNE citadas en la ITC-BT-02.",
+                    ref = "ITC-BT-02"
+                ),
+                Question(
+                    q = "¿Cómo se actualizan oficialmente las versiones de las normas UNE que figuran en el listado de referencia de la ITC-BT-02?",
+                    opts = listOf(
+                        "Mediante actualización automática cuando AENOR publica una revisión",
+                        "Por decisión expresa de cualquier técnico u Organismo de Control OCA",
+                        "Únicamente mediante la aprobación de un nuevo Real Decreto que reforme el REBT",
+                        "Mediante Resolución del órgano directivo competente en materia de seguridad industrial del Ministerio"
+                    ),
+                    a = 3,
+                    exp = "El apartado 1 de la ITC-BT-02 prevé un mecanismo ágil de actualización técnica: cuando AENOR publica nuevas versiones de las normas UNE, la dirección competente en seguridad industrial del Ministerio puede aprobar periódicamente una Resolución para actualizar el listado del anexo, sin necesidad de redactar un nuevo Real Decreto.",
+                    ref = "ITC-BT-02"
+                ),
+                Question(
+                    q = "Según la ITC-BT-02, si se publica una nueva edición de una norma UNE que está incluida en el listado oficial, ¿puede el instalador aplicarla directamente de forma obligatoria en un proyecto?",
+                    opts = listOf(
+                        "No, legalmente sigue siendo obligatoria la versión concreta que figure en el listado del anexo hasta que se publique la Resolución ministerial de actualización",
+                        "Sí, las nuevas ediciones de las normas UNE anulan automáticamente las anteriores a efectos de inspección OCA",
+                        "Solo si la potencia instalada de la instalación es superior a 50 kW",
+                        "Sí, siempre que no suponga un incremento del presupuesto de obra superior al 10%"
+                    ),
+                    a = 0,
+                    exp = "Legalmente, la obligatoriedad se adscribe a la versión exacta y año de edición indicados en el listado del anexo de la ITC-BT-02. Las posteriores revisiones o nuevas ediciones de la norma UNE no adquieren fuerza reglamentaria obligatoria hasta que son sancionadas e integradas formalmente por el Ministerio competente.",
+                    ref = "ITC-BT-02"
+                ),
+                Question(
+                    q = "¿Qué norma de la serie UNE, ampliamente citada en la ITC-BT-02, establece los criterios generales de seguridad para la protección contra choques eléctricos en instalaciones?",
+                    opts = listOf(
+                        "UNE 21031",
+                        "UNE 20460 (particularmente la parte 4-41)",
+                        "UNE-EN 60898",
+                        "UNE-EN 61000"
+                    ),
+                    a = 1,
+                    exp = "La serie UNE 20460 (basada en la norma internacional IEC 60364) constituye la base técnica sobre la que se asientan las prescripciones de montaje y diseño de interiores y puesta a tierra. Específicamente, la norma UNE 20460-4-41 detalla los requisitos para la protección contra choques eléctricos, siendo clave en la ITC-BT-02.",
+                    ref = "ITC-BT-02"
+                ),
+                Question(
+                    q = "Cuando un reglamento autonómico exige una norma UNE que no aparece en la ITC-BT-02 del REBT nacional, ¿qué consideración legal tiene?",
+                    opts = listOf(
+                        "Su aplicación es nula por vulnerar el REBT nacional en todos los casos",
+                        "Sustituye a cualquier instrucción del REBT nacional que regule la misma materia",
+                        "Se considerará de aplicación complementaria regional, siempre que no contradiga ni relaje los mínimos exigidos por el REBT estatal",
+                        "Obliga únicamente a los fabricantes de cuadros pero no a los instaladores"
+                    ),
+                    a = 2,
+                    exp = "Las Comunidades Autónomas pueden promulgar disposiciones complementarias que fijen requisitos adicionales de seguridad, siempre que no entren en contradicción con la legislación básica del Estado (REBT nacional) ni supongan una rebaja en los niveles mínimos de seguridad y protección exigidos.",
+                    ref = "ITC-BT-02"
+                ),
+                Question(
+                    q = "¿A qué tipo de organizaciones técnicas se les reconoce competencia para la elaboración de las normas de referencia especificadas en la ITC-BT-02?",
+                    opts = listOf(
+                        "Exclusivamente a los colegios profesionales de ingenieros industriales",
+                        "A las asociaciones regionales de instaladores autorizados",
+                        "A los laboratorios privados de ensayo homologados de forma local",
+                        "A los organismos de normalización reconocidos, principalmente AENOR (UNE) a nivel nacional"
+                    ),
+                    a = 3,
+                    exp = "La ITC-BT-02 hace referencia explícita a las normas de rango nacional UNE redactadas y aprobadas por la Asociación Española de Normalización (AENOR/UNE), que es el organismo oficialmente reconocido para el desarrollo de estándares técnicos en España, en armonización con comités europeos como CENELEC.",
+                    ref = "ITC-BT-02"
+                ),
+                Question(
+                    q = "¿Qué norma UNE de referencia listada en la ITC-BT-02 detalla el método de codificación IP para clasificar el grado de estanqueidad de las envolventes contra la penetración de cuerpos sólidos y agua?",
+                    opts = listOf(
+                        "UNE-EN 60529",
+                        "UNE-EN 50102",
+                        "UNE 21027",
+                        "UNE-EN 60664"
+                    ),
+                    a = 0,
+                    exp = "La norma UNE-EN 60529 especifica el sistema de codificación IP (Ingress Protection). Este sistema consta de dos dígitos (y a veces letras adicionales) que indican el nivel de estanqueidad frente a objetos sólidos (primer dígito) y líquidos (segundo dígito), y es una referencia clave de la ITC-BT-02.",
+                    ref = "ITC-BT-02"
+                ),
+                Question(
+                    q = "Las resoluciones periódicas que emite el Ministerio para actualizar el listado de normas de la ITC-BT-02 tienen como fin principal:",
+                    opts = listOf(
+                        "Imponer la compra de nuevas patentes privadas de software",
+                        "Mantener el REBT en sintonía con el progreso de la técnica y la evolución de las normas europeas de normalización",
+                        "Privatizar la redacción de leyes en favor de las multinacionales",
+                        "Derogar progresivamente el uso de protecciones diferenciales de 30 mA"
+                    ),
+                    a = 1,
+                    exp = "El fin principal de estas actualizaciones periódicas contempladas en la ITC-BT-02 es evitar la obsolescencia técnica del reglamento. De este modo, las normas armonizadas europeas (EN) que entran en vigor o se revisan técnicamente se van incorporando al marco reglamentario del REBT, garantizando la seguridad más avanzada.",
+                    ref = "ITC-BT-02"
+                ),
+                Question(
+                    q = "Según el REBT e ITC-BT-02, ¿pueden utilizarse normas internacionales como las CEI (IEC) o europeas (EN) si no existe una norma española UNE correspondiente en el listado?",
+                    opts = listOf(
+                        "No, bajo ninguna circunstancia se permite usar normas que no sean estrictamente UNE",
+                        "Solo si la instalación tiene una potencia de cortocircuito infinita",
+                        "Sí, se permite su aplicación siempre que garanticen un nivel de seguridad equivalente al de las normas UNE del reglamento",
+                        "Es obligatorio importar físicamente los materiales del país emisor de la norma"
+                    ),
+                    a = 2,
+                    exp = "En ausencia de una norma UNE específica aplicable o recogida en el listado de la ITC-BT-02, el REBT admite la utilización de estándares de reconocido prestigio internacional o europeo (como las normas IEC, ISO o EN), siempre que queden justificadas técnicamente y garanticen niveles de seguridad equivalentes a los exigidos.",
+                    ref = "ITC-BT-02"
+                ),
+                Question(
+                    q = "¿Cuál de las siguientes normas de la serie UNE es de vital importancia en la ITC-BT-02 para determinar la resistencia de los conductores y las intensidades máximas admisibles en instalaciones interiores?",
+                    opts = listOf(
+                        "UNE-EN 60898-1",
+                        "UNE-EN 60947-2",
+                        "UNE 21186",
+                        "UNE 20460-5-523"
+                    ),
+                    a = 3,
+                    exp = "La norma UNE 20460-5-523 (y sus revisiones posteriores armonizadas como la UNE-HD 60364-5-52) regula el dimensionamiento de conductores y establece las tablas de intensidad máxima admisible según la temperatura de servicio, tipo de aislamiento y método de instalación. Es la base de cálculo de las ITC-BT-19 e ITC-BT-22.",
+                    ref = "ITC-BT-02"
+                ),
+                Question(
+                    q = "Según las directrices de la ITC-BT-02, cuando una norma UNE citada en el REBT ha sido anulada o sustituida oficialmente por otra norma UNE con diferente denominación, ¿qué norma es legalmente exigible?",
+                    opts = listOf(
+                        "La norma antigua citada en el listado de la ITC-BT-02, mientras no se modifique reglamentariamente dicho listado",
+                        "La nueva norma UNE desde el mismo día de su publicación en el BOE estatal",
+                        "La norma internacional que prefiera el instalador sin importar la denominación",
+                        "Ninguna de las dos, la instalación queda exenta de cumplir esa norma específica"
+                    ),
+                    a = 0,
+                    exp = "Aunque un estándar técnico sea anulado o modificado en el catálogo privado de AENOR, a nivel estrictamente legal subsiste la obligatoriedad de la versión específica citada en la ITC-BT-02 hasta que el organismo del Ministerio apruebe formalmente la sustitución en la correspondiente Resolución de actualización.",
+                    ref = "ITC-BT-02"
+                ),
+                Question(
+                    q = "¿Qué organismo nacional es el encargado de certificar de forma oficial la idoneidad y el cumplimiento normativo de las normas UNE citadas en la ITC-BT-02 para los materiales comercializados?",
+                    opts = listOf(
+                        "La asociación de instaladores autorizados de cada provincia",
+                        "Los laboratorios y entidades de certificación acreditados por ENAC (Entidad Nacional de Acreditación)",
+                        "La policía local encargada del control de locales de pública concurrencia",
+                        "El propio instalador mediante su declaración oral de conformidad"
+                    ),
+                    a = 1,
+                    exp = "Para que un material ostente marcas de calidad o certificados de conformidad válidos frente al cumplimiento de normas UNE de la ITC-BT-02, estos deben ser expedidos por entidades o laboratorios debidamente acreditados por ENAC (Entidad Nacional de Acreditación), según los reglamentos de seguridad industrial.",
+                    ref = "ITC-BT-02"
+                ),
+                Question(
+                    q = "En la ITC-BT-02, ¿por qué la referencia a las normas UNE se realiza habitualmente con la fecha o año de edición?",
+                    opts = listOf(
+                        "Por un mero trámite archivístico sin repercusión de seguridad",
+                        "Para dar tiempo a las imprentas oficiales a realizar copias en papel",
+                        "Para delimitar con precisión técnica las exigencias vigentes, evitando que cambios posteriores del estándar alteren retroactivamente las obligaciones del Real Decreto",
+                        "Para incentivar fiscalmente a los autores de las normas UNE"
+                    ),
+                    a = 2,
+                    exp = "Referenciar una norma técnica con su año de edición es una garantía de seguridad jurídica. De este modo, los límites, fórmulas o exigencias de diseño se mantienen fijos y previsibles para los proyectistas e instaladores, hasta que una norma legal dictamine de forma explícita el cambio a una versión más reciente.",
+                    ref = "ITC-BT-02"
+                ),
+                Question(
+                    q = "¿Cuál de las siguientes afirmaciones describe mejor la relación de coexistencia reglamentaria regulada en la ITC-BT-02 entre el Marcado CE y el cumplimiento de las normas UNE?",
+                    opts = listOf(
+                        "El Marcado CE exime por completo del cumplimiento de las normas de la ITC-BT-02",
+                        "Las normas UNE del listado anulan el requisito de Marcado CE europeo",
+                        "El Marcado CE no es exigible si el material cumple una norma UNE nacional",
+                        "El Marcado CE es un requisito legal de comercialización en la UE, mientras que las normas UNE de la ITC-BT-02 precisan los requisitos de diseño e instalación concretos"
+                    ),
+                    a = 3,
+                    exp = "El Marcado CE es un pasaporte obligatorio que declara que el producto cumple con las directivas de la Unión Europea para poder ser comercializado en su territorio. Por su parte, el cumplimiento de las normas UNE específicas citadas en la ITC-BT-02 asegura que la instalación y selección del producto son técnicamente idóneas para los estándares de seguridad españoles.",
+                    ref = "ITC-BT-02"
+                ),
+                Question(
+                    q = "Según el listado de normas de la ITC-BT-02, ¿qué norma regula los requisitos técnicos obligatorios exigidos a los interruptores automáticos magnetotérmicos de uso doméstico y análogos?",
+                    opts = listOf(
+                        "UNE-EN 60898-1",
+                        "UNE-EN 60947-2",
+                        "UNE 20460",
+                        "UNE 21027"
+                    ),
+                    a = 0,
+                    exp = "La norma UNE-EN 60898-1 detalla los ensayos, características y curvas de disparo exigidos a los interruptores automáticos magnetotérmicos destinados a instalaciones domésticas o similares (donde son operados por usuarios no expertos). Para aplicaciones industriales rige la norma UNE-EN 60947-2, ambas referenciadas en el anexo de la ITC-BT-02.",
+                    ref = "ITC-BT-02"
+                ),
+                Question(
+                    q = "Qué norma técnica UNE de la ITC-BT-02 es de aplicación primordial para los fabricantes y montadores de cuadros de distribución eléctrica?",
+                    opts = listOf(
+                        "UNE 21031",
+                        "UNE-EN 61439 (anteriormente UNE-EN 60439)",
+                        "UNE-EN 60598",
+                        "UNE 21186"
+                    ),
+                    a = 1,
+                    exp = "La norma UNE-EN 61439 (que sustituyó a la antigua UNE-EN 60439 de la redacción original) regula los conjuntos de aparamenta de baja tensión, definiendo los requisitos constructivos, térmicos y de resistencia dieléctrica para armarios y cuadros de distribución. Es una referencia básica de la ITC-BT-02.",
+                    ref = "ITC-BT-02"
+                ),
+                Question(
+                    q = "¿Cuál de las siguientes normas UNE es obligatoria según la ITC-BT-02 para evaluar las corrientes de cortocircuito admisibles en las instalaciones de baja tensión?",
+                    opts = listOf(
+                        "UNE 21186",
+                        "UNE-EN 60529",
+                        "UNE-EN 60909",
+                        "UNE 20460-3"
+                    ),
+                    a = 2,
+                    exp = "La norma UNE-EN 60909 describe los métodos normalizados para el cálculo de las corrientes de cortocircuito en sistemas trifásicos de corriente alterna, siendo de obligado cumplimiento bajo las directrices técnicas del anexo de la ITC-BT-02 para los cálculos de dimensionamiento y poder de corte.",
+                    ref = "ITC-BT-02"
+                ),
+Question(
+                    q = "¿Cuál es el propósito principal del listado de normas UNE recogido en la ITC-BT-02?",
+                    opts = listOf(
+                        "Informar de las novedades técnicas de forma voluntaria",
+                        "Establecer un marco de obligado cumplimiento para la seguridad y calidad de las instalaciones",
+                        "Limitar el número de proveedores autorizados",
+                        "Aumentar el coste de los materiales eléctricos"
+                    ),
+                    a = 1,
+                    exp = "La ITC-BT-02 enumera las normas de obligado cumplimiento para garantizar que el diseño, los materiales y la ejecución de las instalaciones cumplan con los estándares de seguridad mínima del REBT.",
+                    ref = "ITC-BT-02"
+                ),
+Question(
+                    q = "¿Qué ocurre cuando una norma UNE de la ITC-BT-02 es sustituida por una nueva edición?",
+                    opts = listOf(
+                        "Se debe aplicar automáticamente la nueva sin excepción",
+                        "La ITC-BT-02 sigue exigiendo la versión citada hasta que el Ministerio oficialice la sustitución",
+                        "El instalador decide qué versión usar",
+                        "Se debe aplicar la norma internacional IEC ignorando la UNE"
+                    ),
+                    a = 1,
+                    exp = "A efectos legales, la versión exigible es la citada en el REBT. Las actualizaciones posteriores no tienen fuerza obligatoria hasta que el Ministerio las incorpora formalmente mediante resolución.",
+                    ref = "ITC-BT-02"
+                ),
+Question(
+                    q = "¿En qué condiciones admite el REBT el uso de una norma técnica diferente a las UNE citadas en la ITC-BT-02?",
+                    opts = listOf(
+                        "Nunca",
+                        "Siempre que sea una norma de origen asiático",
+                        "Cuando se justifique un nivel de seguridad equivalente conforme a la normativa europea o internacional",
+                        "Solo si el cliente lo solicita expresamente"
+                    ),
+                    a = 2,
+                    exp = "El principio de equivalencia técnica permite utilizar normas de reconocido prestigio europeo o internacional cuando no exista UNE aplicable o se demuestre una seguridad equivalente.",
+                    ref = "ITC-BT-02"
+                ),
+Question(
+                    q = "¿Cuál es la función del Marcado CE en un producto eléctrico según la ITC-BT-02?",
+                    opts = listOf(
+                        "Garantizar que cumple con todos los requisitos de instalación del REBT",
+                        "Acreditar que el producto cumple con las directivas europeas de comercialización",
+                        "Sustituir la necesidad de puesta a tierra",
+                        "Asegurar un funcionamiento de 50 años"
+                    ),
+                    a = 1,
+                    exp = "El Marcado CE es un requisito de comercialización en la UE, pero su presencia no exime de realizar la instalación según las normas de la ITC-BT-02.",
+                    ref = "ITC-BT-02"
+                ),
+Question(
+                    q = "¿Qué grado de protección IP mínimo es habitual para envolventes exteriores según la norma citada en la ITC-BT-02?",
+                    opts = listOf("IP20", "IP44", "IP68", "IP00"),
+                    a = 1,
+                    exp = "Aunque depende del uso, la norma UNE-EN 60529 (IP) establece grados de estanqueidad para prevenir la entrada de cuerpos y agua según el entorno, con IP44 como estándar común para intemperie protegida.",
+                    ref = "ITC-BT-02"
+                ),
+Question(
+                    q = "¿Qué es una instalación de 'Baja Tensión' en el REBT según la ITC-BT-02?",
+                    opts = listOf("CA < 50V", "CA <= 1000V y CC <= 1500V", "Solo 230V", "Cualquier tensión"),
+                    a = 1,
+                    exp = "El ámbito del REBT define la Baja Tensión como aquellas instalaciones de CA hasta 1.000 V inclusive y CC hasta 1.500 V inclusive, basándose en normas internacionales armonizadas.",
+                    ref = "ITC-BT-02"
+                ),
+Question(
+                    q = "¿Qué se entiende por 'norma armonizada' en el contexto de la ITC-BT-02?",
+                    opts = listOf("Una norma sin fuerza legal", "Una norma europea aprobada por organismos de normalización (CENELEC) y citada en el Diario Oficial de la UE", "Una norma solo nacional", "Una sugerencia del fabricante"),
+                    a = 1,
+                    exp = "Las normas armonizadas son aquellas desarrolladas para dar cumplimiento a directivas europeas, siendo piezas fundamentales en el sistema de seguridad eléctrica citado en la ITC-BT-02.",
+                    ref = "ITC-BT-02"
+                ),
+Question(
+                    q = "¿Qué norma regula los interruptores para instalaciones domésticas según la ITC-BT-02?",
+                    opts = listOf("UNE-EN 60898", "UNE-EN 60669", "UNE-EN 61439", "UNE 20460"),
+                    a = 1,
+                    exp = "La serie UNE-EN 60669 establece las características técnicas y de seguridad para interruptores de instalación fija para uso doméstico o análogo, referenciada en el REBT.",
+                    ref = "ITC-BT-02"
+                ),
+Question(
+                    q = "¿Cuál es la norma de referencia en la ITC-BT-02 para los conductores eléctricos (cables)?",
+                    opts = listOf("UNE 21123", "UNE-EN 60898", "UNE-EN 61439", "UNE 20460"),
+                    a = 0,
+                    exp = "La norma UNE 21123 y series similares regulan las características de cables eléctricos (aislamiento, tensiones asignadas) necesarios para su correcta elección en instalaciones de BT.",
+                    ref = "ITC-BT-02"
+                ),
+Question(
+                    q = "¿Por qué la ITC-BT-02 remite a normas de compatibilidad electromagnética (CEM)?",
+                    opts = listOf("Para evitar interferencias en el funcionamiento de los equipos eléctricos", "Para regular el precio del cobre", "Para medir la resistencia de tierra", "Para iluminar mejor"),
+                    a = 0,
+                    exp = "La CEM es vital para asegurar que los dispositivos eléctricos no perturben a otros ni se vean afectados ellos mismos por perturbaciones externas, según directivas europeas.",
+                    ref = "ITC-BT-02"
+                ),
+Question(
+                    q = "¿Qué norma UNE regula el diseño y montaje de sistemas de puesta a tierra en la ITC-BT-02?",
+                    opts = listOf("UNE-EN 60898", "UNE-EN 61439", "UNE 20460-5-54", "UNE 21123"),
+                    a = 2,
+                    exp = "La UNE 20460-5-54 (o series HD 60364) establece las prescripciones para las instalaciones de puesta a tierra, garantizando la seguridad en caso de fallos de aislamiento.",
+                    ref = "ITC-BT-02"
+                ),
+Question(
+                    q = "¿A qué ámbito se aplica la norma UNE-EN 60898 según la ITC-BT-02?",
+                    opts = listOf("Uso industrial únicamente", "Uso doméstico y análogo", "Instalaciones de AT", "Telecomunicaciones"),
+                    a = 1,
+                    exp = "La norma UNE-EN 60898 está destinada a interruptores automáticos para protección contra sobreintensidades en instalaciones de uso doméstico o análogo.",
+                    ref = "ITC-BT-02"
+                ),
+Question(
+                    q = "¿Qué regula la serie de normas UNE-EN 60947 en la ITC-BT-02?",
+                    opts = listOf("Cuadros de distribución", "Aparamenta de baja tensión para uso industrial", "Tomas de corriente", "Cables"),
+                    a = 1,
+                    exp = "La serie UNE-EN 60947 engloba los requisitos para aparamenta de baja tensión utilizada en el ámbito industrial (interruptores, contactores, relés).",
+                    ref = "ITC-BT-02"
+                ),
+Question(
+                    q = "¿Qué mide el primer dígito del código IP según la norma UNE-EN 60529 (ITC-BT-02)?",
+                    opts = listOf("Resistencia al agua", "Protección contra objetos sólidos", "Impacto mecánico", "Tensión máxima"),
+                    a = 1,
+                    exp = "El primer dígito del IP (del 0 al 6) indica la protección contra la penetración de objetos sólidos extraños.",
+                    ref = "ITC-BT-02"
+                ),
+Question(
+                    q = "¿Qué mide el segundo dígito del código IP según la norma UNE-EN 60529 (ITC-BT-02)?",
+                    opts = listOf("Resistencia al agua", "Protección contra objetos sólidos", "Impacto mecánico", "Tensión máxima"),
+                    a = 0,
+                    exp = "El segundo dígito del IP (del 0 al 8/9) indica la protección contra los efectos perjudiciales debido a la entrada de agua.",
+                    ref = "ITC-BT-02"
+                ),
+Question(
+                    q = "¿Qué norma UNE de la ITC-BT-02 regula los transformadores de seguridad?",
+                    opts = listOf("UNE-EN 61558", "UNE-EN 60898", "UNE-EN 61439", "UNE 21123"),
+                    a = 0,
+                    exp = "La norma UNE-EN 61558 regula la seguridad de los transformadores, fuentes de alimentación y similares, fundamentales para sistemas de muy baja tensión (MBTS).",
+                    ref = "ITC-BT-02"
+                ),
+                Question(
+                    q = "¿Para qué sirve el estudio de cortocircuito según la ITC-BT-02 y UNE-EN 60909?",
+                    opts = listOf("Para dimensionar el poder de corte de los PIA y el aguante térmico de cables", "Para medir el consumo mensual", "Para iluminar la vivienda", "Para calentar el agua"),
+                    a = 0,
+                    exp = "El cálculo correcto de la Icc máxima es crítico para asegurar que las protecciones (PIA) abran el circuito antes de que los conductores se fundan.",
+                    ref = "ITC-BT-02"
+                ),
+Question(
+                    q = "¿Qué norma UNE referenciada en la ITC-BT-02 regula los pararrayos?",
+                    opts = listOf("UNE 21123", "UNE 21186", "UNE-EN 60898", "UNE 20460"),
+                    a = 1,
+                    exp = "La norma UNE 21186 establece los requisitos para el diseño y montaje de sistemas de protección contra el rayo, obligatorios según el Código Técnico de la Edificación y el REBT.",
+                    ref = "ITC-BT-02"
+                ),
+                Question(
+                    q = "¿Cuál es el objetivo principal de la ITC-BT-02 sobre normas de referencia?",
+                    opts = listOf("Actualizar permanentemente las normas UNE obligatorias", "Listar los materiales eléctricos prohibidos", "Establecer la capacidad de carga de los cables", "Definir las tarifas eléctricas"),
+                    a = 0,
+                    exp = "La ITC-BT-02 establece una lista actualizada de normas UNE que el REBT toma como referencia para garantizar la calidad y seguridad de las instalaciones.",
+                    ref = "ITC-BT-02"
+                ),
+                Question(
+                    q = "¿Tienen carácter obligatorio las normas UNE referenciadas en la ITC-BT-02?",
+                    opts = listOf("No, son solo recomendaciones", "Sí, cuando el REBT las cita expresamente o como medio para cumplir sus exigencias", "Solo para instalaciones industriales", "Nunca son obligatorias"),
+                    a = 1,
+                    exp = "Aunque las normas UNE son voluntarias en principio, al ser citadas en el REBT adquieren carácter reglamentario para cumplir con las prescripciones exigidas.",
+                    ref = "ITC-BT-02"
+                ),
+                Question(
+                    q = "¿Qué sucede si una norma UNE citada en la ITC-BT-02 es sustituida por una nueva versión?",
+                    opts = listOf("La instalación deja de ser legal", "Debe aplicarse la nueva versión si el REBT no dice lo contrario", "La antigua sigue siendo obligatoria siempre", "No afecta a la instalación"),
+                    a = 1,
+                    exp = "El REBT y la ITC-BT-02 suelen contemplar la aplicación de las versiones más recientes de las normas UNE, que mejoran la seguridad.",
+                    ref = "ITC-BT-02"
+                ),
+                Question(
+                    q = "¿Qué norma regula las condiciones generales de las instalaciones eléctricas según la ITC-BT-02?",
+                    opts = listOf("La serie UNE-HD 60364", "La norma ISO 9001", "La norma de calidad de suministro", "No hay norma general"),
+                    a = 0,
+                    exp = "La serie UNE-HD 60364 es la piedra angular del REBT, definiendo cómo deben proyectarse y ejecutarse las instalaciones eléctricas de baja tensión.",
+                    ref = "ITC-BT-02"
+                ),
+                Question(
+                    q = "¿Qué papel juega la norma UNE-EN 61439 citada en la ITC-BT-02?",
+                    opts = listOf("Regula los cables subterráneos", "Establece los requisitos para conjuntos de aparamenta (cuadros eléctricos)", "Regula la iluminación de emergencia", "Es una norma de contadores"),
+                    a = 1,
+                    exp = "La norma UNE-EN 61439 es fundamental para asegurar que los cuadros eléctricos sean seguros y fiables ante cortocircuitos y sobrecargas.",
+                    ref = "ITC-BT-02"
+                ),
+                Question(
+                    q = "¿Qué define la ITC-BT-02 respecto a las normas de seguridad contra incendios?",
+                    opts = listOf("Solo recomienda el uso de materiales ignífugos", "Cita normas UNE específicas para cables de seguridad", "No trata sobre incendios", "Lo deja a criterio del instalador"),
+                    a = 1,
+                    exp = "La seguridad contra incendios es crítica, por lo que la ITC-BT-02 cita normas UNE para el comportamiento al fuego de cables y equipos.",
+                    ref = "ITC-BT-02"
+                ),
+                Question(
+                    q = "¿Es necesario cumplir siempre con la última versión de las normas UNE citadas en la ITC-BT-02?",
+                    opts = listOf("Sí, sin excepciones", "Se permite el cumplimiento de versiones anteriores si se garantiza la seguridad", "Las normas no cambian", "Solo si el instalador lo desea"),
+                    a = 1,
+                    exp = "El reglamento permite flexibilidad, siempre que se justifique que la seguridad equivalente o superior se mantiene.",
+                    ref = "ITC-BT-02"
+                ),
+                Question(
+                    q = "¿Qué norma se aplica para cables eléctricos según la ITC-BT-02?",
+                    opts = listOf("Normas tipo UNE 21123", "UNE-EN 61439", "UNE 21186", "ISO 14001"),
+                    a = 0,
+                    exp = "Las series UNE 21123 y similares definen las características constructivas y de ensayo para cables eléctricos de baja tensión.",
+                    ref = "ITC-BT-02"
+                ),
+                Question(
+                    q = "¿Qué garantiza la aplicación de las normas UNE citadas en la ITC-BT-02?",
+                    opts = listOf("El cumplimiento de los requisitos técnicos de seguridad del REBT", "El menor coste de instalación", "La máxima estética del cuadro", "La velocidad de instalación"),
+                    a = 0,
+                    exp = "La finalidad principal de las normas UNE referenciadas es técnica: asegurar que la instalación es segura y funcional conforme a los estándares acordados.",
+                    ref = "ITC-BT-02"
+                ),
+                Question(
+                    q = "¿Qué regula la ITC-BT-02 para los sistemas de puesta a tierra?",
+                    opts = listOf("No regula las puestas a tierra", "Cita normas como la serie UNE-HD 60364", "Regula solo pararrayos", "Regula cables de cobre"),
+                    a = 1,
+                    exp = "Las puestas a tierra son esenciales para la seguridad; la ITC-BT-02 remite a las normas de la serie UNE-HD 60364 para su correcto diseño.",
+                    ref = "ITC-BT-02"
+                ),
+                Question(
+                    q = "¿Qué norma UNE referenciada en la ITC-BT-02 es clave para las envolventes (cajas)?",
+                    opts = listOf("UNE-EN 60670", "UNE-EN 61439", "UNE 21123", "UNE 21186"),
+                    a = 0,
+                    exp = "La serie UNE-EN 60670 regula las cajas y envolventes para instalaciones eléctricas, crucial para la protección contra contactos directos e indirectos.",
+                    ref = "ITC-BT-02"
+                ),
+                Question(
+                    q = "¿Las normas de la ITC-BT-02 son aplicables en todas las comunidades autónomas?",
+                    opts = listOf("No, depende de la comunidad", "Sí, es una normativa estatal", "Solo en ciudades grandes", "No se aplican"),
+                    a = 1,
+                    exp = "El REBT y sus ITC tienen carácter nacional, asegurando criterios uniformes de seguridad en todo el territorio español.",
+                    ref = "ITC-BT-02"
+                ),
+                Question(
+                    q = "¿Qué norma UNE referenciada en la ITC-BT-02 define las canalizaciones eléctricas?",
+                    opts = listOf("UNE-HD 60364", "UNE 21123", "UNE 21186", "Ninguna"),
+                    a = 0,
+                    exp = "La serie UNE-HD 60364 especifica cómo deben realizarse las canalizaciones para garantizar su durabilidad y seguridad.",
+                    ref = "ITC-BT-02"
+                ),
+                Question(
+                    q = "¿Por qué la ITC-BT-02 incluye normas de seguridad contra el rayo?",
+                    opts = listOf("Para proteger estructuras y equipos sensibles contra sobretensiones", "Porque es más barato", "Por estética", "Por petición de las aseguradoras"),
+                    a = 0,
+                    exp = "El rayo es un riesgo eléctrico significativo; las normas UNE citadas (como la 21186) son esenciales para mitigar daños por sobretensiones.",
+                    ref = "ITC-BT-02"
+                ),
+                Question(
+                    q = "¿Qué sucede si no existe una norma UNE específica para un material en la ITC-BT-02?",
+                    opts = listOf("Se prohíbe su uso", "Se deben usar normas internacionales equivalentes (IEC/EN) si son seguras", "Es obligatorio usar otra cualquiera", "El instalador decide"),
+                    a = 1,
+                    exp = "El REBT admite normas internacionales (IEC) o europeas (EN) equivalentes si no existe norma UNE, siempre que se garantice un nivel de seguridad adecuado.",
+                    ref = "ITC-BT-02"
+                ),
+                Question(
+                    q = "¿Cuál es la función de la ITC-BT-02 al listar normas?",
+                    opts = listOf("Facilitar el cumplimiento de los requisitos técnicos del reglamento", "Dificultar la instalación", "Aumentar los impuestos", "Solo informativa"),
+                    a = 0,
+                    exp = "Facilita la labor técnica al proporcionar estándares claros y aceptados para la ejecución y verificación de instalaciones.",
+                    ref = "ITC-BT-02"
+                ),
+                Question(
+                    q = "¿Qué norma UNE referenciada en la ITC-BT-02 regula los dispositivos de protección diferencial?",
+                    opts = listOf("UNE-EN 61008/61009", "UNE-EN 61439", "UNE 21123", "UNE-HD 60364"),
+                    a = 0,
+                    exp = "La serie UNE-EN 61008/61009 es obligatoria para verificar la eficacia de los interruptores diferenciales ante fugas de corriente.",
+                    ref = "ITC-BT-02"
+                ),
+                Question(
+                    q = "¿Qué norma UNE de la ITC-BT-02 se aplica a conductores desnudos?",
+                    opts = listOf("UNE 21027", "UNE-EN 61439", "UNE-HD 60364", "UNE 20460"),
+                    a = 0,
+                    exp = "Existen normas específicas tipo UNE 21027 y similares para conductores desnudos, usados principalmente en redes aéreas.",
+                    ref = "ITC-BT-02"
+                ),
+                Question(
+                    q = "¿Quién mantiene actualizada la lista de normas UNE de la ITC-BT-02?",
+                    opts = listOf("El Ministerio de Industria y Energía", "Los instaladores", "UNE directamente", "Los fabricantes"),
+                    a = 0,
+                    exp = "El Ministerio, a través de resoluciones, actualiza periódicamente la lista de normas para adaptarlas a la evolución técnica.",
+                    ref = "ITC-BT-02"
                 )
             )
         ),

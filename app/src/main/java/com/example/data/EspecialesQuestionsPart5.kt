@@ -1213,6 +1213,42 @@ Question(
                     a = 3,
                     exp = "En las estaciones de servicio (con volúmenes de vapores inflamables de hidrocarburos), los cargadores de vehículos eléctricos (que generan chispas mecánicas en clavijas o contactores) deben quedar alejados de las zonas clasificadas peligrosas o utilizar protecciones antideflagrantes homologadas (ITC-BT-29 e ITC-BT-52).",
                     ref = "ITC-BT-52"
+                ),
+Question(
+                    q = "¿Cuál es el objeto de la instrucción ITC-BT-33 del REBT?",
+                    opts = listOf(
+                        "Regular las instalaciones de alta tensión en industrias",
+                        "Establecer las prescripciones para las instalaciones eléctricas provisionales y temporales de obra",
+                        "Normar la instalación de piscinas",
+                        "Definir el alumbrado en estadios deportivos"
+                    ),
+                    a = 1,
+                    exp = "La ITC-BT-33 tiene por objeto establecer las prescripciones para las instalaciones eléctricas provisionales y temporales de obra (públicas o privadas) destinadas a suministrar energía durante la ejecución de los trabajos.",
+                    ref = "ITC-BT-33 §1"
+                ),
+Question(
+                    q = "¿Cuál es el objeto de la instrucción ITC-BT-33 del REBT?",
+                    opts = listOf(
+                        "Regular las instalaciones de alta tensión en industrias",
+                        "Establecer las prescripciones para las instalaciones eléctricas provisionales y temporales de obra",
+                        "Normar la instalación de piscinas",
+                        "Definir el alumbrado en estadios deportivos"
+                    ),
+                    a = 1,
+                    exp = "La ITC-BT-33 tiene por objeto establecer las prescripciones para las instalaciones eléctricas provisionales y temporales de obra (públicas o privadas) destinadas a suministrar energía durante la ejecución de los trabajos.",
+                    ref = "ITC-BT-33 §1"
+                ),
+Question(
+                    q = "¿Qué grado de protección mínimo deben poseer las envolventes de los cuadros eléctricos instalados a la intemperie en una obra según la ITC-BT-33?",
+                    opts = listOf(
+                        "IP20",
+                        "IP44",
+                        "IP67",
+                        "IP30"
+                    ),
+                    a = 1,
+                    exp = "La ITC-BT-33 exige que todos los cuadros eléctricos de obra instalados a la intemperie cuenten con un grado de protección mínimo IP44 para garantizar su funcionamiento seguro frente a la lluvia y objetos sólidos.",
+                    ref = "ITC-BT-33 §2"
                 )
     )
 }

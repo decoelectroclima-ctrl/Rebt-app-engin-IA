@@ -17,36 +17,36 @@ Question(
 Question(
                     q = "Según el REBT, la protección contra contactos directos será preferentemente:",
                     opts = listOf(
-                        "Por aislamiento de partes activas o por medio de barreras o envolventes",
                         "Mediante puesta a tierra",
+                        "Por aislamiento de partes activas o por medio de barreras o envolventes",
                         "Por separación eléctrica",
                         "Por MBTS exclusivamente"
                     ),
-                    a = 0,
+                    a = 1,
                     exp = "ITC-BT-33, apartado 4.1: «Las medidas de protección contra los contactos directos serán preferentemente: – Protección por aislamiento de partes activas – Protección por medio de barreras o envolventes.»",
                     ref = "ITC-BT-33"
                 ),
 Question(
                     q = "Según el REBT, en esquema TT la tensión límite convencional no debe ser superior a:",
                     opts = listOf(
-                        "24 V en corriente alterna o 60 V en corriente continua",
-                        "50 V en corriente alterna",
                         "12 V en corriente alterna",
+                        "50 V en corriente alterna",
+                        "24 V en corriente alterna o 60 V en corriente continua",
                         "120 V en corriente continua"
                     ),
-                    a = 0,
+                    a = 2,
                     exp = "ITC-BT-33, apartado 4.2: «... la tensión límite convencional no debe ser superior a 24 V de valor eficaz en corriente alterna, ó 60 V en corriente continua.»",
                     ref = "ITC-BT-33"
                 ),
 Question(
                     q = "Según el REBT, cada base de toma de corriente debe estar protegida:",
                     opts = listOf(
-                        "Por diferencial ≤ 30 mA, MBTS o separación eléctrica",
+                        "Mediante aislamiento doble",
                         "Únicamente por fusible",
                         "Sólo por magnetotérmico",
-                        "Mediante aislamiento doble"
+                        "Por diferencial ≤ 30 mA, MBTS o separación eléctrica"
                     ),
-                    a = 0,
+                    a = 3,
                     exp = "ITC-BT-33, apartado 4.2: «Cada base o grupo de bases de toma de corriente deben estar protegidas por dispositivos diferenciales ... igual como máximo a 30 mA; o bien alimentadas a muy baja tensión de seguridad MBTS; o bien protegidas por separación eléctrica de los circuitos.»",
                     ref = "ITC-BT-33"
                 ),
@@ -65,36 +65,36 @@ Question(
 Question(
                     q = "Según el REBT, los elementos a la intemperie deberán tener como mínimo un grado de protección:",
                     opts = listOf(
-                        "IP45",
                         "IP20",
+                        "IP45",
                         "IPX1",
                         "IP67"
                     ),
-                    a = 0,
+                    a = 1,
                     exp = "ITC-BT-33, apartado 5.1: «Las envolventes, aparamenta, las tomas de corriente y los elementos de la instalación que estén a la intemperie, deberán tener como mínimo un grado de protección IP45.»",
                     ref = "ITC-BT-33"
                 ),
 Question(
                     q = "Según el REBT, las canalizaciones no deben tenderse en pasos de peatones o vehículos:",
                     opts = listOf(
-                        "Salvo que se disponga protección especial",
-                        "Nunca",
                         "Sólo en interiores",
+                        "Nunca",
+                        "Salvo que se disponga protección especial",
                         "Sólo en exteriores"
                     ),
-                    a = 0,
+                    a = 2,
                     exp = "ITC-BT-33, apartado 5.2: «... éstos no deben estar tendidos en pasos para peatones o vehículos. Si tal tendido es necesario, debe disponerse protección especial contra los daños mecánicos.»",
                     ref = "ITC-BT-33"
                 ),
 Question(
                     q = "Según el REBT, en el origen de cada instalación debe existir:",
                     opts = listOf(
-                        "El cuadro general de mando y los dispositivos de protección principales",
+                        "Una toma de tierra independiente",
                         "Un contador",
                         "Un transformador",
-                        "Una toma de tierra independiente"
+                        "El cuadro general de mando y los dispositivos de protección principales"
                     ),
-                    a = 0,
+                    a = 3,
                     exp = "ITC-BT-33, apartado 6.1: «En el origen de cada instalación debe existir un conjunto que incluya el cuadro general de mando y los dispositivos de protección principales.»",
                     ref = "ITC-BT-33"
                 ),
@@ -341,36 +341,36 @@ Question(
 Question(
                     q = "Según el REBT, esta instrucción se aplica a instalaciones:",
                     opts = listOf(
-                        "Fijas",
                         "Provisionales",
+                        "Fijas",
                         "Portátiles",
                         "Móviles"
                     ),
-                    a = 0,
+                    a = 1,
                     exp = "ITC-BT-35, apartado 1: «La presente instrucción se aplica a las instalaciones fijas de los establecimientos agrícolas y hortícolas…»",
                     ref = "ITC-BT-35"
                 ),
 Question(
                     q = "Según el REBT, entre los establecimientos incluidos se encuentran:",
                     opts = listOf(
-                        "Cuadras, establos, gallineros y porquerizas",
-                        "Viviendas rurales",
                         "Locales comerciales",
+                        "Viviendas rurales",
+                        "Cuadras, establos, gallineros y porquerizas",
                         "Centros de transformación"
                     ),
-                    a = 0,
+                    a = 2,
                     exp = "ITC-BT-35, apartado 1: «… tales como cuadras, establos, gallineros, porquerizas…»",
                     ref = "ITC-BT-35"
                 ),
 Question(
                     q = "Según el REBT, también se incluyen locales para:",
                     opts = listOf(
-                        "La preparación de piensos de animales",
+                        "Uso sanitario",
                         "Uso administrativo",
                         "Alojamiento de personas",
-                        "Uso sanitario"
+                        "La preparación de piensos de animales"
                     ),
-                    a = 0,
+                    a = 3,
                     exp = "ITC-BT-35, apartado 1: «… locales para la preparación de piensos de animales…»",
                     ref = "ITC-BT-35"
                 ),
@@ -389,36 +389,36 @@ Question(
 Question(
                     q = "Según el REBT, la ITC-BT-35 se aplica también a instalaciones:",
                     opts = listOf(
-                        "Situadas al exterior",
                         "Situadas exclusivamente en interior",
+                        "Situadas al exterior",
                         "Subterráneas",
                         "En edificios habitables"
                     ),
-                    a = 0,
+                    a = 1,
                     exp = "ITC-BT-35, apartado 1: «… o que estén situados al exterior…»",
                     ref = "ITC-BT-35"
                 ),
 Question(
                     q = "Según el REBT, quedan excluidos de esta instrucción:",
                     opts = listOf(
-                        "Los locales habitables",
-                        "Los locales exteriores",
                         "Los locales con animales",
+                        "Los locales exteriores",
+                        "Los locales habitables",
                         "Los graneros"
                     ),
-                    a = 0,
+                    a = 2,
                     exp = "ITC-BT-35, apartado 1: «… estando excluidos los locales habitables.»",
                     ref = "ITC-BT-35"
                 ),
 Question(
                     q = "Según el REBT, las prescripciones particulares de estos establecimientos quedan recogidas en:",
                     opts = listOf(
-                        "La norma UNE 20.460-7-705",
+                        "La norma UNE 20.460-5-523",
                         "La ITC-BT-24",
                         "La ITC-BT-30",
-                        "La norma UNE 20.460-5-523"
+                        "La norma UNE 20.460-7-705"
                     ),
-                    a = 0,
+                    a = 3,
                     exp = "ITC-BT-35, apartado 2: «Las prescripciones particulares para este tipo de establecimientos quedan recogidas en la norma UNE 20.460-7-705.»",
                     ref = "ITC-BT-35"
                 ),
@@ -437,48 +437,168 @@ Question(
 Question(
                     q = "Según el REBT, para los apartados en estudio en la norma UNE 20.460-7-705 se aplicará:",
                     opts = listOf(
-                        "La instrucción ITC-BT-33",
                         "La ITC-BT-24",
+                        "La instrucción ITC-BT-33",
                         "La ITC-BT-30",
                         "La ITC-BT-19"
                     ),
-                    a = 0,
+                    a = 1,
                     exp = "ITC-BT-35, apartado 2: «Para aquellos apartados que en esta citada norma se encuentran en estudio, se aplicará lo dispuesto para estos apartados en la instrucción ITC-BT-33.»",
+                    ref = "ITC-BT-35"
+                ),
+Question(
+                    q = "¿Cuál es el valor máximo de la tensión de contacto límite convencional que se adopta en establos y locales para animales según la ITC-BT-35?",
+                    opts = listOf(
+                        "12 V en corriente alterna y 30 V en corriente continua",
+                        "50 V en corriente alterna",
+                        "25 V en corriente alterna y 60 V en corriente continua",
+                        "110 V en corriente alterna"
+                    ),
+                    a = 2,
+                    exp = "Debido a la extrema sensibilidad fisiológica de los animales de granja a la corriente eléctrica (presentan menor resistencia eléctrica corporal y mayor susceptibilidad a fibrilación), la ITC-BT-35 rebaja el límite de tensión de contacto de seguridad de los 50 V usuales a 25 V eficaces en corriente alterna y a 60 V en corriente continua.",
+                    ref = "ITC-BT-35"
+                ),
+Question(
+                    q = "De acuerdo con la ITC-BT-35 y la norma UNE 20.460-7-705, ¿qué nivel de protección diferencial máximo se exige con carácter general para todos los circuitos de alimentación del local agrícola (excepto tomas de corriente ≤ 32 A)?",
+                    opts = listOf(
+                        "Un diferencial de 30 mA únicamente",
+                        "No se requiere diferencial si las masas están conectadas a tierra de forma equipotencial",
+                        "Diferenciales selectivos de 1 A",
+                        "Un interruptor diferencial de sensibilidad no superior a 300 mA"
+                    ),
+                    a = 3,
+                    exp = "Para reducir eficazmente los riesgos de incendio debidos a corrientes de fuga a tierra sobre el heno, paja u otros materiales combustibles abundantes en granjas, la ITC-BT-35 y su norma UNE asociada exigen que todos los circuitos de distribución estén protegidos por diferenciales de corriente residual ≤ 300 mA.",
+                    ref = "ITC-BT-35"
+                ),
+Question(
+                    q = "Según la ITC-BT-35, en los locales destinados al ganado donde se instalen calefactores o luminarias para cría, ¿qué distancia mínima de seguridad debe mantenerse respecto a paja, fertilizantes u otros materiales combustibles?",
+                    opts = listOf(
+                        "Al menos 0,5 metros, salvo indicación superior del fabricante",
+                        "0,2 metros",
+                        "0,1 metros",
+                        "No hay distancia mínima reglamentaria"
+                    ),
+                    a = 0,
+                    exp = "La norma UNE 20.460-7-705 citada por la ITC-BT-35 estipula que los aparatos de calefacción por radiación y las luminarias suspendidas deben colocarse a una distancia mínima de 0,5 metros de las materias combustibles (como paja u otros forrajes) para evitar peligros de ignición por radiación térmica.",
+                    ref = "ITC-BT-35"
+                ),
+Question(
+                    q = "¿Cuál es el grado de protección mínimo (IP) exigido de forma general por la ITC-BT-35 para la aparamenta y equipos eléctricos instalados en el interior de establos o cuadras?",
+                    opts = listOf(
+                        "IP20",
+                        "IP44",
+                        "IP68",
+                        "IP3X"
+                    ),
+                    a = 1,
+                    exp = "Los locales para ganado presentan un ambiente con altos niveles de humedad, polvo en suspensión y salpicaduras de agua de limpieza. Por ello, la ITC-BT-35 requiere un grado de protección IP mínimo de IP44 para toda la aparamenta, cajas de empalme, interruptores y motores del establo.",
+                    ref = "ITC-BT-35"
+                ),
+Question(
+                    q = "Según la ITC-BT-35, en locales ganaderos donde se generen vapores corrosivos continuados (como vapores de amoníaco en porquerizas o purines), ¿qué grado de protección mínimo (IP) se exige para los equipos eléctricos?",
+                    opts = listOf(
+                        "IP30",
+                        "IP44",
+                        "IP55",
+                        "IP21"
+                    ),
+                    a = 2,
+                    exp = "En porquerizas, gallineros o establos con fuerte acumulación de purines y deyecciones, la presencia de vapores altamente corrosivos de amoníaco puede destruir la aparamenta eléctrica estándar. Para estos locales, la ITC-BT-35 y su norma UNE elevan la exigencia reglamentaria a un grado mínimo de protección IP55.",
+                    ref = "ITC-BT-35"
+                ),
+Question(
+                    q = "En el interior de un establo o sala de ordeño, ¿cómo debe ejecutarse la conexión equipotencial suplementaria obligatoria prescrita en la ITC-BT-35?",
+                    opts = listOf(
+                        "Conectando las masas metálicas accesibles a los tubos de plástico de suministro de agua",
+                        "Mediante una piqueta de cobre independiente conectada directamente a los bebederos",
+                        "Dejando que los animales pisen una alfombrilla aislante de caucho",
+                        "Uniendo todas las estructuras metálicas, comederos, barreras y mallas del suelo de hormigón al conductor de protección (PE) del cuadro"
+                    ),
+                    a = 3,
+                    exp = "Para evitar diferencias de potencial peligrosas (tensiones de paso y contacto) que puedan afectar al ganado o a los operarios en zonas húmedas, la ITC-BT-35 exige una red de equipotencialidad suplementaria que una de forma segura y permanente todas las masas metálicas accesibles y las mallas del subsuelo al conductor PE.",
+                    ref = "ITC-BT-35"
+                ),
+Question(
+                    q = "Si se instalan cables calefactores empotrados en el suelo de un establo para climatizar la solera donde reposan los animales, ¿qué medida de seguridad exige la ITC-BT-35?",
+                    opts = listOf(
+                        "Deben poseer una cubierta protectora metálica conectada a tierra y estar enlazados a la red de equipotencialidad del establo",
+                        "Solo se permite su uso si la tensión de servicio es superior a 400 V",
+                        "Los cables calefactores deben ser desnudos sin funda aislante",
+                        "Queda terminantemente prohibido instalar cables calefactores en el suelo de los establos"
+                    ),
+                    a = 0,
+                    exp = "Para evitar riesgos de electrocución de los animales tumbados ante un fallo de aislamiento del cable calefactor o por corrientes de fuga en el hormigón húmedo, la norma asociada a la ITC-BT-35 exige que dichos cables posean una pantalla metálica conectada al conductor de protección (PE) del circuito.",
+                    ref = "ITC-BT-35"
+                ),
+Question(
+                    q = "Según la ITC-BT-35, ¿está permitido realizar instalaciones eléctricas provisionales mediante cables flexibles tendidos por el suelo en un establo?",
+                    opts = listOf(
+                        "Sí, si se protegen con cinta aislante roja de peligro",
+                        "No, las instalaciones en establecimientos agrícolas deben ser de carácter fijo y permanente",
+                        "Sí, durante la época estival de menor pluviosidad",
+                        "Sí, siempre que no haya animales presentes en el establo"
+                    ),
+                    a = 1,
+                    exp = "Por motivos de seguridad, para impedir que los animales puedan morder, pisar o arrancar las canalizaciones eléctricas provocando cortocircuitos o electrocuciones, la ITC-BT-35 establece que las instalaciones eléctricas de los establecimientos agrícolas deben ser de carácter fundamentalmente fijo, limitándose el uso de flexibles a conexiones cortas de equipos móviles.",
+                    ref = "ITC-BT-35"
+                ),
+Question(
+                    q = "De acuerdo con la ITC-BT-35, ¿qué tipo de aislamiento deben tener los conductores activos rígidos instalados en locales agrícolas?",
+                    opts = listOf(
+                        "Conductores desnudos sobre aisladores",
+                        "Tensión asignada mínima de 300/500 V",
+                        "Tensión asignada mínima de 450/750 V",
+                        "Cualquier tensión si están empotrados"
+                    ),
+                    a = 2,
+                    exp = "La ITC-BT-35 y su norma de referencia UNE 20.460-7-705 exigen que incluso para canalizaciones fijas bajo tubo, los conductores tengan un nivel de aislamiento con tensión asignada no inferior a 450/750 V, garantizando una rigidez dieléctrica adecuada frente a sobretensiones puntuales.",
+                    ref = "ITC-BT-35"
+                ),
+Question(
+                    q = "Según la ITC-BT-35, en los invernaderos (locales de horticultura), ¿qué tipo de cajas de conexión deben emplearse en las canalizaciones fijas?",
+                    opts = listOf(
+                        "Cajas de cartón prensado impermeabilizadas con alquitrán",
+                        "No se permite el empleo de cajas de conexión en invernaderos",
+                        "Cajas metálicas ordinarias sin prensaestopas",
+                        "Cajas de material aislante con grado de protección IP adecuado, preferentemente estancas (IPX4 o superior)"
+                    ),
+                    a = 3,
+                    exp = "Los invernaderos presentan ambientes saturados de humedad y goteo constante de condensación. La ITC-BT-35 prescribe que las cajas de empalme sean de material termoplástico resistente a la humedad y con un grado de protección estanco contra chorros o goteo de agua (mínimo IPX4 o superior), con prensaestopas estancos.",
                     ref = "ITC-BT-35"
                 ),
 Question(
                     q = "Según el REBT, a los efectos de la ITC-BT-36 se consideran:",
                     opts = listOf(
-                        "Tres tipos de instalaciones a muy baja tensión",
                         "Dos tipos de instalaciones a muy baja tensión",
+                        "Tres tipos de instalaciones a muy baja tensión",
                         "Cuatro tipos de instalaciones a muy baja tensión",
                         "Únicamente las instalaciones MBTS"
                     ),
-                    a = 0,
+                    a = 1,
                     exp = "ITC-BT-36, apartado 1: «… se consideran tres tipos de instalaciones a muy baja tensión: Muy Baja Tensión de Seguridad (MBTS); Muy Baja Tensión de Protección (MBTP) y Muy Baja Tensión Funcional (MBTF).»",
                     ref = "ITC-BT-36"
                 ),
 Question(
                     q = "Según el REBT, la tensión nominal máxima de una instalación MBTS es:",
                     opts = listOf(
-                        "50 V en c.a. o 75 V en c.c.",
-                        "25 V en c.a. o 60 V en c.c.",
                         "12 V en c.a. o 30 V en c.c.",
+                        "25 V en c.a. o 60 V en c.c.",
+                        "50 V en c.a. o 75 V en c.c.",
                         "230 V en c.a."
                     ),
-                    a = 0,
+                    a = 2,
                     exp = "ITC-BT-36, apartado 1: «… cuya tensión nominal no excede de 50 V en c.a. ó 75 V en c.c…»",
                     ref = "ITC-BT-36"
                 ),
 Question(
                     q = "Según el REBT, las instalaciones MBTS deben estar alimentadas mediante:",
                     opts = listOf(
-                        "Una fuente con aislamiento de protección",
+                        "Cualquier fuente eléctrica",
                         "Una fuente con aislamiento principal",
                         "Una fuente sin aislamiento",
-                        "Cualquier fuente eléctrica"
+                        "Una fuente con aislamiento de protección"
                     ),
-                    a = 0,
+                    a = 3,
                     exp = "ITC-BT-36, apartado 1: «… alimentadas mediante una fuente con aislamiento de protección…»",
                     ref = "ITC-BT-36"
                 ),
@@ -497,36 +617,36 @@ Question(
 Question(
                     q = "Según el REBT, las instalaciones MBTP se diferencian de las MBTS porque:",
                     opts = listOf(
-                        "Sus circuitos y/o masas están conectados a tierra",
                         "No tienen aislamiento de protección",
+                        "Sus circuitos y/o masas están conectados a tierra",
                         "Superan los 75 V en corriente continua",
                         "No utilizan transformadores de seguridad"
                     ),
-                    a = 0,
+                    a = 1,
                     exp = "ITC-BT-36, apartado 1: «… por razones funcionales, los circuitos y/o las masas están conectados a tierra o a un conductor de protección.»",
                     ref = "ITC-BT-36"
                 ),
 Question(
                     q = "Según el REBT, una instalación MBTF es aquella que:",
                     opts = listOf(
-                        "No cumple los requisitos de MBTS ni de MBTP",
-                        "Está siempre conectada a tierra",
                         "Debe usar transformador de seguridad",
+                        "Está siempre conectada a tierra",
+                        "No cumple los requisitos de MBTS ni de MBTP",
                         "Tiene aislamiento de protección obligatorio"
                     ),
-                    a = 0,
+                    a = 2,
                     exp = "ITC-BT-36, apartado 1: «… cuya tensión nominal no excede de 50 V en c.a. ó 75 V en c.c, y que no cumplen los requisitos de MBTS ni de MBTP.»",
                     ref = "ITC-BT-36"
                 ),
 Question(
                     q = "Según el REBT, la protección contra choques eléctricos en instalaciones MBTF se realizará conforme a:",
                     opts = listOf(
-                        "La ITC-BT-24",
+                        "La ITC-BT-30",
                         "La ITC-BT-19",
                         "La ITC-BT-06",
-                        "La ITC-BT-30"
+                        "La ITC-BT-24"
                     ),
-                    a = 0,
+                    a = 3,
                     exp = "ITC-BT-36, apartado 1: «… deberá realizarse conforme a lo establecido en la ITC-BT-24…»",
                     ref = "ITC-BT-36"
                 ),
@@ -545,25 +665,133 @@ Question(
 Question(
                     q = "Según el REBT, no será necesario instalar protección contra sobreintensidades cuando:",
                     opts = listOf(
-                        "La intensidad de cortocircuito sea inferior a la admisible en los conductores",
                         "Se utilice MBTP",
+                        "La intensidad de cortocircuito sea inferior a la admisible en los conductores",
                         "La tensión sea inferior a 25 V",
                         "Se trate de corriente continua"
                     ),
-                    a = 0,
+                    a = 1,
                     exp = "ITC-BT-36, apartado 2.1: «Cuando la intensidad de cortocircuito… sea inferior a la intensidad admisible… no será necesario instalar…»",
                     ref = "ITC-BT-36"
                 ),
 Question(
                     q = "Según el REBT, la separación entre circuitos MBTS/MBTP y otros circuitos puede realizarse mediante:",
                     opts = listOf(
-                        "Separación física de los conductores",
-                        "Colocación conjunta sin aislamiento",
                         "Conexión directa a tierra",
+                        "Colocación conjunta sin aislamiento",
+                        "Separación física de los conductores",
                         "Uso obligatorio de canalización metálica"
                     ),
-                    a = 0,
+                    a = 2,
                     exp = "ITC-BT-36, apartado 2.2: «– La separación física de los conductores.»",
+                    ref = "ITC-BT-36"
+                ),
+Question(
+                    q = "¿Por qué está expresamente prohibido alimentar un circuito de Muy Baja Tensión de Seguridad (MBTS) a través de un autotransformador según la ITC-BT-36?",
+                    opts = listOf(
+                        "Porque provoca caídas de tensión superiores al 10% de forma constante",
+                        "Porque los autotransformadores solo funcionan con corriente continua",
+                        "Porque eleva la frecuencia nominal de servicio a más de 500 Hz",
+                        "Porque carece de separación galvánica (aislamiento de protección) entre el primario y el secundario"
+                    ),
+                    a = 3,
+                    exp = "Un autotransformador tiene un devanado común para el primario y el secundario, por lo que no proporciona aislamiento galvánico. Un fallo en el aislamiento podría aplicar la tensión de red directamente al secundario de muy baja tensión, anulando por completo la seguridad, por lo que la ITC-BT-36 exige transformadores de seguridad de doble devanado.",
+                    ref = "ITC-BT-36"
+                ),
+Question(
+                    q = "¿Qué diferencia principal distingue reglamentariamente a un circuito MBTP (PELV) de uno MBTS (SELV) según la ITC-BT-36?",
+                    opts = listOf(
+                        "Que en el circuito MBTP las masas y/o el circuito secundario están conectados intencionadamente a tierra",
+                        "El tipo de cable flexible utilizado",
+                        "Que el circuito MBTP trabaja a una tensión nominal superior a 1.000 V",
+                        "La frecuencia nominal de la fuente de alimentación"
+                    ),
+                    a = 0,
+                    exp = "Tanto MBTS como MBTP se alimentan de fuentes de seguridad equivalentes (aislamiento doble o reforzado). Sin embargo, en MBTS (Seguridad) se prohíbe de forma absoluta cualquier conexión a tierra del secundario o de las masas, mientras que en MBTP (Protección) se permite o exige la puesta a tierra de masas o de un polo del circuito.",
+                    ref = "ITC-BT-36"
+                ),
+Question(
+                    q = "De acuerdo con la ITC-BT-36, un circuito alimentado a Muy Baja Tensión Funcional (MBTF o FELV) se caracteriza por:",
+                    opts = listOf(
+                        "Disponer de un aislamiento doble de seguridad superior al de MBTS",
+                        "No cumplir con las exigencias de aislamiento de seguridad de las fuentes de MBTS o MBTP",
+                        "Estar conectado únicamente a baterías solares aisladas",
+                        "Funcionar de forma exclusiva en locales húmedos o mojados"
+                    ),
+                    a = 1,
+                    exp = "La MBTF (Felt o Funcional) emplea tensiones dentro de los límites de la muy baja tensión (≤ 50V CA), pero su fuente de alimentación no garantiza el aislamiento galvánico de seguridad respecto a la red de tensión usual (por ejemplo, alimentada mediante un divisor de tensión o autotransformador). Por ello, exige medidas adicionales de protección de la ITC-BT-24.",
+                    ref = "ITC-BT-36"
+                ),
+Question(
+                    q = "¿Qué tipo de fuente de alimentación está homologada por la ITC-BT-36 para alimentar un circuito de Muy Baja Tensión de Seguridad (MBTS)?",
+                    opts = listOf(
+                        "Un transformador convencional de distribución de potencia sin aislamiento reforzado",
+                        "Un divisor de tensión resistivo conectado directamente a fase y neutro",
+                        "Un transformador de aislamiento de seguridad que cumpla la norma UNE-EN 61558-2-6 (o UNE-EN 60742 antigua), o baterías de acumuladores químicas",
+                        "Un alternador industrial síncrono trifásico de 400 V"
+                    ),
+                    a = 2,
+                    exp = "La ITC-BT-36 par. 2.1 establece de forma estricta las fuentes válidas: transformadores de seguridad homologados con aislamiento doble o reforzado, generadores con aislamiento de protección equivalente (motor-generador aislado) o acumuladores químicos (baterías) independientes.",
+                    ref = "ITC-BT-36"
+                ),
+Question(
+                    q = "Según la ITC-BT-36, cuando los conductores de un circuito MBTS o MBTP discurran por la misma canalización (tubo o canal) junto a conductores de tensión usual (como 230/400V), ¿qué requisito de aislamiento deben cumplir?",
+                    opts = listOf(
+                        "Deben separarse mediante cinta adhesiva vulcanizada en cada tramo",
+                        "No se permite en ningún caso que compartan canalización",
+                        "Basta con que los cables estén trenzados entre sí",
+                        "Los conductores de muy baja tensión deben estar aislados para la tensión más elevada presente en la canalización, o poseer cubierta de aislamiento común"
+                    ),
+                    a = 3,
+                    exp = "Para evitar ver fallos de aislamiento cruzados que inyecten tensiones peligrosas en la muy baja tensión, el apartado 2.2 de la ITC-BT-36 permite compartir canalización siempre que todos los cables estén aislados individualmente para la tensión más elevada de la canalización, o bien se interponga una barrera aislante continua.",
+                    ref = "ITC-BT-36"
+                ),
+Question(
+                    q = "De acuerdo con la ITC-BT-36, los enchufes y clavijas destinados a circuitos de muy baja tensión de seguridad (MBTS) deben:",
+                    opts = listOf(
+                        "Hacer imposible su introducción en tomas de corriente de tensión superior",
+                        "Tener patillas planas compatibles con los enchufes domésticos",
+                        "Contar con un conductor de puesta a tierra lateral Schuko obligatoriamente",
+                        "Ser pintados con rayas amarillas y negras"
+                    ),
+                    a = 0,
+                    exp = "El apartado correspondiente de la ITC-BT-36 prohíbe que las clavijas MBTS o MBTP puedan insertarse en bases de toma de corriente de otras tensiones, y que las bases de muy baja tensión admitan clavijas de otros circuitos, garantizando una protección pasiva absoluta contra errores de conexión.",
+                    ref = "ITC-BT-36"
+                ),
+Question(
+                    q = "Según la ITC-BT-36, ¿es obligatorio proteger contra sobreintensidades un circuito de muy baja tensión de seguridad (MBTS) si la intensidad de cortocircuito de la fuente es inferior a la intensidad máxima admisible de los conductores del secundario?",
+                    opts = listOf(
+                        "Sí, es obligatorio instalar fusibles de acción rápida en todos los polos activos",
+                        "No es necesario instalar dispositivos de protección contra sobrecargas ni cortocircuitos",
+                        "Solo si la longitud de la línea supera los 10 metros",
+                        "Se debe instalar obligatoriamente un disyuntor magnetotérmico unipolar"
+                    ),
+                    a = 1,
+                    exp = "El apartado 2.1 de la ITC-BT-36 establece que cuando la propia fuente de seguridad posea una corriente de cortocircuito limitada por diseño que sea inferior a la corriente admisible de los cables del circuito, estos no sufrirán daños térmicos ante un cortocircuito, eximiendo legalmente de instalar protecciones adicionales.",
+                    ref = "ITC-BT-36"
+                ),
+Question(
+                    q = "Para un circuito de Muy Baja Tensión Funcional (MBTF / FELV), ¿cuál de los siguientes elementos de protección es OBLIGATORIO para las masas metálicas accesibles de los equipos según la ITC-BT-36 e ITC-BT-24?",
+                    opts = listOf(
+                        "Mantenerlas totalmente aisladas sin toma de tierra",
+                        "Pintarlas con barniz epoxi dieléctrico",
+                        "Conectarlas al conductor de protección (PE) de la instalación primaria general de tensión usual",
+                        "Sustituir los receptores por equipos con doble aislamiento de Clase III"
+                    ),
+                    a = 2,
+                    exp = "Dado que en MBTF (FELV) no se garantiza el aislamiento galvánico de seguridad frente a la red primaria (por ejemplo, si falla el transformador ordinario), las masas metálicas de los equipos del circuito secundario deben conectarse al conductor de protección de la instalación principal para asegurar el disparo de las protecciones del primario ante un defecto.",
+                    ref = "ITC-BT-36"
+                ),
+Question(
+                    q = "¿Cuál es el límite superior de tensión en corriente alterna (valor eficaz) y corriente continua (exenta de ondulación) establecido por la ITC-BT-36 para clasificar a una instalación como de muy baja tensión?",
+                    opts = listOf(
+                        "Hasta 12 V en c.a. y 24 V en c.c.",
+                        "Hasta 24 V en c.a. y 50 V en c.c.",
+                        "Hasta 110 V en c.a. y 220 V en c.c.",
+                        "Hasta 50 V en c.a. eficaces y 75 V en c.c. de valor medio aritmético"
+                    ),
+                    a = 3,
+                    exp = "El apartado 1 de la ITC-BT-36 define de forma inequívoca que la Muy Baja Tensión comprende aquellas instalaciones con tensiones nominales que no excedan de 50 V eficaces en corriente alterna y de 75 V de valor medio en corriente continua exenta de ondulación.",
                     ref = "ITC-BT-36"
                 ),
 Question(
@@ -581,36 +809,36 @@ Question(
 Question(
                     q = "Según el REBT, las instalaciones a tensiones especiales se encuentran:",
                     opts = listOf(
-                        "Dentro del campo de aplicación del presente reglamento",
                         "Fuera del ámbito del REBT",
+                        "Dentro del campo de aplicación del presente reglamento",
                         "Reguladas únicamente por normas UNE",
                         "Excluidas del reglamento"
                     ),
-                    a = 0,
+                    a = 1,
                     exp = "ITC-BT-37, apartado 1: «… dentro del campo de aplicación del presente reglamento.»",
                     ref = "ITC-BT-37"
                 ),
 Question(
                     q = "Según el REBT, las instalaciones a tensiones especiales deben cumplir:",
                     opts = listOf(
-                        "Las prescripciones para tensiones usuales y las prescripciones complementarias según su emplazamiento",
-                        "Únicamente las prescripciones específicas de la ITC-BT-37",
                         "Solo las prescripciones de la ITC-BT-24",
+                        "Únicamente las prescripciones específicas de la ITC-BT-37",
+                        "Las prescripciones para tensiones usuales y las prescripciones complementarias según su emplazamiento",
                         "Exclusivamente las prescripciones de locales afectos a un servicio eléctrico"
                     ),
-                    a = 0,
+                    a = 2,
                     exp = "ITC-BT-37, apartado 1: «… además de cumplir con las prescripciones establecidas para las instalaciones a tensiones usuales y las prescripciones complementarias según su emplazamiento…»",
                     ref = "ITC-BT-37"
                 ),
 Question(
                     q = "Según el REBT, en las instalaciones a tensiones especiales se aplicará obligatoriamente:",
                     opts = listOf(
-                        "Uno de los sistemas de protección contra contactos indirectos indicada en la ITC-BT-24",
+                        "Protección por emplazamiento no conductivo",
                         "Protección exclusivamente mediante doble aislamiento",
                         "Únicamente protección mediante MBTS",
-                        "Protección por emplazamiento no conductivo"
+                        "Uno de los sistemas de protección contra contactos indirectos indicada en la ITC-BT-24"
                     ),
-                    a = 0,
+                    a = 3,
                     exp = "ITC-BT-37, apartado 1: «Se aplicará obligatoriamente uno de los sistemas de protección para contactos indirectos indicada en la ITC-BT-24…»",
                     ref = "ITC-BT-37"
                 ),
@@ -629,48 +857,216 @@ Question(
 Question(
                     q = "Según el REBT, los cables empleados en instalaciones a tensiones especiales serán:",
                     opts = listOf(
-                        "Siempre de tensión nominal no inferior a 1 000 V",
                         "De tensión nominal mínima 450/750 V",
+                        "Siempre de tensión nominal no inferior a 1 000 V",
                         "De cualquier tensión nominal",
                         "Únicamente con aislamiento principal"
                     ),
-                    a = 0,
+                    a = 1,
                     exp = "ITC-BT-37, apartado 1: «Los cables empleados serán siempre de tensión nominal no inferior a 1 000 V.»",
+                    ref = "ITC-BT-37"
+                ),
+Question(
+                    q = "De acuerdo con la ITC-BT-37, ¿cuál es el requisito reglamentario obligatorio para el marcado de las bases de toma de corriente y clavijas en instalaciones a tensiones especiales?",
+                    opts = listOf(
+                        "No requieren marcado especial si están bajo llave",
+                        "Deben pintarse de color rojo fosforescente obligatoriamente",
+                        "Deben llevar grabada de forma indeleble y visible la tensión nominal de servicio",
+                        "Basta con un letrero adhesivo provisional en la pared"
+                    ),
+                    a = 2,
+                    exp = "El apartado 2 de la ITC-BT-37 estipula que las tomas de corriente y clavijas utilizadas en estas redes deben llevar grabada de forma clara y permanente su tensión de servicio, evitando confusiones peligrosas que puedan derivar en la conexión de receptores inapropiados.",
+                    ref = "ITC-BT-37"
+                ),
+Question(
+                    q = "¿Qué característica geométrica o de diseño constructivo exige la ITC-BT-37 para las tomas de corriente y clavijas de tensiones especiales para evitar accidentes de inserción?",
+                    opts = listOf(
+                        "Deben ser redondas exclusivamente",
+                        "Deben poseer un pasador metálico exterior de bloqueo manual",
+                        "Deben tener el mismo formato que los enchufes domésticos ordinarios",
+                        "Su configuración de patillas debe hacer imposible la introducción de clavijas de tensiones especiales en bases de tensión usual (y viceversa)"
+                    ),
+                    a = 3,
+                    exp = "Para impedir que un usuario introduzca un equipo diseñado para tensión usual (como 230 V) en una base de tensiones especiales (como 750 V), la ITC-BT-37 requiere que las tomas y clavijas posean una configuración de patillas y formas incompatibles con los formatos normalizados de otras tensiones.",
+                    ref = "ITC-BT-37"
+                ),
+Question(
+                    q = "Según la ITC-BT-37, los dispositivos de protección y maniobra (como interruptores y disyuntores) instalados en circuitos de tensión especial deben realizar un corte de tipo:",
+                    opts = listOf(
+                        "Omnipolar (interrumpiendo de forma simultánea todos los conductores activos de alimentación)",
+                        "Bipolar en redes trifásicas",
+                        "Unipolar (cortando solo la fase de mayor corriente)",
+                        "No se exige corte omnipolar si se cuenta con fusibles en cada línea"
+                    ),
+                    a = 0,
+                    exp = "Por motivos de seguridad, para garantizar que aguas abajo del dispositivo no quede ningún conductor activo con potencial peligroso respecto a tierra, la ITC-BT-37 prescribe que los aparatos de corte, maniobra y protección actúen sobre todos los conductores activos simultáneamente (corte omnipolar).",
+                    ref = "ITC-BT-37"
+                ),
+Question(
+                    q = "En caso de utilizar tubos metálicos para proteger las canalizaciones de tensiones especiales, ¿qué medida de seguridad exige la ITC-BT-37?",
+                    opts = listOf(
+                        "Pintar los tubos internamente con resina aislante",
+                        "Asegurar la continuidad eléctrica de los tubos y conectarlos eficazmente al conductor de protección (PE) y a tierra",
+                        "No se permite el uso de tubos metálicos bajo ninguna circunstancia",
+                        "Mantener los tubos flotando sin conexión a tierra"
+                    ),
+                    a = 1,
+                    exp = "De acuerdo con el apartado 1 de la ITC-BT-37, si se emplean canalizaciones metálicas, es obligatorio garantizar su perfecta continuidad eléctrica y enlazarlas directamente a la puesta a tierra de protección. Así, ante cualquier fallo de aislamiento, la corriente de defecto derivará a tierra y provocará el disparo inmediato de las protecciones.",
+                    ref = "ITC-BT-37"
+                ),
+Question(
+                    q = "Según la ITC-BT-37, ¿cuál es la tensión nominal mínima de aislamiento exigida a los cables que discurran por instalaciones con tensiones especiales?",
+                    opts = listOf(
+                        "Cables de 300/500 V siempre que se instalen en falso techo",
+                        "Basta con cables de tensión nominal de 450/750 V si están bajo tubo",
+                        "No inferior a 1.000 V (cables de 0,6/1 kV)",
+                        "Cables especiales para media tensión de al menos 10 kV"
+                    ),
+                    a = 2,
+                    exp = "La ITC-BT-37 establece de forma explícita que los cables empleados en instalaciones a tensiones especiales deben tener una tensión nominal mínima de aislamiento de 1.000 V (0,6/1 kV), impidiendo el uso de mangueras de menor categoría de aislamiento que podrían perforarse con estas tensiones.",
+                    ref = "ITC-BT-37"
+                ),
+Question(
+                    q = "De acuerdo con la ITC-BT-37, las envolventes metálicas de la aparamenta y las masas de los receptores que trabajen a tensiones especiales:",
+                    opts = listOf(
+                        "Deben dejarse sin conectar a tierra para evitar bucles de corriente",
+                        "Solo se conectarán a tierra si la potencia supera los 5 kW",
+                        "Deben conectarse a una piqueta de tierra independiente sin unir al neutro",
+                        "Deben conectarse obligatoriamente al conductor de protección (PE) de la instalación, salvo que posean doble aislamiento o aislamiento reforzado"
+                    ),
+                    a = 3,
+                    exp = "Para evitar contactos indirectos peligrosos debido a la mayor tensión de estos sistemas, el apartado 1 de la ITC-BT-37 obliga a realizar la conexión equipotencial de todas las masas metálicas accesibles de los equipos y envolventes conductoras de cables al sistema general de tierra, eximiendo únicamente a los equipos de Clase II.",
+                    ref = "ITC-BT-37"
+                ),
+Question(
+                    q = "Según la ITC-BT-37, cuando una instalación a tensiones especiales discurra por un local que pueda clasificarse como local húmedo o mojado, ¿qué prescripciones técnicas prevalecen?",
+                    opts = listOf(
+                        "Deben cumplirse de manera acumulativa y conjunta tanto las prescripciones de la ITC-BT-37 como las de la ITC-BT-30 correspondientes",
+                        "Prevalecen exclusivamente las normas de locales húmedos de la ITC-BT-30",
+                        "Prevalecen únicamente las normas de tensiones especiales de la ITC-BT-37",
+                        "Queda prohibido realizar instalaciones de tensiones especiales en locales húmedos"
+                    ),
+                    a = 0,
+                    exp = "La ITC-BT-37 determina en su apartado 1 que las instalaciones a tensiones especiales deben cumplir, además de las suyas propias, con las prescripciones establecidas para las instalaciones a tensiones usuales y las complementarias de seguridad que correspondan al tipo de emplazamiento o local (como locales húmedos de la ITC-BT-30).",
+                    ref = "ITC-BT-37"
+                ),
+Question(
+                    q = "¿Qué tipo de señalización visual se exige colocar en las proximidades de los equipos instalados a tensiones especiales según la ITC-BT-37?",
+                    opts = listOf(
+                        "Una luz verde de presencia de suministro general",
+                        "Placas de advertencia de peligro visibles que alerten claramente sobre la presencia de tensiones especiales y el riesgo eléctrico",
+                        "Un letrero que indique el nombre comercial de la empresa instaladora",
+                        "No se exige señalización si los equipos están en locales de acceso restringido"
+                    ),
+                    a = 1,
+                    exp = "Para advertir de forma clara al personal de mantenimiento y operarios sobre el riesgo intrínseco de operar con tensiones superiores a las normales, la reglamentación técnica exige disponer de placas o letreros de señalización normalizados de riesgo eléctrico ('Peligro, alta tensión' o similar) bien visibles.",
+                    ref = "ITC-BT-37"
+                ),
+Question(
+                    q = "Según la ITC-BT-37, los sistemas de canalización que alojen conductores para tensiones especiales deben protegerse frente a daños mecánicos mediante el empleo de tubos que posean:",
+                    opts = listOf(
+                        "Canaletas de plástico abiertas sin tapa",
+                        "Tubos corrugados ligeros de PVC de grado de resistencia 1 (muy ligero)",
+                        "Cualidades de resistencia mecánica adecuadas al tipo de instalación, preferentemente rígidos y aislantes o metálicos conectados a tierra",
+                        "No se permite alojar estos cables en tubos, deben ir grapados directamente en la pared"
+                    ),
+                    a = 2,
+                    exp = "Las canalizaciones de tensiones especiales exigen una robustez mecánica superior para evitar roturas o penetraciones accidentales que expongan tensiones elevadas. Por ello, la ITC-BT-37 y las normas UNE asociadas exigen tubos rígidos de alta resistencia mecánica contra impactos.",
+                    ref = "ITC-BT-37"
+                ),
+Question(
+                    q = "De acuerdo con la ITC-BT-37, ¿cuál es el límite superior de tensión en corriente alterna eficaz admitido bajo esta instrucción técnica complementaria?",
+                    opts = listOf(
+                        "Hasta 500 V",
+                        "Sin límite superior si el local es industrial",
+                        "Hasta 1.500 V",
+                        "Hasta 1.000 V (por encima de este valor se considera Alta Tensión)"
+                    ),
+                    a = 3,
+                    exp = "El campo de aplicación del REBT (y de la ITC-BT-37) comprende las instalaciones de baja tensión, cuyo límite superior absoluto en corriente alterna son los 1.000 V eficaces. Superado este valor, la instalación entra en el ámbito del Reglamento de Líneas de Alta Tensión o de Centrales y Subestaciones.",
+                    ref = "ITC-BT-37"
+                ),
+Question(
+                    q = "Para una instalación de corriente continua regulada por la ITC-BT-37, ¿cuál es el rango de tensión nominal media que define el ámbito de las tensiones especiales?",
+                    opts = listOf(
+                        "Superior a 750 V y hasta un máximo de 1.500 V de corriente continua",
+                        "De 75 V a 500 V de corriente continua",
+                        "De 0 a 75 V de corriente continua",
+                        "Cualquier tensión superior a 120 V"
+                    ),
+                    a = 0,
+                    exp = "El apartado 1 de la ITC-BT-37 define las tensiones especiales en corriente continua como aquellas con tensión nominal superior a 750 V de valor medio aritmético y hasta el límite superior de la baja tensión en continua, que son 1.500 V.",
+                    ref = "ITC-BT-37"
+                ),
+Question(
+                    q = "Según la ITC-BT-37, los receptores o electrodomésticos destinados a conectarse a circuitos de tensiones especiales deben cumplir obligatoriamente con qué requisito?",
+                    opts = listOf(
+                        "Disponer de un cable de alimentación flexible de al menos 10 metros",
+                        "Estar específicamente diseñados e indicados por el fabricante para operar de forma segura a la tensión nominal especial del circuito",
+                        "Estar equipados con fusibles rápidos de porcelana gG de hasta 2 A",
+                        "Ser de Clase I exclusivamente"
+                    ),
+                    a = 1,
+                    exp = "El empleo de receptores ordinarios diseñados para 230V en un circuito de tensión especial (como 750V) provocaría un incendio o destrucción instantánea. La ITC-BT-37 exige que todo receptor esté debidamente homologado y clasificado por el fabricante para funcionar a la tensión nominal exacta del sistema.",
+                    ref = "ITC-BT-37"
+                ),
+Question(
+                    q = "De acuerdo con la ITC-BT-37, ¿está permitido realizar derivaciones intermedias de tensión usual (como 230V) directamente desde conductores activos a tensión especial sin transformar?",
+                    opts = listOf(
+                        "Sí, si se intercala un interruptor magnetotérmico de 10 A",
+                        "Sí, conectando entre fase y neutro directamente",
+                        "No, está estrictamente prohibido obtener tensiones menores sin un sistema de transformación galvánica adecuado",
+                        "Solo para circuitos de iluminación de señalización temporal"
+                    ),
+                    a = 2,
+                    exp = "Obtener tensiones menores directamente por caída de tensión resistiva o derivación directa de circuitos de tensiones especiales sin el empleo de transformadores o convertidores con separación galvánica adecuada representa un riesgo crítico de sobretensiones peligrosas y accidentes de electrocución, quedando prohibido.",
+                    ref = "ITC-BT-37"
+                ),
+Question(
+                    q = "Según la ITC-BT-37, cuando existan conductores desnudos a tensiones especiales accesibles, ¿qué grado de protección mínimo por barreras o envolventes debe implementarse según la ITC-BT-24?",
+                    opts = listOf(
+                        "IP10",
+                        "No se permite ningún conductor desnudo en absoluto",
+                        "IPX1",
+                        "Como mínimo un grado de protección IPXXB o IP2X, y si hay superficies horizontales accesibles superiores, IPXXD o IP4X"
+                    ),
+                    a = 3,
+                    exp = "Para evitar el contacto directo de personas o herramientas con partes activas a tensiones especiales, la ITC-BT-37 en concordancia con la ITC-BT-24 exige barreras rígidas u obstáculos estables con grado de protección IP2X/IPXXB (o IP4X/IPXXD para partes accesibles superiores) para asegurar el alejamiento eficaz de las masas activas.",
                     ref = "ITC-BT-37"
                 ),
 Question(
                     q = "Según el REBT, el objeto de la ITC-BT-39 es:",
                     opts = listOf(
-                        "Determinar los requisitos particulares de las cercas eléctricas para ganado, su alimentador y su instalación",
                         "Regular únicamente los alimentadores eléctricos",
+                        "Determinar los requisitos particulares de las cercas eléctricas para ganado, su alimentador y su instalación",
                         "Definir las instalaciones provisionales agrícolas",
                         "Regular las líneas aéreas de baja tensión"
                     ),
-                    a = 0,
+                    a = 1,
                     exp = "ITC-BT-39, apartado 1: «El objeto de la presente Instrucción es determinar los requisitos particulares de las cercas eléctricas para ganado, su alimentador y su instalación.»",
                     ref = "ITC-BT-39"
                 ),
 Question(
                     q = "Según el REBT, se entiende por cerca eléctrica para ganado:",
                     opts = listOf(
-                        "Una barrera para animales que comprende uno o varios conductores formados por hilos metálicos, barrotes o alambradas",
-                        "Un cerramiento metálico conectado a tierra",
                         "Una valla electrificada de alta tensión",
+                        "Un cerramiento metálico conectado a tierra",
+                        "Una barrera para animales que comprende uno o varios conductores formados por hilos metálicos, barrotes o alambradas",
                         "Un sistema de protección perimetral industrial"
                     ),
-                    a = 0,
+                    a = 2,
                     exp = "ITC-BT-39, apartado 1: «Se entiende por cerca eléctrica para ganado, a una barrera para animales que comprende uno o varios conductores formados por hilos metálicos, barrotes o alambradas.»",
                     ref = "ITC-BT-39"
                 ),
 Question(
                     q = "Según el REBT, se entiende por alimentador de cerca eléctrica:",
                     opts = listOf(
-                        "El aparato destinado a suministrar regularmente impulsos de tensión a la cerca",
+                        "El sistema de señalización",
                         "El conductor principal de la cerca",
                         "La toma de tierra de la instalación",
-                        "El sistema de señalización"
+                        "El aparato destinado a suministrar regularmente impulsos de tensión a la cerca"
                     ),
-                    a = 0,
+                    a = 3,
                     exp = "ITC-BT-39, apartado 1: «Se entiende por alimentador de cerca eléctrica, al aparato destinado a suministrar regularmente impulsos de tensión a la cerca a la que está conectado.»",
                     ref = "ITC-BT-39"
                 ),
@@ -684,6 +1080,186 @@ Question(
                     ),
                     a = 0,
                     exp = "ITC-BT-39, apartado 2: «El alimentador de cerca eléctrica puede estar alimentado… Conectado a una red de distribución de energía eléctrica.»",
+                    ref = "ITC-BT-39"
+                ),
+Question(
+                    q = "¿Cuál es la distancia mínima obligatoria que debe separar el electrodo de puesta a tierra del alimentador (energizador) de una cerca eléctrica de cualquier otro sistema de tierra ajeno según la ITC-BT-39?",
+                    opts = listOf(
+                        "2 metros",
+                        "10 metros",
+                        "5 metros",
+                        "50 metros"
+                    ),
+                    a = 1,
+                    exp = "El apartado 3 de la ITC-BT-39 prescribe que la toma de tierra del alimentador de una cerca eléctrica debe ser totalmente independiente y estar separada por una distancia mínima de 10 metros de cualquier otra puesta a tierra, como la del sistema eléctrico general o la de redes de telecomunicaciones, para evitar interferencias o retornos de tensión peligrosos.",
+                    ref = "ITC-BT-39"
+                ),
+Question(
+                    q = "Según la ITC-BT-39, ¿cuál de los siguientes tipos de conductores está estrictamente prohibido electrificar en una cerca para ganado?",
+                    opts = listOf(
+                        "Hilos conductores flexibles trenzados con plástico",
+                        "Alambre de acero galvanizado liso",
+                        "Alambre de espino o concertinas",
+                        "Cintas conductoras anchas de poliéster"
+                    ),
+                    a = 2,
+                    exp = "Para evitar que un animal o persona quede enganchado físicamente y reciba descargas eléctricas continuadas de forma ineludible (lo cual podría ser fatal), la ITC-BT-39 prohíbe tajantemente el uso de alambre de espino o cualquier conductor punzante o cortante como cable electrificado.",
+                    ref = "ITC-BT-39"
+                ),
+Question(
+                    q = "De acuerdo con la ITC-BT-39, ¿cuántos alimentadores o energizadores de cerca independientes pueden conectarse a una misma línea o circuito de cerca eléctrica?",
+                    opts = listOf(
+                        "Hasta dos, si se configuran para disparar de forma alterna",
+                        "Un máximo de tres, si la longitud total de la cerca supera los 5 km",
+                        "No hay límite reglamentario si los alimentadores son de batería",
+                        "Únicamente un solo alimentador por cerca"
+                    ),
+                    a = 3,
+                    exp = "La ITC-BT-39 establece claramente que no debe conectarse más de un alimentador a una cerca eléctrica, ni tampoco conectar una misma cerca a dos alimentadores independientes. Esto previene que los impulsos de tensión se superpongan en el tiempo, lo cual anularía el intervalo de seguridad obligatorio entre descargas y causaría riesgos mortales.",
+                    ref = "ITC-BT-39"
+                ),
+Question(
+                    q = "¿Cuándo es obligatorio instalar letreros de advertencia de peligro en una cerca eléctrica para ganado según la ITC-BT-39?",
+                    opts = listOf(
+                        "Siempre que la cerca esté instalada a lo largo de un camino público, sendero o vía de paso",
+                        "Es obligatorio siempre, incluso en terrenos privados totalmente cerrados sin paso",
+                        "Únicamente si la cerca confina animales peligrosos o bravos",
+                        "Solo si la tensión de los impulsos supera los 10.000 V"
+                    ),
+                    a = 0,
+                    exp = "De acuerdo con las prescripciones de seguridad de la ITC-BT-39, es obligatorio colocar señales de advertencia visibles a intervalos regulares si la cerca eléctrica discurre en paralelo o cruza una vía pública, camino forestal o zona transitable por personas ajenas a la explotación agrícola.",
+                    ref = "ITC-BT-39"
+                ),
+Question(
+                    q = "Según las directrices de la ITC-BT-39, ¿qué características físicas de color y contenido deben tener los letreros de advertencia colocados en las cercas eléctricas?",
+                    opts = listOf(
+                        "Fondo blanco con letras rojas de aviso municipal",
+                        "Fondo amarillo, bordes negros, con inscripción o símbolo de peligro de descarga o 'Cerca eléctrica'",
+                        "Banderolas de color verde fosforescente sin texto",
+                        "Placas metálicas reflectantes de color azul cobalto"
+                    ),
+                    a = 1,
+                    exp = "La ITC-BT-39 especifica que los letreros de advertencia deben poseer un fondo amarillo, con forma rectangular o triangular, bordes negros y albergar el texto 'Cerca eléctrica' o el símbolo normalizado de choque eléctrico, garantizando una visibilidad clara para evitar contactos accidentales.",
+                    ref = "ITC-BT-39"
+                ),
+Question(
+                    q = "Según la ITC-BT-39, la distancia mínima de seguridad que debe mantenerse entre los conductores de una cerca eléctrica y un poste de una línea eléctrica aérea de baja tensión de hasta 1 kV es de:",
+                    opts = listOf(
+                        "0,5 metros",
+                        "10 metros",
+                        "2 metros",
+                        "15 metros"
+                    ),
+                    a = 2,
+                    exp = "Para evitar arcos eléctricos o el contacto físico accidental entre los conductores de la línea aérea y la cerca eléctrica (por rotura, viento u obra), la ITC-BT-39 fija distancias mínimas de paso: 2 metros para líneas de tensión nominal ≤ 1.000 V, y 15 metros para líneas con tensiones superiores a 1.000 V.",
+                    ref = "ITC-BT-39"
+                ),
+Question(
+                    q = "De acuerdo con la ITC-BT-39, ¿cuál es la distancia de seguridad obligatoria entre los hilos electrificados de la cerca y cualquier otra valla metálica ordinaria no electrificada?",
+                    opts = listOf(
+                        "Basta con que no se toquen físicamente",
+                        "Al menos 0,5 metros",
+                        "Un mínimo de 5 metros en zonas secas",
+                        "Como mínimo 2 metros"
+                    ),
+                    a = 3,
+                    exp = "La ITC-BT-39 exige que se mantenga una separación física mínima de 2 metros entre los conductores electrificados de la cerca y cualquier estructura o valla metálica ordinaria conectada a tierra, impidiendo que la corriente se derive o electrifique de forma indirecta otras cercas ordinarias circundantes.",
+                    ref = "ITC-BT-39"
+                ),
+Question(
+                    q = "En caso de que una cerca eléctrica deba cruzar por debajo de una línea eléctrica aérea de alta tensión, ¿cómo debe realizarse el cruce según la ITC-BT-39?",
+                    opts = listOf(
+                        "Los conductores de la cerca se cruzarán de forma que su proyección ortogonal forme el mayor ángulo posible con la línea eléctrica (cercano a 90 grados)",
+                        "Solo se permite si el cable de la cerca es de cobre desnudo de 50 mm²",
+                        "Está prohibido cruzar por debajo de líneas aéreas de alta tensión bajo cualquier concepto",
+                        "Se permite pasarlo en diagonal a lo largo de todo el vano"
+                    ),
+                    a = 0,
+                    exp = "Para minimizar el riesgo de inducción electromagnética o electrostática peligrosa sobre la cerca eléctrica, y para limitar la zona de peligro ante la caída de un cable de alta tensión, la ITC-BT-39 requiere que el cruce bajo líneas aéreas se realice lo más perpendicular posible (ángulo cercano a 90°).",
+                    ref = "ITC-BT-39"
+                ),
+Question(
+                    q = "Según la ITC-BT-39, ¿con qué frecuencia temporal máxima deben colocarse los letreros de advertencia de 'Cerca eléctrica' a lo largo de los tramos afectados por el paso de peatones?",
+                    opts = listOf(
+                        "Cada 10 metros en tramos rectos",
+                        "A distancias no superiores a 100 metros",
+                        "Solo se exige un letrero al inicio y otro al final de la linde, sin importar la longitud",
+                        "Cada 500 metros en parcelas agrícolas"
+                    ),
+                    a = 1,
+                    exp = "La ITC-BT-39 estipula que los letreros de advertencia deben colocarse firmemente en los postes de soporte o fijados a los hilos de la cerca a intervalos regulares que no excedan de 100 metros, así como en cada puerta, acceso o paso peatonal existente.",
+                    ref = "ITC-BT-39"
+                ),
+Question(
+                    q = "Según las directrices de la ITC-BT-39, ¿está permitido fijar o tender hilos de una cerca eléctrica aprovechando como soportes los postes de una línea eléctrica aérea de distribución?",
+                    opts = listOf(
+                        "Sí, si se utilizan aisladores de porcelana de alta tensión",
+                        "Solo si la línea aérea está fuera de servicio o desmantelada",
+                        "No, bajo ninguna circunstancia se permite fijar hilos de la cerca a apoyos de líneas de energía o telecomunicaciones",
+                        "Está permitido con autorización verbal del ayuntamiento"
+                    ),
+                    a = 2,
+                    exp = "Para evitar accidentes gravísimos derivados del contacto accidental con conductores de distribución general, la ITC-BT-39 prohíbe de forma taxativa el uso de postes de líneas aéreas de transporte, distribución o telecomunicaciones como soportes de la instalación de una cerca eléctrica.",
+                    ref = "ITC-BT-39"
+                ),
+Question(
+                    q = "De acuerdo con la ITC-BT-39, ¿cuál de los siguientes sistemas de alimentación eléctrica de un energizador NO requiere que se implemente una separación galvánica de seguridad?",
+                    opts = listOf(
+                        "Conexión directa a la red de CA de 230 V",
+                        "Conexión a través de un transformador de aislamiento",
+                        "Todos los alimentadores requieren aislamiento galvánico de red por norma UNE-EN 60335-2-76",
+                        "Alimentación mediante baterías de acumuladores independientes cargadas fuera de la cerca"
+                    ),
+                    a = 3,
+                    exp = "Los alimentadores que funcionan exclusivamente con baterías autónomas de baja tensión (como las de 9V o 12V de automoción) que se recargan por separado fuera del circuito de cerca no presentan riesgo de transferir tensiones peligrosas de la red eléctrica general, por lo que carecen de riesgos de acoplamiento galvánico de red.",
+                    ref = "ITC-BT-39"
+                ),
+Question(
+                    q = "En la ITC-BT-39, ¿qué función primordial cumple el 'alimentador' o energizador de la cerca eléctrica?",
+                    opts = listOf(
+                        "Suministrar impulsos intermitentes de alta tensión y muy corta duración por debajo de los límites peligrosos de energía",
+                        "Medir la resistencia del chasis de los vehículos circundantes",
+                        "Mantener la linde iluminada durante la noche",
+                        "Asegurar que la corriente sea continua y constante a 10 A"
+                    ),
+                    a = 0,
+                    exp = "El alimentador o energizador transforma la baja tensión de entrada en impulsos de alta tensión (de 2.000 V a 10.000 V) pero con una duración extremadamente breve (microsegundos) e intervalos de pausa obligatorios (típicamente ≥ 1s), asegurando un efecto de barrera psicológica eficaz pero seguro para el ganado y las personas.",
+                    ref = "ITC-BT-39"
+                ),
+Question(
+                    q = "Según la ITC-BT-39, ¿cuál de las siguientes situaciones representa un riesgo crítico en el montaje de la toma de tierra de un alimentador de cerca eléctrica?",
+                    opts = listOf(
+                        "Utilizar una piqueta de acero galvanizado de 1 metro",
+                        "Conectarla físicamente al electrodo de tierra de protección de un edificio o vivienda",
+                        "Humedecer el terreno circundante a la piqueta",
+                        "Colocar el alimentador en un poste de madera seco"
+                    ),
+                    a = 1,
+                    exp = "El error de conectar la tierra de la cerca a la tierra de protección de una vivienda está estrictamente prohibido por la ITC-BT-39. En caso de descarga en la cerca, la alta tensión del impulso podría retornar a través de la tierra de protección de la casa, electrificando los chasis metálicos de los electrodomésticos interiores con consecuencias fatales.",
+                    ref = "ITC-BT-39"
+                ),
+Question(
+                    q = "De acuerdo con la ITC-BT-39, si una cerca eléctrica discurre junto a un camino público, los letreros de advertencia colocados deben estar:",
+                    opts = listOf(
+                        "Escondidos entre la maleza para no afear el paisaje",
+                        "Colocados en el suelo tumbados para evitar que los muerda el ganado",
+                        "Sujetados firmemente a intervalos no superiores a 100 metros y orientados de cara al camino para ser legibles por los peatones",
+                        "Solo en el interior de la finca dirigidos al operario"
+                    ),
+                    a = 2,
+                    exp = "La ITC-BT-39 exige que los letreros de advertencia estén orientados hacia las zonas transitables o caminos públicos de modo que las personas que se aproximen a la linde puedan advertir la presencia de conductores eléctricos activos antes de tocarlos físicamente.",
+                    ref = "ITC-BT-39"
+                ),
+Question(
+                    q = "Según la ITC-BT-39, ¿con qué norma armonizada europea UNE debe cumplir la construcción de los alimentadores de cercas eléctricas?",
+                    opts = listOf(
+                        "UNE-EN 60529",
+                        "UNE-EN 60898-1",
+                        "UNE-EN 61439",
+                        "UNE-EN 60335-2-76"
+                    ),
+                    a = 3,
+                    exp = "La norma UNE-EN 60335-2-76 es el estándar específico aplicable a la seguridad de aparatos electrodomésticos y análogos, regulando detalladamente los requisitos de diseño y límites de corriente y energía exigidos para los alimentadores de cercas eléctricas.",
                     ref = "ITC-BT-39"
                 ),
 Question(
@@ -1037,37 +1613,229 @@ Question(
 Question(
                     q = "Según el REBT, los receptores utilizados en caravanas deberán cumplir:",
                     opts = listOf(
-                        "Las directivas europeas aplicables conforme al artículo 6 del REBT",
                         "Exclusivamente la ITC-BT-24",
+                        "Las directivas europeas aplicables conforme al artículo 6 del REBT",
                         "Únicamente normas UNE nacionales",
                         "Las prescripciones de locales húmedos"
                     ),
-                    a = 0,
+                    a = 1,
                     exp = "ITC-BT-41, apartado 1: «Los receptores que se utilicen en dichas instalaciones cumplirán los requisitos de las directivas europeas aplicables conforme a lo establecido en el artículo 6 del Reglamento Electrotécnico para Baja Tensión.»",
                     ref = "ITC-BT-41"
                 ),
 Question(
                     q = "Según el REBT, el cumplimiento de directivas europeas en caravanas está vinculado a:",
                     opts = listOf(
-                        "El artículo 6 del Reglamento Electrotécnico para Baja Tensión",
-                        "La ITC-BT-19",
                         "La ITC-BT-28",
+                        "La ITC-BT-19",
+                        "El artículo 6 del Reglamento Electrotécnico para Baja Tensión",
                         "La norma UNE 20460-5-52"
                     ),
-                    a = 0,
+                    a = 2,
                     exp = "ITC-BT-41, apartado 1: «…conforme a lo establecido en el artículo 6 del Reglamento Electrotécnico para Baja Tensión.»",
                     ref = "ITC-BT-41"
                 ),
 Question(
                     q = "Según el REBT, las prescripciones particulares para instalaciones de caravanas se establecen en:",
                     opts = listOf(
-                        "La norma UNE 20.460-7-708",
+                        "La UNE 20460-4-41",
                         "La ITC-BT-24",
                         "La ITC-BT-33",
-                        "La UNE 20460-4-41"
+                        "La norma UNE 20.460-7-708"
+                    ),
+                    a = 3,
+                    exp = "ITC-BT-41, apartado 2: «Las prescripciones particulares para este tipo de establecimientos o instalaciones son las establecidas en la norma UNE 20.460-7-708.»",
+                    ref = "ITC-BT-41"
+                ),
+Question(
+                    q = "¿Cuál es el valor mínimo de la intensidad nominal que debe tener cada base de toma de corriente destinada a alimentar una parcela en un parque de caravanas según la ITC-BT-41?",
+                    opts = listOf(
+                        "16 A",
+                        "10 A",
+                        "32 A",
+                        "63 A"
                     ),
                     a = 0,
-                    exp = "ITC-BT-41, apartado 2: «Las prescripciones particulares para este tipo de establecimientos o instalaciones son las establecidas en la norma UNE 20.460-7-708.»",
+                    exp = "De conformidad con la norma de referencia UNE 20460-7-708 (asociada a la ITC-BT-41), las tomas de corriente destinadas al suministro individual de caravanas deben ser de tipo industrial (2P+T) con una corriente nominal de servicio mínima de 16 A, garantizando un suministro adecuado para los consumos normales de las caravanas.",
+                    ref = "ITC-BT-41"
+                ),
+Question(
+                    q = "Según la ITC-BT-41 y la norma UNE 20460-7-708, ¿cuál es el número máximo admisible de bases de toma de corriente que pueden agruparse en un mismo borne o torreta de distribución en un parque de caravanas?",
+                    opts = listOf(
+                        "2 bases",
+                        "4 bases",
+                        "6 bases",
+                        "8 bases"
+                    ),
+                    a = 1,
+                    exp = "Para evitar la concentración excesiva de cables y facilitar el acceso seguro en caso de emergencia, la norma UNE 20.460-7-708 citada en la ITC-BT-41 prohíbe agrupar más de 4 bases de toma de corriente en un mismo armario, torreta o envolvente de distribución en el parque de caravanas.",
+                    ref = "ITC-BT-41"
+                ),
+Question(
+                    q = "De acuerdo con la ITC-BT-41, ¿qué nivel de protección diferencial se exige obligatoriamente para proteger cada toma de corriente individual en un parque de caravanas?",
+                    opts = listOf(
+                        "Un diferencial común de 300 mA para cada grupo de 10 tomas",
+                        "Un diferencial de 100 mA de tipo selectivo",
+                        "Un interruptor diferencial individual de sensibilidad de operación máxima de 30 mA por cada base",
+                        "No se exige protección diferencial si el parque dispone de puesta a tierra inferior a 10 ohmios"
+                    ),
+                    a = 2,
+                    exp = "Para garantizar la seguridad de las personas frente a contactos indirectos en un medio húmedo y exterior, cada toma de corriente individual en el parque debe estar protegida de forma independiente por un interruptor diferencial de sensibilidad ≤ 30 mA. Queda prohibida la protección compartida de varias bases con un único diferencial.",
+                    ref = "ITC-BT-41"
+                ),
+Question(
+                    q = "¿A qué altura sobre el nivel del suelo deben situarse las bases de toma de corriente en las torretas de distribución de un parque de caravanas según la ITC-BT-41?",
+                    opts = listOf(
+                        "A cualquier altura siempre que estén bajo llave",
+                        "Como mínimo a 0.2 metros y máximo a 0.8 metros",
+                        "A una altura uniforme de 2 metros para evitar actos vandálicos",
+                        "Entre 0,5 metros y 1,5 metros del suelo, medido hasta el eje de la base"
+                    ),
+                    a = 3,
+                    exp = "Conforme a las normas técnicas que complementan la ITC-BT-41, las tomas de corriente situadas en el exterior deben colocarse a una altura comprendida entre 0,5 m y 1,5 m respecto al suelo para evitar riesgos por salpicaduras, inundaciones leves o acumulación de nieve, y facilitar la ergonomía de conexión.",
+                    ref = "ITC-BT-41"
+                ),
+Question(
+                    q = "Según la ITC-BT-41, ¿qué tipo de cable flexible se exige para realizar la conexión provisional exterior entre la torreta del parque y la base de alimentación de la caravana?",
+                    opts = listOf(
+                        "Cable flexible con conductores de cobre de sección mínima de 2,5 mm² y cubierta de neopreno pesada (tipo H07RN-F o equivalente)",
+                        "Manguera plana doméstica de sección 1,5 mm² con cubierta de PVC ligero",
+                        "Cable unipolar de cobre rígido sin manguera protectora",
+                        "Cable con armadura de fleje de acero para soportar el paso de vehículos"
+                    ),
+                    a = 0,
+                    exp = "Para asegurar la resistencia mecánica ante el aplastamiento y la intemperie (humedad, radiación solar), la ITC-BT-41 y sus normas UNE exigen que el cable de conexión del usuario sea de cobre, flexible, de sección mínima de 2,5 mm² y con aislamiento de altas prestaciones tipo H07RN-F (neopreno) o equivalente.",
+                    ref = "ITC-BT-41"
+                ),
+Question(
+                    q = "De acuerdo con la ITC-BT-41, la longitud máxima reglamentaria permitida para el cable flexible de conexión exterior que une la caravana con la base de toma de corriente del parque es de:",
+                    opts = listOf(
+                        "10 metros",
+                        "25 metros (con una tolerancia de ± 2 metros)",
+                        "50 metros para permitir mayor libertad de estacionamiento",
+                        "No hay límite de longitud reglamentaria si la caída de tensión es inferior al 3%"
+                    ),
+                    a = 1,
+                    exp = "La norma UNE 20460-7-708, en concordancia con la ITC-BT-41, estipula que el cordón flexible de conexión debe tener una longitud fija de 25 metros (con tolerancia de ± 2 m). Esto limita la caída de tensión y evita la existencia de rollos de cable sobrante tirados por el suelo que puedan sufrir daños mecánicos.",
+                    ref = "ITC-BT-41"
+                ),
+Question(
+                    q = "Según la ITC-BT-41, ¿qué norma específica regula los equipos eléctricos y de seguridad propios del interior del vehículo recreativo (caravana)?",
+                    opts = listOf(
+                        "La norma UNE 20.460-7-708",
+                        "La norma UNE-EN 60309-2",
+                        "La norma UNE 21.162 (o su equivalente europeo armonizado EN 1648)",
+                        "La ITC-BT-28"
+                    ),
+                    a = 2,
+                    exp = "Mientras que la UNE 20.460-7-708 se enfoca en las instalaciones exteriores del camping o parque de caravanas, la norma UNE 21.162 regula específicamente los requisitos técnicos y de seguridad exigibles a las instalaciones y equipos eléctricos situados en el interior del vehículo habitable o caravana.",
+                    ref = "ITC-BT-41"
+                ),
+Question(
+                    q = "En la instalación interior de una caravana según la ITC-BT-41, ¿qué prescripción de seguridad es OBLIGATORIA para las partes metálicas de la estructura del vehículo (chasis)?",
+                    opts = listOf(
+                        "Deben mantenerse totalmente aisladas de cualquier circuito eléctrico",
+                        "Se deben pintar con pintura epoxi no conductora en su totalidad",
+                        "Se deben conectar a una pica de tierra provisional clavada al lado de la rueda",
+                        "Deben conectarse de forma permanente y segura al conductor de protección (PE) de la propia caravana"
+                    ),
+                    a = 3,
+                    exp = "Para evitar la aparición de tensiones peligrosas en la carrocería metálica exterior de la caravana ante un fallo de aislamiento interno, el chasis y todas las masas metálicas accesibles del vehículo deben unirse mediante equipotencialidad al conductor de protección (PE) que enlaza con la puesta a tierra del camping.",
+                    ref = "ITC-BT-41"
+                ),
+Question(
+                    q = "Según la ITC-BT-41, ¿cuál es el tipo de conector reglamentario exigido para la clavija y la base de entrada de alimentación situada en la propia caravana?",
+                    opts = listOf(
+                        "Bases y clavijas que cumplan la norma UNE-EN 60309-2 (tipo industrial azul de 16 A 2P+T)",
+                        "Enchufes domésticos de tipo Schuko ordinarios",
+                        "Regletas de conexión de tornillos estancas",
+                        "Conectores trifásicos de 4 polos sin neutro"
+                    ),
+                    a = 0,
+                    exp = "La clavija y la toma de alimentación del vehículo deben ser conformes a la norma UNE-EN 60309-2, garantizando la imposibilidad de inversión de polaridad y la estanqueidad necesaria en exteriores. Típicamente corresponde al conector industrial de color azul (16 A, 2P+T, posición horaria 6h).",
+                    ref = "ITC-BT-41"
+                ),
+Question(
+                    q = "De acuerdo con la ITC-BT-41, ¿está permitido realizar empalmes o derivaciones intermedias a lo largo de la manguera flexible de alimentación de una caravana?",
+                    opts = listOf(
+                        "Sí, mediante cinta aislante estanca de alta calidad",
+                        "No, el cable flexible debe ser continuo y sin empalmes en todo su recorrido",
+                        "Solo si la potencia demandada por la caravana es menor de 2.000 W",
+                        "Está permitido únicamente dentro de cajas de empalme aéreas de plástico"
+                    ),
+                    a = 1,
+                    exp = "La norma técnica asociada a la ITC-BT-41 prohíbe de forma absoluta cualquier tipo de empalme, conexión intermedia o derivación en el cable flexible de alimentación del usuario. El cable debe ser una pieza continua desde la torreta de toma de corriente del camping hasta el conector de la caravana para evitar fallos de aislamiento o desconexiones accidentales.",
+                    ref = "ITC-BT-41"
+                ),
+Question(
+                    q = "¿Cuál es el valor máximo admisible de la caída de tensión en las líneas de distribución interior de un parque de caravanas según la ITC-BT-41 y sus normas técnicas complementarias?",
+                    opts = listOf(
+                        "1,5%",
+                        "3%",
+                        "5% (medido desde el origen de la instalación hasta cualquier punto de utilización)",
+                        "10% debido al carácter provisional"
+                    ),
+                    a = 2,
+                    exp = "Para garantizar que los receptores del usuario (calefactores, neveras, iluminación) funcionen con plena eficacia, la caída de tensión en el parque de caravanas desde la acometida principal hasta cualquier base de toma de corriente individual no debe ser superior al 5%.",
+                    ref = "ITC-BT-41"
+                ),
+Question(
+                    q = "Según la ITC-BT-41, ¿qué tipo de protección contra sobreintensidades debe instalarse para salvaguardar cada una de las parcelas de un parque de caravanas?",
+                    opts = listOf(
+                        "Un fusible de tipo cuchilla (NH) de 50 A",
+                        "Un interruptor magnetotérmico unipolar que corte solo la fase",
+                        "Un relé térmico ajustable regulado al mínimo",
+                        "Un interruptor automático magnetotérmico omnipolar (que corte fase y neutro de forma simultánea) individualizado por base"
+                    ),
+                    a = 3,
+                    exp = "La norma asociada a la ITC-BT-41 exige que cada base de toma de corriente esté protegida individualmente por un interruptor magnetotérmico omnipolar. Esto asegura que ante una sobrecarga o cortocircuito en una parcela, solo caiga el suministro de esa caravana, manteniendo la continuidad del resto del camping, y cortando tanto la fase como el neutro.",
+                    ref = "ITC-BT-41"
+                ),
+Question(
+                    q = "De acuerdo con la ITC-BT-41, ¿cuál es el método recomendado para canalizaciones eléctricas subterráneas que discurran bajo caminos transitables dentro de un parque de caravanas?",
+                    opts = listOf(
+                        "Cables enterrados bajo conducto rígido a una profundidad mínima adecuada, protegidos con tejas o placas de alta resistencia y cinta de señalización",
+                        "Cables tendidos directamente sobre el suelo del camino cubiertos de grava",
+                        "Cables grapados a ras de tierra en las vallas delimitadoras",
+                        "No se permite ninguna línea eléctrica subterránea, todas deben ser aéreas"
+                    ),
+                    a = 0,
+                    exp = "Las líneas de distribución de energía en parques de caravanas deben ser preferentemente subterráneas para evitar enganches y accidentes mecánicos. Según las normas del REBT, bajo zonas de paso de vehículos, los cables deben alojarse en zanjas a profundidad reglamentaria adecuada (típicamente ≥ 0,8 m), protegidos mecánicamente contra aplastamientos y señalizados debidamente.",
+                    ref = "ITC-BT-41"
+                ),
+Question(
+                    q = "En la instalación de una caravana según la ITC-BT-41, ¿se permite el empleo de materiales con un grado de protección IP inferior a IP44 en exteriores?",
+                    opts = listOf(
+                        "Sí, si están situados bajo un saliente o tejadillo de la caravana",
+                        "No, toda aparamenta e instalación a la intemperie en el parque de caravanas debe poseer un grado mínimo de protección IP44",
+                        "Solo se permite en zonas áridas de escasa pluviosidad",
+                        "El grado de protección IP no es de aplicación en caravanas"
+                    ),
+                    a = 1,
+                    exp = "Debido a la exposición directa a la lluvia, rocío y polvo del exterior, la ITC-BT-41 y la UNE 20.460-7-708 exigen que toda la aparamenta, cajas de distribución, tomas de corriente e interruptores a la intemperie posean, como mínimo, un grado de protección contra la humedad de IP44 (salpicaduras de agua en todas direcciones).",
+                    ref = "ITC-BT-41"
+                ),
+Question(
+                    q = "¿Cuál es el requisito de alimentación de alumbrado de emergencia obligatorio en el parque de caravanas según la ITC-BT-41?",
+                    opts = listOf(
+                        "No se exige alumbrado de emergencia en ningún parque de caravanas",
+                        "Cada caravana debe disponer de su propio equipo de alumbrado de emergencia de 2 horas",
+                        "Los locales de servicio común, oficinas, zonas de aseos y vías de evacuación principales del parque deben contar con iluminación de emergencia conforme a la ITC-BT-28",
+                        "Basta con que el personal de recepción disponga de linternas portátiles"
+                    ),
+                    a = 2,
+                    exp = "Los parques de caravanas, al albergar gran número de personas ajenas al recinto y en régimen nocturno, deben dotar a sus instalaciones fijas comunes (servicios de aseos, oficinas, botiquín) y a las vías de evacuación generales de alumbrado de emergencia reglamentario bajo las prescripciones de la ITC-BT-28.",
+                    ref = "ITC-BT-41"
+                ),
+Question(
+                    q = "Según la ITC-BT-41, en el interior de una caravana, los antiguos conductores activos de corriente alterna deben ser cableados mediante:",
+                    opts = listOf(
+                        "Cables unifilares rígidos empotrados directamente en el panel de madera",
+                        "Conductores de aluminio desnudo sobre aisladores de porcelana",
+                        "Cables planos con grapas metálicas vistas",
+                        "Cables flexibles de cobre alojados en conductos protectores no propagadores de la llama"
+                    ),
+                    a = 3,
+                    exp = "Las vibraciones y movimientos continuados que sufre una caravana durante sus desplazamientos por carretera exigen que todo el cableado interior esté realizado con conductores flexibles de cobre para evitar la rotura de hilos. Además, por seguridad contra incendios, deben alojarse en tubos o canales autoextinguibles (no propagadores de llama).",
                     ref = "ITC-BT-41"
                 ),
 Question(
@@ -1085,36 +1853,36 @@ Question(
 Question(
                     q = "Según el REBT, los receptores utilizados en puertos y marinas deberán cumplir:",
                     opts = listOf(
-                        "Las directivas europeas aplicables conforme al artículo 6 del REBT",
                         "Únicamente las normas UNE nacionales",
+                        "Las directivas europeas aplicables conforme al artículo 6 del REBT",
                         "Exclusivamente la ITC-BT-24",
                         "Las prescripciones de locales mojados"
                     ),
-                    a = 0,
+                    a = 1,
                     exp = "ITC-BT-42, apartado 1: «Los receptores que se utilicen en dichas instalaciones cumplirán los requisitos de las directivas europeas aplicables conforme a lo establecido en el artículo 6 del Reglamento Electrotécnico para Baja Tensión.»",
                     ref = "ITC-BT-42"
                 ),
 Question(
                     q = "Según el REBT, se excluyen del campo de aplicación de la ITC-BT-42:",
                     opts = listOf(
-                        "Las embarcaciones afectadas por la Directiva 94/25/CEE",
-                        "Los barcos de recreo",
                         "Las casas flotantes",
+                        "Los barcos de recreo",
+                        "Las embarcaciones afectadas por la Directiva 94/25/CEE",
                         "Los yates de gran consumo"
                     ),
-                    a = 0,
+                    a = 2,
                     exp = "ITC-BT-42, apartado 1: «Se excluyen de este campo de aplicación aquellas embarcaciones afectadas por la Directiva 94/25/CEE.»",
                     ref = "ITC-BT-42"
                 ),
 Question(
                     q = "Según el REBT, se entiende como barco de recreo:",
                     opts = listOf(
-                        "Toda unidad flotante utilizada exclusivamente para los deportes y el ocio",
+                        "Las embarcaciones pesqueras",
                         "Cualquier embarcación a motor",
                         "Todo buque de transporte marítimo",
-                        "Las embarcaciones pesqueras"
+                        "Toda unidad flotante utilizada exclusivamente para los deportes y el ocio"
                     ),
-                    a = 0,
+                    a = 3,
                     exp = "ITC-BT-42, apartado 1: «…barco de recreo toda unidad flotante utilizada exclusivamente para los deportes y el ocio…»",
                     ref = "ITC-BT-42"
                 ),
@@ -1133,36 +1901,36 @@ Question(
 Question(
                     q = "Según el REBT, excepcionalmente se podrán alimentar con 400 V trifásicos:",
                     opts = listOf(
-                        "Barcos o yates de gran consumo eléctrico",
                         "Todos los barcos de recreo",
+                        "Barcos o yates de gran consumo eléctrico",
                         "Únicamente embarcaciones militares",
                         "Casas flotantes"
                     ),
-                    a = 0,
+                    a = 1,
                     exp = "ITC-BT-42, apartado 2: «Excepcionalmente se podrán alimentar con corriente alterna trifásica a 400 V aquellos barcos o yates de gran consumo eléctrico.»",
                     ref = "ITC-BT-42"
                 ),
 Question(
                     q = "Según el REBT, las protecciones contra contactos directos e indirectos serán conformes a:",
                     opts = listOf(
-                        "La ITC-BT-24",
-                        "La ITC-BT-23",
                         "La ITC-BT-19",
+                        "La ITC-BT-23",
+                        "La ITC-BT-24",
                         "La ITC-BT-18"
                     ),
-                    a = 0,
+                    a = 2,
                     exp = "ITC-BT-42, apartado 3: «Las protecciones contra contactos directos e indirectos serán conformes a lo establecido en la ITC-BT-24…»",
                     ref = "ITC-BT-42"
                 ),
 Question(
                     q = "Según el REBT, cuando se utilice MBTS la protección contra contactos directos se asegurará mediante:",
                     opts = listOf(
-                        "Un aislamiento que soporte un ensayo dieléctrico de 500 V durante un minuto",
+                        "Conexión equipotencial",
                         "Protección diferencial de 30 mA",
                         "Doble aislamiento obligatorio",
-                        "Conexión equipotencial"
+                        "Un aislamiento que soporte un ensayo dieléctrico de 500 V durante un minuto"
                     ),
-                    a = 0,
+                    a = 3,
                     exp = "ITC-BT-42, apartado 3.1: «…por un aislamiento que pueda soportar un ensayo dieléctrico de 500 V durante un minuto.»",
                     ref = "ITC-BT-42"
                 ),
@@ -1181,36 +1949,36 @@ Question(
 Question(
                     q = "Según el REBT, en un esquema TN solo se utilizará:",
                     opts = listOf(
-                        "La variante TN-S",
                         "La variante TN-C",
+                        "La variante TN-S",
                         "La variante TN-C-S",
                         "Cualquier variante TN"
                     ),
-                    a = 0,
+                    a = 1,
                     exp = "ITC-BT-42, apartado 3.2: «En el caso de un esquema TN, se utilizará sólo la variante TN-S.»",
                     ref = "ITC-BT-42"
                 ),
 Question(
                     q = "Según el REBT, no se admiten medidas de protección:",
                     opts = listOf(
-                        "Por obstáculos ni por puesta fuera del alcance",
-                        "Por corte automático",
                         "Por MBTS",
+                        "Por corte automático",
+                        "Por obstáculos ni por puesta fuera del alcance",
                         "Por diferencial"
                     ),
-                    a = 0,
+                    a = 2,
                     exp = "ITC-BT-42, apartado 3.3.1: «No se admiten las medidas de protección por obstáculos ni por puesta fuera del alcance.»",
                     ref = "ITC-BT-42"
                 ),
 Question(
                     q = "Según el REBT, los equipos eléctricos deberán poseer al menos el grado de protección:",
                     opts = listOf(
-                        "IPX6",
+                        "IP55",
                         "IPX4",
                         "IP44",
-                        "IP55"
+                        "IPX6"
                     ),
-                    a = 0,
+                    a = 3,
                     exp = "ITC-BT-42, apartado 4.1: «Los equipos eléctricos deberán poseer al menos, el grado de protección IPX6…»",
                     ref = "ITC-BT-42"
                 ),
@@ -1229,25 +1997,85 @@ Question(
 Question(
                     q = "Según el REBT, los cuadros de distribución estarán situados:",
                     opts = listOf(
-                        "Lo más cerca posible de los amarres a alimentar",
                         "En locales cerrados alejados del muelle",
+                        "Lo más cerca posible de los amarres a alimentar",
                         "En edificios de control",
                         "En zonas elevadas"
                     ),
-                    a = 0,
+                    a = 1,
                     exp = "ITC-BT-42, apartado 4.3.1: «Los cuadros de distribución de los puertos y marinas estarán situados lo más cerca posible de los amarres a alimentar.»",
                     ref = "ITC-BT-42"
                 ),
 Question(
                     q = "Según el REBT, las bases de toma de corriente deberán ser conforme a:",
                     opts = listOf(
-                        "La norma UNE-EN 60309",
-                        "La norma UNE 20460",
                         "La ITC-BT-19",
+                        "La norma UNE 20460",
+                        "La norma UNE-EN 60309",
                         "La UNE 21123"
                     ),
-                    a = 0,
+                    a = 2,
                     exp = "ITC-BT-42, apartado 4.3.2: «…las bases de toma de corriente deberán ser de uno de los tipos establecidos en la norma UNE-EN 60309…»",
+                    ref = "ITC-BT-42"
+                ),
+Question(
+                    q = "¿Por qué la ITC-BT-42 prohíbe terminantemente el uso de cualquier tipo de línea eléctrica aérea sobre las instalaciones flotantes o escolleras de un puerto deportivo?",
+                    opts = listOf(
+                        "No existe tal prohibición si la altura de los postes supera los 10 metros",
+                        "Porque el aire marino salino aumenta la resistencia del cobre aéreo",
+                        "Debido a que el peso de los cables aéreos desestabilizaría los pantalanes flotantes",
+                        "Para evitar contactos directos accidentales con los mástiles metálicos de las embarcaciones durante maniobras"
+                    ),
+                    a = 3,
+                    exp = "El apartado 4.2 de la ITC-BT-42 establece de forma taxativa que no se utilizará ningún tipo de línea aérea para la alimentación de instalaciones flotantes o muelles. Los mástiles de los barcos de recreo son de gran altura y metálicos, por lo que el paso de líneas aéreas crearía un peligro crítico de contacto directo fatal durante maniobras u oscilaciones por el oleaje.",
+                    ref = "ITC-BT-42"
+                ),
+Question(
+                    q = "Según la ITC-BT-42, ¿cuál es el grado de protección mínimo (IP) contra la humedad y penetración del agua que deben poseer los equipos eléctricos instalados en exteriores expuestos a salpicaduras marinas?",
+                    opts = listOf(
+                        "IPX6 (protección contra chorros potentes de agua o mar gruesa)",
+                        "IP44",
+                        "IP20",
+                        "IP68"
+                    ),
+                    a = 0,
+                    exp = "Las duras condiciones ambientales de puertos y marinas, con oleaje, mareas y salpicaduras constantes de agua salada de alta presión, exigen un grado de estanqueidad superior. Conforme al apartado 4.1 de la ITC-BT-42, los equipos instalados a la intemperie expuestos a estas acciones directas deben ser, como mínimo, IPX6.",
+                    ref = "ITC-BT-42"
+                ),
+Question(
+                    q = "¿Cuál es el número máximo de bases de toma de corriente que la ITC-BT-42 permite agrupar o montar en un mismo cuadro de distribución de puerto deportivo?",
+                    opts = listOf(
+                        "2 bases",
+                        "4 bases por cuadro",
+                        "1 base por cuadro obligatoriamente",
+                        "8 bases por cuadro"
+                    ),
+                    a = 1,
+                    exp = "Para evitar saturaciones de cables sobre los pantalanes y garantizar un reparto de carga seguro, las normas técnicas vinculadas a la ITC-BT-42 limitan el número de bases de toma de corriente agrupadas en una misma torreta o armario de distribución a un máximo de 4 bases.",
+                    ref = "ITC-BT-42"
+                ),
+Question(
+                    q = "En la protección de las tomas de corriente en un puerto deportivo según la ITC-BT-42, ¿qué requisito específico debe cumplir la aparamenta de mando y protección?",
+                    opts = listOf(
+                        "Un solo magnetotérmico trifásico de 63 A en cabecera para todas las tomas",
+                        "No se exigen diferenciales si se dispone de un transformador de aislamiento flotante de 100 kVA",
+                        "Cada base de toma de corriente debe estar protegida de forma individualizada contra sobreintensidades (magnetotérmico) y poseer su propia protección diferencial ≤ 30 mA",
+                        "Protección únicamente mediante fusibles cerámicos tipo gG en el neutro"
+                    ),
+                    a = 2,
+                    exp = "El apartado 3.2 de la ITC-BT-42 establece que cada toma de corriente debe poseer su propio dispositivo de protección individualizado frente a sobrecargas y cortocircuitos, así como protección diferencial-residual de sensibilidad ≤ 30 mA. Esto evita disparos en cadena que dejen sin suministro a otros barcos y garantiza la seguridad individual.",
+                    ref = "ITC-BT-42"
+                ),
+Question(
+                    q = "Según la ITC-BT-42, cuando un puerto deportivo implemente el esquema de conexión a tierra TN, ¿qué variante constructiva específica es la única admitida reglamentariamente?",
+                    opts = listOf(
+                        "Esquema TN-C exclusivamente",
+                        "Esquema TN-C-S",
+                        "Se permite cualquier variante del esquema TN si la pica está sumergida en agua de mar",
+                        "Únicamente la variante TN-S (con los conductores de neutro y de protección estrictamente separados)"
+                    ),
+                    a = 3,
+                    exp = "De acuerdo con el apartado 3.2 de la ITC-BT-42, si se selecciona el esquema TN, la única variante autorizada es el esquema TN-S. Al mantener separados los conductores de protección (PE) y neutro (N), se impide la circulación de corrientes residuales ordinarias de retorno por las masas metálicas o chasis de los barcos, disminuyendo la corrosión galvánica y riesgos de choque.",
                     ref = "ITC-BT-42"
                 ),
 Question(
@@ -1441,6 +2269,126 @@ Question(
                     a = 2,
                     exp = "La ITC-BT-43 punto 2.2 clasifica como receptores de Clase III a aquellos diseñados para ser alimentados a Muy Baja Tensión de Seguridad (MBTS), cuyos límites reglamentarios son 50 V en corriente alterna y 75 V en corriente continua, no pudiendo generarse internamente tensiones superiores.",
                     ref = "ITC-BT-43"
+                ),
+Question(
+                    q = "¿Cuál es el grado de protección mínimo (IP) exigido por la ITC-BT-33 para envolventes y tomas de corriente en obras que estén a la intemperie?",
+                    opts = listOf(
+                        "IP45",
+                        "IP44",
+                        "IP55",
+                        "IP65"
+                    ),
+                    a = 0,
+                    exp = "Conforme al apartado 5.1 de la ITC-BT-33, las envolventes, la aparamenta, las tomas de corriente y cualquier elemento de la instalación a la intemperie en una obra deben presentar, como mínimo, un grado de protección IP45. Un error frecuente es asumir que basta con el grado IP44 típico de intemperie general, pero la norma eleva la exigencia debido al ambiente hostil de las obras.",
+                    ref = "ITC-BT-33"
+                ),
+Question(
+                    q = "Según la ITC-BT-33, ¿qué tipo de cables deben utilizarse para las canalizaciones móviles o temporales en el suelo de una obra?",
+                    opts = listOf(
+                        "Conductores rígidos bajo tubo flexible de PVC",
+                        "Cables flexibles con tensión asignada mínima de 450/750 V con cubierta de neopreno o equivalente resistente al agua",
+                        "Cables planos con aislamiento básico de 300/500 V",
+                        "Cables unipolares rígidos sin cubierta directamente enterrados"
+                    ),
+                    a = 1,
+                    exp = "De acuerdo con el apartado 5.2 de la ITC-BT-33, para canalizaciones móviles se deben utilizar cables con conductores de cobre flexibles y tensión asignada mínima de 450/750 V, con cubierta resistente al agua y al desgaste mecánico, del tipo DN-F o H07RN-F o equivalente. El uso de cables rígidos o de menor tensión (como 300/500V) está expresamente prohibido debido al elevado riesgo de rotura.",
+                    ref = "ITC-BT-33"
+                ),
+Question(
+                    q = "Cuando una misma obra se alimenta a partir de varias fuentes de alimentación, ¿cuál es el requisito obligatorio respecto a su interconexión según la ITC-BT-33?",
+                    opts = listOf(
+                        "Se pueden conectar en paralelo libremente mediante puentes de cobre",
+                        "Se permite la interconexión automática mediante contactores sin enclavamiento",
+                        "Deben disponer de dispositivos diseñados e instalados de modo que impidan la interconexión entre las distintas fuentes",
+                        "La interconexión solo está permitida si la potencia de los generadores no supera los 10 kW"
+                    ),
+                    a = 2,
+                    exp = "Según el apartado 2.1 de la ITC-BT-33, una obra puede ser alimentada por varias fuentes (incluyendo generadores móviles). Sin embargo, para evitar cortocircuitos entre fuentes no sincronizadas o retorno de corriente peligroso, las distintas alimentaciones deben conectarse mediante dispositivos de enclavamiento o conmutación que impidan físicamente la interconexión entre ellas.",
+                    ref = "ITC-BT-33"
+                ),
+Question(
+                    q = "¿Qué tensión límite convencional de seguridad se adopta en las obras bajo esquema TT para la protección contra contactos indirectos según la ITC-BT-33?",
+                    opts = listOf(
+                        "50 V en corriente alterna",
+                        "12 V en corriente alterna",
+                        "110 V en corriente alterna",
+                        "24 V en corriente alterna y 60 V en corriente continua"
+                    ),
+                    a = 3,
+                    exp = "En las instalaciones temporales de obras, el riesgo de choque eléctrico se incrementa sustancialmente por la humedad y el contacto con el terreno. Por ello, el apartado 4.2 de la ITC-BT-33 reduce la tensión de contacto límite convencional de los 50 V usuales a 24 V eficaces en corriente alterna, y a 60 V en corriente continua (en lugar de los 120 V generales).",
+                    ref = "ITC-BT-33"
+                ),
+Question(
+                    q = "Según la ITC-BT-33, ¿cuál es la limitación física que tienen las llamadas 'instalaciones fijas' dentro de una instalación de obra?",
+                    opts = listOf(
+                        "Están limitadas únicamente al conjunto que comprende el cuadro general de mando y protección y los dispositivos de protección principales",
+                        "Pueden extenderse hasta un máximo de 50 metros desde el punto de acometida",
+                        "Se permite que alimenten a cualquier receptor de potencia superior a 15 kW de forma permanente",
+                        "No se consideran instalaciones fijas en ningún caso, todas son temporales"
+                    ),
+                    a = 0,
+                    exp = "El apartado 1 de la ITC-BT-33 define que, en las instalaciones de obras, las instalaciones fijas están estrictamente limitadas al conjunto que comprende el cuadro general de mando y los dispositivos de protección principales en el origen. Todo lo que esté aguas abajo de este cuadro principal se considera instalación móvil o temporal, con sus consecuentes requisitos de mayor protección.",
+                    ref = "ITC-BT-33"
+                ),
+Question(
+                    q = "De acuerdo con la ITC-BT-33, las partes de edificios existentes que sufran ampliaciones o reparaciones importantes se considerarán como:",
+                    opts = listOf(
+                        "Locales húmedos permanentes sujetos a la ITC-BT-30",
+                        "Obras durante el tiempo que duren los trabajos correspondientes",
+                        "Instalaciones ordinarias de viviendas",
+                        "Locales de características especiales de Clase I"
+                    ),
+                    a = 1,
+                    exp = "Conforme al apartado 1 de la ITC-BT-33, las zonas o partes de edificios habitados o existentes que estén experimentando transformaciones (tales como reparaciones importantes, ampliaciones o demoliciones parciales) quedan bajo el ámbito de aplicación de la ITC-BT-33 y serán consideradas 'obras' a todos los efectos eléctricos durante la duración de los trabajos.",
+                    ref = "ITC-BT-33"
+                ),
+Question(
+                    q = "Según la ITC-BT-33, ¿qué norma específica de la serie UNE deben cumplir obligatoriamente los conjuntos de aparamenta (cuadros de distribución) para obras?",
+                    opts = listOf(
+                        "UNE-EN 60204-1",
+                        "UNE-EN 60529",
+                        "UNE-EN 60439-4 (o su equivalente actual UNE-EN 61439-4)",
+                        "UNE-EN 60898"
+                    ),
+                    a = 2,
+                    exp = "El apartado 5.1 de la ITC-BT-33 establece que todos los conjuntos de aparamenta utilizados en obras de construcción deben cumplir rigurosamente con las prescripciones de la norma UNE-EN 60.439-4 (reemplazada en el catálogo actual por la serie UNE-EN 61439-4, referida a cuadros de distribución para obras). Esto garantiza la resistencia al choque mecánico, corrosión y entrada de humedad propia de estos entornos.",
+                    ref = "ITC-BT-33"
+                ),
+Question(
+                    q = "Si es indispensable tender una canalización eléctrica móvil por un paso de peatones o vehículos en una obra, ¿qué medida de seguridad exige la ITC-BT-33?",
+                    opts = listOf(
+                        "No se permite en ningún caso, el cable debe ser subterráneo",
+                        "Asegurar que el cable esté suspendido a una altura de al menos 1,8 metros",
+                        "Señalar la zona con cinta reflectante únicamente",
+                        "Disponer una protección especial eficaz contra los daños mecánicos (como pasacables de alta resistencia o canaletas protectoras)"
+                    ),
+                    a = 3,
+                    exp = "El apartado 5.2 de la ITC-BT-33 indica que, por regla general, los cables no deben estar tendidos en pasos para peatones o vehículos. No obstante, si dicho tendido es estrictamente necesario, la norma exige disponer de una protección especial contra daños mecánicos, asegurando que el paso continuado de maquinaria o personas no deteriore el aislamiento del conductor.",
+                    ref = "ITC-BT-33"
+                ),
+Question(
+                    q = "¿Cómo deben estar protegidas las bases de toma de corriente de intensidad nominal ≤ 32 A en una obra según la ITC-BT-33?",
+                    opts = listOf(
+                        "Por diferenciales de sensibilidad no superior a 30 mA, o mediante MBTS, o por separación eléctrica de circuitos",
+                        "Mediante interruptores magnetotérmicos de curva D",
+                        "Únicamente con fusibles de tipo gG de hasta 32 A",
+                        "Exclusivamente con interruptores de corte en carga de accionamiento manual"
+                    ),
+                    a = 0,
+                    exp = "El apartado 4.2 de la ITC-BT-33 requiere que cada toma de corriente de hasta 32 A esté protegida por un diferencial con corriente diferencial residual de operación máxima de 30 mA, o bien alimentada a MBTS (Muy Baja Tensión de Seguridad), o bien protegida mediante separación eléctrica individual de circuitos. Esto previene accidentes fatales por contacto indirecto.",
+                    ref = "ITC-BT-33"
+                ),
+Question(
+                    q = "De acuerdo con la ITC-BT-33, ¿qué requisitos técnicos deben cumplir los sistemas automáticos que alimenten circuitos de seguridad o de socorro en una obra?",
+                    opts = listOf(
+                        "Ser manuales y requerir la intervención de un instalador autorizado",
+                        "Ser de corte breve (capaces de restablecer o cortar el suministro en plazos breves según el tipo de servicio)",
+                        "Disponer de baterías con una autonomía mínima de 24 horas continuadas",
+                        "Estar integrados únicamente por grupos electrógenos de arranque manual"
+                    ),
+                    a = 1,
+                    exp = "El apartado 3.2 de la ITC-BT-33 especifica que los circuitos de seguridad (distintos de la iluminación de emergencia estándar) deben estar alimentados por sistemas automáticos capaces de actuar con un tiempo de corte breve, tales como grupos de motor térmico o baterías de acumuladores automáticas, asegurando que ante un fallo de la red principal el servicio crítico de seguridad no sufra interrupciones peligrosas.",
+                    ref = "ITC-BT-33"
                 )
     )
 }
