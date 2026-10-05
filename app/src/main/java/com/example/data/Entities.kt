@@ -142,5 +142,35 @@ data class ReminderEntity(
     val completedAt: Long? = null
 )
 
+@Entity(tableName = "student_calendar_event")
+data class StudentCalendarEventEntity(
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    val title: String,
+    val description: String = "",
+    val date: String, // "YYYY-MM-DD" e.g. "2026-10-15"
+    val time: String = "18:00",
+    val durationMinutes: Int = 90,
+    val eventType: String = "CLASS_THEORY", // "CLASS_THEORY", "CLASS_PRACTICE", "EXAM_THEORY", "EXAM_PRACTICE", "STUDY_SESSION", "SIMULATION"
+    val relatedItc: String = "General",
+    val locationOrNotes: String = "",
+    val isCompleted: Boolean = false,
+    val isAlarmEnabled: Boolean = true,
+    val colorHex: String = "#58A6FF",
+    val createdAt: Long = System.currentTimeMillis()
+)
+
+@Entity(tableName = "study_plan")
+data class StudyPlanEntity(
+    @PrimaryKey val id: Int = 1,
+    val targetExamDate: String = "", // "YYYY-MM-DD" Examen Teórico
+    val targetPracticeExamDate: String = "", // "YYYY-MM-DD" Examen Práctico
+    val examCallName: String = "Convocatoria Oficial Instalador REBT 2026",
+    val studyPlanMode: String = "ESTANDAR", // "INTENSIVO", "ESTANDAR", "EXTENDIDO"
+    val hoursPerWeek: Int = 8,
+    val notes: String = "",
+    val isCustomized: Boolean = false,
+    val lastUpdated: Long = System.currentTimeMillis()
+)
+
 
 

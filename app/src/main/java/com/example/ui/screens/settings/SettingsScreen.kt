@@ -267,6 +267,42 @@ fun SettingsScreen(viewModel: MainViewModel) {
 
                     HorizontalDivider(color = if (viewModel.isDarkTheme) Color(0xFF30363D) else Color(0xFFE1E4E8))
 
+                    // Shortcut to Calendar & Study Plan
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                FeedbackManager.playClick(context)
+                                viewModel.activeTab = "calendar"
+                            }
+                            .padding(vertical = 4.dp)
+                            .testTag("settings_calendar_shortcut")
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(
+                                imageVector = Icons.Default.CalendarMonth,
+                                contentDescription = null,
+                                tint = Color(0xFFF5B041),
+                                modifier = Modifier.size(20.dp)
+                            )
+                            Spacer(modifier = Modifier.width(10.dp))
+                            Column {
+                                Text("Calendario y Plan de Estudios", fontSize = 13.sp, fontWeight = FontWeight.Medium)
+                                Text("Clases, fechas de examen teórico y práctico, y plan guiado", fontSize = 11.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            }
+                        }
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                            contentDescription = null,
+                            tint = Color.Gray,
+                            modifier = Modifier.size(18.dp)
+                        )
+                    }
+
+                    HorizontalDivider(color = if (viewModel.isDarkTheme) Color(0xFF30363D) else Color(0xFFE1E4E8))
+
                     // Shortcut to Reminders
                     Row(
                         verticalAlignment = Alignment.CenterVertically,

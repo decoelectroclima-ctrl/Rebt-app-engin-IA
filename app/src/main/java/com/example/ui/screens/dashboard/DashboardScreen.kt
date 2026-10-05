@@ -22,6 +22,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.MainViewModel
@@ -36,8 +37,37 @@ fun DashboardScreen(viewModel: MainViewModel) {
     val dailyActivity by viewModel.dailyActivityFlow.collectAsState()
     val mistakeReviews by viewModel.questionReviewsFlow.collectAsState()
     val remindersList by viewModel.remindersFlow.collectAsState()
+    val studentEvents by viewModel.studentEventsFlow.collectAsState()
+    val studyPlan by viewModel.studyPlanFlow.collectAsState()
     val subscription by viewModel.subscriptionFlow.collectAsState()
     val isPremium = subscription?.isActive == true
+
+    // Computed Exams & Study Plan
+    val theoryExamEvent = studentEvents.firstOrNull { it.eventType == "EXAM_THEORY" }
+    val practiceExamEvent = studentEvents.firstOrNull { it.eventType == "EXAM_PRACTICE" }
+    val nextClassEvent = studentEvents.firstOrNull { (it.eventType == "CLASS_THEORY" || it.eventType == "CLASS_PRACTICE") && !it.isCompleted }
+
+    val daysToTheory = remember(theoryExamEvent, studyPlan) {
+        val dateStr = theoryExamEvent?.date ?: studyPlan?.targetExamDate
+        if (!dateStr.isNullOrBlank()) {
+            try {
+                val target = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault()).parse(dateStr)?.time ?: 0L
+                val diff = target - System.currentTimeMillis()
+                (diff / (1000 * 60 * 60 * 24)).toInt()
+            } catch (_: Exception) { null }
+        } else null
+    }
+
+    val daysToPractice = remember(practiceExamEvent, studyPlan) {
+        val dateStr = practiceExamEvent?.date ?: studyPlan?.targetPracticeExamDate
+        if (!dateStr.isNullOrBlank()) {
+            try {
+                val target = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault()).parse(dateStr)?.time ?: 0L
+                val diff = target - System.currentTimeMillis()
+                (diff / (1000 * 60 * 60 * 24)).toInt()
+            } catch (_: Exception) { null }
+        } else null
+    }
 
     // Computed Reminders
     val pendingRemindersCount = remindersList.count { it.status == "Pendiente" }
@@ -325,6 +355,169 @@ fun DashboardScreen(viewModel: MainViewModel) {
             }
         }
 
+        // 2.6 Official Exams Countdown & Study Plan Widget
+        item {
+            Card(
+                onClick = {
+                    FeedbackManager.playClick(context)
+                    viewModel.activeTab = "calendar"
+                },
+                shape = RoundedCornerShape(16.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = if (viewModel.isDarkTheme) Color(0xFF161B22) else Color(0xFFFFFFFF)
+                ),
+                border = BorderStroke(1.2.dp, Color(0xFF58A6FF).copy(alpha = 0.4f)),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag("dashboard_calendar_plan_widget")
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Box(
+                                modifier = Modifier
+                                    .size(36.dp)
+                                    .clip(CircleShape)
+                                    .background(Color(0xFF58A6FF).copy(alpha = 0.15f)),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.CalendarMonth,
+                                    contentDescription = null,
+                                    tint = Color(0xFF58A6FF),
+                                    modifier = Modifier.size(20.dp)
+                                )
+                            }
+                            Spacer(modifier = Modifier.width(10.dp))
+                            Column {
+                                Text(
+                                    text = "Plan de Estudios y Exámenes Oficiales",
+                                    fontSize = 14.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
+                                Text(
+                                    text = studyPlan?.examCallName ?: "Convocatoria Oficial Instalador REBT 2026",
+                                    fontSize = 11.sp,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                        }
+
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                            contentDescription = "Abrir calendario",
+                            tint = Color(0xFF58A6FF),
+                            modifier = Modifier.size(18.dp)
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    // Countdowns Row
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        // Theory Pill
+                        Surface(
+                            shape = RoundedCornerShape(10.dp),
+                            color = Color(0xFFF85149).copy(alpha = 0.12f),
+                            border = BorderStroke(1.dp, Color(0xFFF85149).copy(alpha = 0.3f)),
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Column(modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp)) {
+                                Text(
+                                    text = "EXAMEN TEÓRICO",
+                                    fontSize = 9.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color(0xFFF85149)
+                                )
+                                Text(
+                                    text = if (daysToTheory != null) {
+                                        when {
+                                            daysToTheory < 0 -> "Completado"
+                                            daysToTheory == 0 -> "¡HOY!"
+                                            daysToTheory == 1 -> "Mañana"
+                                            else -> "En $daysToTheory días"
+                                        }
+                                    } else "Sin fijar",
+                                    fontSize = 13.sp,
+                                    fontWeight = FontWeight.ExtraBold,
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
+                            }
+                        }
+
+                        // Practice Pill
+                        Surface(
+                            shape = RoundedCornerShape(10.dp),
+                            color = Color(0xFF3FB950).copy(alpha = 0.12f),
+                            border = BorderStroke(1.dp, Color(0xFF3FB950).copy(alpha = 0.3f)),
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Column(modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp)) {
+                                Text(
+                                    text = "EXAMEN PRÁCTICO",
+                                    fontSize = 9.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color(0xFF3FB950)
+                                )
+                                Text(
+                                    text = if (daysToPractice != null) {
+                                        when {
+                                            daysToPractice < 0 -> "Completado"
+                                            daysToPractice == 0 -> "¡HOY!"
+                                            daysToPractice == 1 -> "Mañana"
+                                            else -> "En $daysToPractice días"
+                                        }
+                                    } else "Sin fijar",
+                                    fontSize = 13.sp,
+                                    fontWeight = FontWeight.ExtraBold,
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
+                            }
+                        }
+                    }
+
+                    // Next upcoming class preview if present
+                    if (nextClassEvent != null) {
+                        Spacer(modifier = Modifier.height(10.dp))
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(
+                                    if (viewModel.isDarkTheme) Color(0xFF21262D) else Color(0xFFF6F8FA),
+                                    RoundedCornerShape(8.dp)
+                                )
+                                .padding(horizontal = 10.dp, vertical = 6.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.School,
+                                contentDescription = null,
+                                tint = Color(0xFF58A6FF),
+                                modifier = Modifier.size(16.dp)
+                            )
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Text(
+                                text = "Próxima: ${nextClassEvent.title} (${nextClassEvent.date})",
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.Medium,
+                                color = MaterialTheme.colorScheme.onSurface,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                        }
+                    }
+                }
+            }
+        }
+
         // 3. Recommended Actions
         item {
             Text(
@@ -333,6 +526,23 @@ fun DashboardScreen(viewModel: MainViewModel) {
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.padding(top = 4.dp, bottom = 4.dp)
+            )
+        }
+
+        item {
+            // Action 0: Calendario y Plan de Estudios
+            ActionRowCard(
+                title = "Calendario y Plan de Estudios del Alumno",
+                description = "Gestiona tus clases teóricas y prácticas, programa las fechas del examen oficial (teórico y práctico) y diseña tu plan personalizado.",
+                badgeText = "Plan Alumno",
+                badgeColor = Color(0xFFF5B041),
+                icon = Icons.Default.CalendarMonth,
+                isDark = viewModel.isDarkTheme,
+                tag = "dashboard_action_calendar",
+                onClick = {
+                    FeedbackManager.playClick(context)
+                    viewModel.activeTab = "calendar"
+                }
             )
         }
 

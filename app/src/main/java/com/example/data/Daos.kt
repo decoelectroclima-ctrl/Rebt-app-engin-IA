@@ -141,4 +141,45 @@ interface EnigmaDao {
 
     @Query("DELETE FROM rebt_reminder")
     suspend fun clearReminders()
+
+    // Student Calendar Events (Clases, Examen Teórico, Examen Práctico, Plan de Estudio)
+    @Query("SELECT * FROM student_calendar_event ORDER BY date ASC, time ASC")
+    fun getStudentCalendarEvents(): Flow<List<StudentCalendarEventEntity>>
+
+    @Query("SELECT * FROM student_calendar_event WHERE date = :date ORDER BY time ASC")
+    fun getStudentCalendarEventsByDate(date: String): Flow<List<StudentCalendarEventEntity>>
+
+    @Query("SELECT * FROM student_calendar_event WHERE id = :id LIMIT 1")
+    suspend fun getStudentCalendarEventById(id: Int): StudentCalendarEventEntity?
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertStudentCalendarEvent(event: StudentCalendarEventEntity): Long
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertStudentCalendarEvents(events: List<StudentCalendarEventEntity>)
+
+    @Update
+    suspend fun updateStudentCalendarEvent(event: StudentCalendarEventEntity)
+
+    @Query("UPDATE student_calendar_event SET isCompleted = :isCompleted WHERE id = :id")
+    suspend fun updateStudentCalendarEventCompletion(id: Int, isCompleted: Boolean)
+
+    @Query("DELETE FROM student_calendar_event WHERE id = :id")
+    suspend fun deleteStudentCalendarEventById(id: Int)
+
+    @Query("DELETE FROM student_calendar_event WHERE eventType = 'STUDY_SESSION' OR eventType = 'CLASS_THEORY' OR eventType = 'CLASS_PRACTICE'")
+    suspend fun clearGeneratedStudyPlanEvents()
+
+    @Query("DELETE FROM student_calendar_event")
+    suspend fun clearAllStudentCalendarEvents()
+
+    // Study Plan Configuration
+    @Query("SELECT * FROM study_plan WHERE id = 1 LIMIT 1")
+    fun getStudyPlanFlow(): Flow<StudyPlanEntity?>
+
+    @Query("SELECT * FROM study_plan WHERE id = 1 LIMIT 1")
+    suspend fun getStudyPlanDirect(): StudyPlanEntity?
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertStudyPlan(plan: StudyPlanEntity)
 }

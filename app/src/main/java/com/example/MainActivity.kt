@@ -319,6 +319,19 @@ fun MainAppLayout(viewModel: MainViewModel) {
                     IconButton(
                         onClick = {
                             FeedbackManager.playClick(context)
+                            viewModel.activeTab = "calendar"
+                        },
+                        modifier = Modifier.testTag("app_bar_calendar_button")
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.CalendarMonth,
+                            contentDescription = "Calendario y Plan de Estudios",
+                            tint = if (viewModel.activeTab == "calendar") MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+                    IconButton(
+                        onClick = {
+                            FeedbackManager.playClick(context)
                             viewModel.activeTab = "reminders"
                         },
                         modifier = Modifier.testTag("app_bar_reminders_button")
@@ -444,6 +457,7 @@ fun MainAppLayout(viewModel: MainViewModel) {
                 "analytics" -> AnalyticsScreen(viewModel)
                 "settings" -> SettingsScreen(viewModel)
                 "reminders" -> RemindersScreen(viewModel)
+                "calendar" -> com.example.ui.screens.calendar.CalendarStudyPlanScreen(viewModel)
                 "posits" -> com.example.ui.screens.posits.PositsScreen(viewModel)
                 "correlacion" -> com.example.ui.screens.study.CorrelacionScreen(viewModel)
                 "boe" -> com.example.ui.screens.settings.BoeScreen(viewModel)

@@ -19,6 +19,8 @@ class EnigmaRepository(private val context: Context) {
     val userLeadsFlow: Flow<List<UserLeadEntity>> = dao.getUserLeads()
     val questionReviewsFlow: Flow<List<QuestionReviewEntity>> = dao.getQuestionReviews()
     val remindersFlow: Flow<List<ReminderEntity>> = dao.getReminders()
+    val studentEventsFlow: Flow<List<StudentCalendarEventEntity>> = dao.getStudentCalendarEvents()
+    val studyPlanFlow: Flow<StudyPlanEntity?> = dao.getStudyPlanFlow()
 
     // 2. Action functions
     suspend fun saveModuleProgress(progress: ModuleProgressEntity) {
@@ -432,5 +434,309 @@ class EnigmaRepository(private val context: Context) {
         for (item in defaultReminders) {
             insertReminder(item)
         }
+    }
+
+    // --- Student Calendar & Study Plan Methods ---
+
+    suspend fun insertStudentEvent(event: StudentCalendarEventEntity): Long {
+        return dao.insertStudentCalendarEvent(event)
+    }
+
+    suspend fun updateStudentEvent(event: StudentCalendarEventEntity) {
+        dao.updateStudentCalendarEvent(event)
+    }
+
+    suspend fun toggleStudentEventCompletion(id: Int, isCompleted: Boolean) {
+        dao.updateStudentCalendarEventCompletion(id, isCompleted)
+    }
+
+    suspend fun deleteStudentEvent(id: Int) {
+        dao.deleteStudentCalendarEventById(id)
+    }
+
+    suspend fun clearAllStudentEvents() {
+        dao.clearAllStudentCalendarEvents()
+    }
+
+    suspend fun saveStudyPlan(plan: StudyPlanEntity) {
+        dao.insertStudyPlan(plan)
+    }
+
+    suspend fun getStudyPlanDirect(): StudyPlanEntity? {
+        return dao.getStudyPlanDirect()
+    }
+
+    private fun getOffsetDate(days: Int): String {
+        val cal = java.util.Calendar.getInstance()
+        cal.add(java.util.Calendar.DAY_OF_YEAR, days)
+        return java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault()).format(cal.time)
+    }
+
+    suspend fun initializeDefaultCalendarAndPlan() {
+        val theoryExamDate = getOffsetDate(28)
+        val practiceExamDate = getOffsetDate(35)
+
+        val plan = StudyPlanEntity(
+            id = 1,
+            targetExamDate = theoryExamDate,
+            targetPracticeExamDate = practiceExamDate,
+            examCallName = "Convocatoria Oficial Instalador REBT 2026",
+            studyPlanMode = "ESTANDAR",
+            hoursPerWeek = 8,
+            notes = "Plan estructurado con clases teóricas, talleres de verificación y montaje, y simulacros cronometrados.",
+            isCustomized = false,
+            lastUpdated = System.currentTimeMillis()
+        )
+        dao.insertStudyPlan(plan)
+
+        val initialEvents = listOf(
+            StudentCalendarEventEntity(
+                title = "Clase Teórica: ITC-BT-18 y Puesta a Tierra",
+                description = "Esquemas de conexión TN, TT e IT, electrodos enterrados, medición de resistividad y conductores equipotenciales.",
+                date = getOffsetDate(2),
+                time = "18:00",
+                durationMinutes = 90,
+                eventType = "CLASS_THEORY",
+                relatedItc = "ITC-BT-18",
+                locationOrNotes = "Aula Virtual / Centro de Formación",
+                colorHex = "#58A6FF"
+            ),
+            StudentCalendarEventEntity(
+                title = "Clase Práctica / Taller: Medición con Telurómetro y Bucle",
+                description = "Uso práctico del telurómetro (método 3 picas), impedancia de bucle de defecto y comprobación de disparo de ID a 30mA.",
+                date = getOffsetDate(5),
+                time = "16:30",
+                durationMinutes = 120,
+                eventType = "CLASS_PRACTICE",
+                relatedItc = "Verificaciones ITC-05",
+                locationOrNotes = "Taller Eléctrico - Banco de Ensayos",
+                colorHex = "#BC8CFF"
+            ),
+            StudentCalendarEventEntity(
+                title = "Estudio Programado: ITC-BT-19 a 27 (Instalaciones Interiores)",
+                description = "Dimensionamiento de circuitos C1 a C5 en viviendas, secciones mínimas, tubos protectores y caídas de tensión (1% / 3%).",
+                date = getOffsetDate(8),
+                time = "19:00",
+                durationMinutes = 60,
+                eventType = "STUDY_SESSION",
+                relatedItc = "ITC-BT-19 a 27",
+                locationOrNotes = "Estudio Personal con app EnginIA",
+                colorHex = "#F5B041"
+            ),
+            StudentCalendarEventEntity(
+                title = "Clase Teórica: Previsión de Cargas y Locales Especiales",
+                description = "ITC-BT-10 e ITC-BT-28 (Pública concurrencia: aforo >100 personas, suministro de socorro, cables libres de halógenos).",
+                date = getOffsetDate(12),
+                time = "18:00",
+                durationMinutes = 90,
+                eventType = "CLASS_THEORY",
+                relatedItc = "ITC-BT-10 / 28",
+                locationOrNotes = "Aula Virtual / Centro de Formación",
+                colorHex = "#58A6FF"
+            ),
+            StudentCalendarEventEntity(
+                title = "Clase Práctica / Taller: Montaje de Cuadros y Protecciones",
+                description = "Montaje real de IGA, protector de sobretensiones transitorias y permanentes, diferenciales tipo A y PIAs.",
+                date = getOffsetDate(16),
+                time = "16:00",
+                durationMinutes = 120,
+                eventType = "CLASS_PRACTICE",
+                relatedItc = "ITC-BT-17 / 24",
+                locationOrNotes = "Taller de Cuadros Eléctricos",
+                colorHex = "#BC8CFF"
+            ),
+            StudentCalendarEventEntity(
+                title = "Simulacro Oficial de Examen Teórico (40 Preguntas)",
+                description = "Simulacro cronometrado con el banco oficial de preguntas de la Junta/Comunidad. 90 minutos para evaluar umbral del 75%.",
+                date = getOffsetDate(21),
+                time = "10:00",
+                durationMinutes = 90,
+                eventType = "SIMULATION",
+                relatedItc = "Simulacro Global",
+                locationOrNotes = "App EnginIA REBT - Modo Examen",
+                colorHex = "#E67E22"
+            ),
+            StudentCalendarEventEntity(
+                title = "Repaso Intensivo y Resolución de Dudas de Normativa",
+                description = "Aclaración de preguntas trampa de exámenes anteriores y fórmulas de cálculo de Iz y caída de tensión.",
+                date = getOffsetDate(25),
+                time = "18:30",
+                durationMinutes = 90,
+                eventType = "CLASS_THEORY",
+                relatedItc = "Repaso General",
+                locationOrNotes = "Sesión de Dudas y Tutoría",
+                colorHex = "#58A6FF"
+            ),
+            StudentCalendarEventEntity(
+                title = "⭐ DÍA DEL EXAMEN TEÓRICO OFICIAL REBT",
+                description = "Examen Oficial de Instalador Autorizado en Baja Tensión. Llevar DNI original, bolígrafo azul/negro, calculadora y reglamento REBT sin anotaciones.",
+                date = theoryExamDate,
+                time = "09:30",
+                durationMinutes = 90,
+                eventType = "EXAM_THEORY",
+                relatedItc = "Examen Oficial",
+                locationOrNotes = "Sede Oficial de Exámenes / Delegación de Industria",
+                colorHex = "#F85149"
+            ),
+            StudentCalendarEventEntity(
+                title = "Taller Práctico Final: Ensayo Previo de la Prueba Práctica",
+                description = "Simulación contrarreloj de la prueba de taller: conexionado de conmutadas, medida de aislamiento con megóhmetro (500V, >0.5MΩ).",
+                date = getOffsetDate(31),
+                time = "16:00",
+                durationMinutes = 120,
+                eventType = "CLASS_PRACTICE",
+                relatedItc = "Taller Práctico",
+                locationOrNotes = "Taller de Pruebas Oficiales",
+                colorHex = "#BC8CFF"
+            ),
+            StudentCalendarEventEntity(
+                title = "🛠️ DÍA DEL EXAMEN PRÁCTICO OFICIAL",
+                description = "Prueba Práctica Oficial: Montaje de circuito de alumbrado/fuerza, conexionado de cuadro y batería de mediciones con instrumentos reglamentarios.",
+                date = practiceExamDate,
+                time = "09:00",
+                durationMinutes = 180,
+                eventType = "EXAM_PRACTICE",
+                relatedItc = "Examen Práctico Oficial",
+                locationOrNotes = "Sede de Talleres Oficiales de Industria",
+                colorHex = "#3FB950"
+            )
+        )
+
+        dao.insertStudentCalendarEvents(initialEvents)
+    }
+
+    suspend fun generateAutomatedStudyPlan(
+        targetTheoryDate: String,
+        targetPracticeDate: String,
+        planMode: String,
+        callName: String
+    ) {
+        val sdf = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault())
+        val today = java.util.Calendar.getInstance()
+        val theoryCal = java.util.Calendar.getInstance()
+        try {
+            sdf.parse(targetTheoryDate)?.let { theoryCal.time = it }
+        } catch (_: Exception) {}
+
+        val diffDays = ((theoryCal.timeInMillis - today.timeInMillis) / (1000 * 60 * 60 * 24)).toInt().coerceAtLeast(7)
+
+        val updatedPlan = StudyPlanEntity(
+            id = 1,
+            targetExamDate = targetTheoryDate,
+            targetPracticeExamDate = targetPracticeDate,
+            examCallName = callName.ifBlank { "Convocatoria Oficial Instalador REBT 2026" },
+            studyPlanMode = planMode,
+            hoursPerWeek = when (planMode) {
+                "INTENSIVO" -> 15
+                "EXTENDIDO" -> 4
+                else -> 8
+            },
+            notes = "Plan optimizado de $diffDays días con distribución de ITCs, prácticas de taller y simulacros oficiales.",
+            isCustomized = true,
+            lastUpdated = System.currentTimeMillis()
+        )
+        dao.insertStudyPlan(updatedPlan)
+
+        // Clear existing generated study sessions and classes so we don't duplicate
+        dao.clearGeneratedStudyPlanEvents()
+
+        val generatedEvents = mutableListOf<StudentCalendarEventEntity>()
+
+        // 1. Ensure the Theoretical Exam event is present
+        generatedEvents.add(
+            StudentCalendarEventEntity(
+                title = "⭐ DÍA DEL EXAMEN TEÓRICO OFICIAL",
+                description = "Prueba Teórica Oficial de Instalador en Baja Tensión. Llevar REBT, DNI y calculadora homologada.",
+                date = targetTheoryDate,
+                time = "09:30",
+                durationMinutes = 90,
+                eventType = "EXAM_THEORY",
+                relatedItc = "Examen Oficial",
+                locationOrNotes = "Sede Oficial Convocatoria Industria",
+                colorHex = "#F85149"
+            )
+        )
+
+        // 2. Ensure Practical Exam event is present
+        generatedEvents.add(
+            StudentCalendarEventEntity(
+                title = "🛠️ DÍA DEL EXAMEN PRÁCTICO OFICIAL",
+                description = "Prueba Práctica Oficial: Montaje, esquemas de cuadro, verificación y medidas de seguridad (ITC-03/04/05/18/24).",
+                date = targetPracticeDate,
+                time = "09:00",
+                durationMinutes = 180,
+                eventType = "EXAM_PRACTICE",
+                relatedItc = "Examen Práctico Oficial",
+                locationOrNotes = "Talleres Homologados de Certificación",
+                colorHex = "#3FB950"
+            )
+        )
+
+        // 3. Generate milestone events spread evenly between today and exam dates
+        val modulesSchedule = listOf(
+            Triple("Clase Teórica: Articulado y Documentación Técnica (ITC-01 a 05)", "Conceptos básicos, proyectos, memorias técnicas de diseño MTD y tramitación administrativa.", "ITC-BT-01 a 05"),
+            Triple("Clase Teórica: Redes de Distribución y Enlace (ITC-06 a 17)", "Aéreas, subterráneas, cajas generales de protección CGP, LGA y centralización de contadores.", "ITC-BT-10 a 16"),
+            Triple("Clase Práctica / Taller: Medidas de Tierra e Instrumentos", "Ensayo práctico con telurómetro y comprobador de aislamiento (500V).", "ITC-BT-18"),
+            Triple("Clase Teórica: Instalaciones Interiores y Previsión (ITC-19 a 27)", "Cálculo de intensidades admisibles, caída de tensión y número de circuitos obligatorios.", "ITC-BT-19 a 27"),
+            Triple("Clase Práctica / Taller: Montaje de Cuadros y Protecciones", "Cableado de ICP/IGA, protector de sobretensiones, diferenciales y térmicos con peines de conexión.", "ITC-BT-24"),
+            Triple("Clase Teórica: Locales Especiales (ITC-28 a 33)", "Pública concurrencia, locales mojados, húmedos, con riesgo de incendio y atmósferas explosivas.", "ITC-BT-28 a 33"),
+            Triple("Simulacro Oficial de Examen: 40 Preguntas Cronometradas", "Evaluación de tiempo de respuesta y análisis de fallos en la app.", "Simulacro Global"),
+            Triple("Clase Teórica: Instalaciones con Fines Especiales (ITC-34 a 52)", "Piscinas, recarga de vehículo eléctrico (ITC-52), generadores y quirófanos.", "ITC-BT-52"),
+            Triple("Clase Práctica / Taller: Ensayo de Examen Práctico Cronometrado", "Simulación completa del ejercicio práctico con tiempo limitado y rúbrica de evaluación.", "Taller Final")
+        )
+
+        val totalMilestones = modulesSchedule.size
+        for (i in 0 until totalMilestones) {
+            val fraction = (i + 1).toFloat() / (totalMilestones + 1)
+            val dayOffset = (diffDays * fraction).toInt().coerceIn(1, diffDays - 1)
+            val eventDate = getOffsetDate(dayOffset)
+            val item = modulesSchedule[i]
+            val isPractice = item.first.contains("Práctica", ignoreCase = true) || item.first.contains("Taller", ignoreCase = true)
+            val isSimulation = item.first.contains("Simulacro", ignoreCase = true)
+
+            val type = when {
+                isSimulation -> "SIMULATION"
+                isPractice -> "CLASS_PRACTICE"
+                else -> "CLASS_THEORY"
+            }
+            val color = when {
+                isSimulation -> "#E67E22"
+                isPractice -> "#BC8CFF"
+                else -> "#58A6FF"
+            }
+
+            generatedEvents.add(
+                StudentCalendarEventEntity(
+                    title = item.first,
+                    description = item.second,
+                    date = eventDate,
+                    time = if (isPractice) "16:30" else "18:30",
+                    durationMinutes = if (isPractice) 120 else 90,
+                    eventType = type,
+                    relatedItc = item.third,
+                    locationOrNotes = if (isPractice) "Taller Eléctrico y Banco de Medidas" else "Aula Virtual / App EnginIA",
+                    colorHex = color
+                )
+            )
+
+            // Add an intermediate study session day
+            if (dayOffset + 1 < diffDays) {
+                generatedEvents.add(
+                    StudentCalendarEventEntity(
+                        title = "Estudio y Test de Repaso: ${item.third}",
+                        description = "Realizar 20 preguntas del test temático y consolidar fórmulas en el Laboratorio de Cálculo.",
+                        date = getOffsetDate(dayOffset + 1),
+                        time = "19:30",
+                        durationMinutes = 45,
+                        eventType = "STUDY_SESSION",
+                        relatedItc = item.third,
+                        locationOrNotes = "Estudio Personal con app EnginIA",
+                        colorHex = "#F5B041"
+                    )
+                )
+            }
+        }
+
+        dao.insertStudentCalendarEvents(generatedEvents)
     }
 }

@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import com.example.data.itcNumber
 import com.example.data.withShuffledOptions
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -70,7 +72,7 @@ class ExampleRobolectricTest {
     val viewModel = MainViewModel(app)
 
     val pool33 = viewModel.allQuestions.values.flatMap { it.questions }.distinctBy { it.q }.filter { it.itcNumber() == 33 }
-    assertEquals(30, pool33.size)
+    assertEquals(43, pool33.size)
 
     // Intento 1 en ITC-33 (bloque de 20 preguntas)
     viewModel.startItcPractice(33, "Instalaciones de obras")
@@ -86,26 +88,85 @@ class ExampleRobolectricTest {
     }
     org.junit.Assert.assertTrue(viewModel.examCompleted)
 
-    // Intento 2 tras agotar el primer bloque: quedan 10 no vistas + 10 recicladas
+    // Intento 2: 20 preguntas más (quedan 23 no vistas)
     viewModel.repeatCurrentExamShuffled()
     val session2 = viewModel.activeExamModule
     org.junit.Assert.assertNotNull(session2)
     assertEquals(20, session2!!.questions.size)
     org.junit.Assert.assertFalse(viewModel.examCompleted)
 
-    // Simulamos completar el test 2 para agotar las 30 preguntas del banco
+    // Simulamos completar el test 2 (quedan 3 no vistas)
     session2.questions.forEach { _ ->
       viewModel.selectedOptionIndex = 0
       viewModel.submitAnswer()
       viewModel.nextQuestion()
     }
 
-    // Intento 3: Banco totalmente agotado -> entra en Modo Asimilación y Refuerzo
+    // Intento 3: Quedan solo 3 no vistas (< 20 target) -> entra en Modo Asimilación y Refuerzo reciclado
     viewModel.repeatCurrentExamShuffled()
     val session3 = viewModel.activeExamModule
     org.junit.Assert.assertNotNull(session3)
     assertEquals(20, session3!!.questions.size)
     org.junit.Assert.assertTrue(session3.label.contains("Refuerzo y Asimilación"))
+  }
+
+  @Test
+  fun `student calendar and study plan initialization and custom event insertion`() = runBlocking {
+    val app = ApplicationProvider.getApplicationContext<android.app.Application>()
+    val repository = com.example.data.EnigmaRepository(app)
+
+    repository.initializeDefaultCalendarAndPlan()
+    val initialEvents = repository.studentEventsFlow.first()
+    org.junit.Assert.assertTrue("Debe inicializar eventos por defecto", initialEvents.isNotEmpty())
+
+    val theoryExam = initialEvents.firstOrNull { it.eventType == "EXAM_THEORY" }
+    val practiceExam = initialEvents.firstOrNull { it.eventType == "EXAM_PRACTICE" }
+    val theoryClass = initialEvents.firstOrNull { it.eventType == "CLASS_THEORY" }
+    val practiceClass = initialEvents.firstOrNull { it.eventType == "CLASS_PRACTICE" }
+
+    org.junit.Assert.assertNotNull("Debe existir evento de Examen Teórico", theoryExam)
+    org.junit.Assert.assertNotNull("Debe existir evento de Examen Práctico", practiceExam)
+    org.junit.Assert.assertNotNull("Debe existir evento de Clase Teórica", theoryClass)
+    org.junit.Assert.assertNotNull("Debe existir evento de Clase Práctica", practiceClass)
+
+    // Insertar un evento nuevo del alumno
+    val customEvent = com.example.data.StudentCalendarEventEntity(
+      title = "Tutoría de Dudas sobre ITC-BT-52",
+      description = "Revisión de esquemas de recarga de VE y protecciones.",
+      date = "2026-11-10",
+      time = "17:00",
+      durationMinutes = 60,
+      eventType = "CLASS_THEORY",
+      relatedItc = "ITC-BT-52"
+    )
+    val eventId = repository.insertStudentEvent(customEvent)
+    org.junit.Assert.assertTrue(eventId > 0)
+
+    // Toggle completion
+    repository.toggleStudentEventCompletion(eventId.toInt(), true)
+    val updatedEvents = repository.studentEventsFlow.first()
+    val savedEvent = updatedEvents.firstOrNull { it.id == eventId.toInt() }
+    org.junit.Assert.assertNotNull(savedEvent)
+    org.junit.Assert.assertTrue(savedEvent!!.isCompleted)
+
+    // Test Automated Study Plan Generator
+    repository.generateAutomatedStudyPlan(
+      targetTheoryDate = "2026-12-01",
+      targetPracticeDate = "2026-12-08",
+      planMode = "INTENSIVO",
+      callName = "Convocatoria Extraordinaria 2026"
+    )
+
+    val plan = repository.getStudyPlanDirect()
+    org.junit.Assert.assertNotNull(plan)
+    assertEquals("2026-12-01", plan!!.targetExamDate)
+    assertEquals("2026-12-08", plan.targetPracticeExamDate)
+    assertEquals("INTENSIVO", plan.studyPlanMode)
+    assertEquals(15, plan.hoursPerWeek)
+
+    val generatedEvents = repository.studentEventsFlow.first()
+    org.junit.Assert.assertTrue(generatedEvents.any { it.eventType == "EXAM_THEORY" && it.date == "2026-12-01" })
+    org.junit.Assert.assertTrue(generatedEvents.any { it.eventType == "EXAM_PRACTICE" && it.date == "2026-12-08" })
   }
 }
 

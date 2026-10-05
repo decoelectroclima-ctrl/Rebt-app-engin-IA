@@ -94,6 +94,29 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     val postItsFlow: StateFlow<List<PostItEntity>> = repository.postItsFlow
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
+    val studentEventsFlow: StateFlow<List<StudentCalendarEventEntity>> = repository.studentEventsFlow
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    val studyPlanFlow: StateFlow<StudyPlanEntity?> = repository.studyPlanFlow
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
+
+    init {
+        viewModelScope.launch {
+            if (currentUserEmail.equals("jj.terapias@gmail.com", ignoreCase = true)) {
+                repository.activatePremiumSubscription(
+                    plan = "premium",
+                    price = 0.0,
+                    transactionId = "JJ-TERAPIAS-FULL-ACCESS-TEST",
+                    purchaseTime = System.currentTimeMillis()
+                )
+            }
+            delay(300)
+            if (studentEventsFlow.value.isEmpty()) {
+                repository.initializeDefaultCalendarAndPlan()
+            }
+        }
+    }
+
     // --- REMINDERS SYSTEM STATES ---
     var reminderStatusFilter by mutableStateOf("Todos") // "Todos", "Pendiente", "Completado", "Vencido"
     var reminderPriorityFilter by mutableStateOf("Todos") // "Todos", "Alta", "Media", "Baja"
@@ -1169,6 +1192,174 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                     }
                 }
             }
+        }
+    }
+
+    // --- CALENDAR & STUDY PLAN MODULE STATES ---
+    private fun getTodayDateString(): String {
+        return java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault()).format(java.util.Date())
+    }
+
+    var selectedCalendarDate by mutableStateOf(getTodayDateString())
+    var calendarViewingYear by mutableStateOf(java.util.Calendar.getInstance().get(java.util.Calendar.YEAR))
+    var calendarViewingMonth by mutableStateOf(java.util.Calendar.getInstance().get(java.util.Calendar.MONTH)) // 0..11
+    var calendarFilterType by mutableStateOf("TODOS") // "TODOS", "EXAMENES", "CLASES", "PLAN_ESTUDIO"
+    var showAddEditEventDialog by mutableStateOf(false)
+    var editingEvent by mutableStateOf<StudentCalendarEventEntity?>(null)
+    var showStudyPlanWizard by mutableStateOf(false)
+    var showDeleteEventConfirmDialog by mutableStateOf<StudentCalendarEventEntity?>(null)
+
+    // Form inputs for Add/Edit Event
+    var eventInputTitle by mutableStateOf("")
+    var eventInputDescription by mutableStateOf("")
+    var eventInputDate by mutableStateOf(getTodayDateString())
+    var eventInputTime by mutableStateOf("18:00")
+    var eventInputDurationMinutes by mutableStateOf(90)
+    var eventInputType by mutableStateOf("CLASS_THEORY") // "CLASS_THEORY", "CLASS_PRACTICE", "EXAM_THEORY", "EXAM_PRACTICE", "STUDY_SESSION", "SIMULATION"
+    var eventInputRelatedItc by mutableStateOf("ITC-BT-18")
+    var eventInputLocation by mutableStateOf("")
+
+    // Form inputs for Study Plan Wizard
+    var planWizardTheoryDate by mutableStateOf("")
+    var planWizardPracticeDate by mutableStateOf("")
+    var planWizardMode by mutableStateOf("ESTANDAR")
+    var planWizardCallName by mutableStateOf("Convocatoria Oficial Instalador REBT 2026")
+
+    fun changeCalendarMonth(delta: Int) {
+        var newMonth = calendarViewingMonth + delta
+        var newYear = calendarViewingYear
+        if (newMonth < 0) {
+            newMonth = 11
+            newYear -= 1
+        } else if (newMonth > 11) {
+            newMonth = 0
+            newYear += 1
+        }
+        calendarViewingMonth = newMonth
+        calendarViewingYear = newYear
+    }
+
+    fun setCalendarToToday() {
+        val cal = java.util.Calendar.getInstance()
+        calendarViewingYear = cal.get(java.util.Calendar.YEAR)
+        calendarViewingMonth = cal.get(java.util.Calendar.MONTH)
+        selectedCalendarDate = getTodayDateString()
+    }
+
+    fun openAddEventDialog(prefilledDate: String? = null, prefilledType: String? = null) {
+        editingEvent = null
+        eventInputTitle = ""
+        eventInputDescription = ""
+        eventInputDate = prefilledDate ?: selectedCalendarDate
+        eventInputTime = "18:00"
+        eventInputDurationMinutes = 90
+        eventInputType = prefilledType ?: "CLASS_THEORY"
+        eventInputRelatedItc = "General"
+        eventInputLocation = ""
+        showAddEditEventDialog = true
+    }
+
+    fun openEditEventDialog(event: StudentCalendarEventEntity) {
+        editingEvent = event
+        eventInputTitle = event.title
+        eventInputDescription = event.description
+        eventInputDate = event.date
+        eventInputTime = event.time
+        eventInputDurationMinutes = event.durationMinutes
+        eventInputType = event.eventType
+        eventInputRelatedItc = event.relatedItc
+        eventInputLocation = event.locationOrNotes
+        showAddEditEventDialog = true
+    }
+
+    fun saveEventFromDialog() {
+        if (eventInputTitle.isBlank()) return
+        val color = when (eventInputType) {
+            "EXAM_THEORY" -> "#F85149"
+            "EXAM_PRACTICE" -> "#3FB950"
+            "CLASS_THEORY" -> "#58A6FF"
+            "CLASS_PRACTICE" -> "#BC8CFF"
+            "SIMULATION" -> "#E67E22"
+            else -> "#F5B041"
+        }
+
+        viewModelScope.launch {
+            val eventToSave = editingEvent?.copy(
+                title = eventInputTitle.trim(),
+                description = eventInputDescription.trim(),
+                date = eventInputDate.trim(),
+                time = eventInputTime.trim(),
+                durationMinutes = eventInputDurationMinutes,
+                eventType = eventInputType,
+                relatedItc = eventInputRelatedItc.trim(),
+                locationOrNotes = eventInputLocation.trim(),
+                colorHex = color
+            ) ?: StudentCalendarEventEntity(
+                title = eventInputTitle.trim(),
+                description = eventInputDescription.trim(),
+                date = eventInputDate.trim(),
+                time = eventInputTime.trim(),
+                durationMinutes = eventInputDurationMinutes,
+                eventType = eventInputType,
+                relatedItc = eventInputRelatedItc.trim(),
+                locationOrNotes = eventInputLocation.trim(),
+                colorHex = color
+            )
+
+            if (editingEvent != null) {
+                repository.updateStudentEvent(eventToSave)
+            } else {
+                repository.insertStudentEvent(eventToSave)
+            }
+            showAddEditEventDialog = false
+        }
+    }
+
+    fun toggleEventCompletion(event: StudentCalendarEventEntity) {
+        viewModelScope.launch {
+            repository.toggleStudentEventCompletion(event.id, !event.isCompleted)
+        }
+    }
+
+    fun deleteEvent(event: StudentCalendarEventEntity) {
+        viewModelScope.launch {
+            repository.deleteStudentEvent(event.id)
+            showDeleteEventConfirmDialog = null
+        }
+    }
+
+    fun openStudyPlanWizard() {
+        val currentPlan = studyPlanFlow.value
+        val cal = java.util.Calendar.getInstance()
+        cal.add(java.util.Calendar.DAY_OF_YEAR, 28)
+        val defaultTheory = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault()).format(cal.time)
+        cal.add(java.util.Calendar.DAY_OF_YEAR, 7)
+        val defaultPractice = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault()).format(cal.time)
+
+        planWizardTheoryDate = currentPlan?.targetExamDate?.ifBlank { defaultTheory } ?: defaultTheory
+        planWizardPracticeDate = currentPlan?.targetPracticeExamDate?.ifBlank { defaultPractice } ?: defaultPractice
+        planWizardMode = currentPlan?.studyPlanMode ?: "ESTANDAR"
+        planWizardCallName = currentPlan?.examCallName?.ifBlank { "Convocatoria Oficial Instalador REBT 2026" } ?: "Convocatoria Oficial Instalador REBT 2026"
+        showStudyPlanWizard = true
+    }
+
+    fun generateStudyPlanFromWizard() {
+        if (planWizardTheoryDate.isBlank()) return
+        viewModelScope.launch {
+            repository.generateAutomatedStudyPlan(
+                targetTheoryDate = planWizardTheoryDate,
+                targetPracticeDate = planWizardPracticeDate.ifBlank { planWizardTheoryDate },
+                planMode = planWizardMode,
+                callName = planWizardCallName
+            )
+            showStudyPlanWizard = false
+        }
+    }
+
+    fun resetCalendarToDefaults() {
+        viewModelScope.launch {
+            repository.clearAllStudentEvents()
+            repository.initializeDefaultCalendarAndPlan()
         }
     }
 }
