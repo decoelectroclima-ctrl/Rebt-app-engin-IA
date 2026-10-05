@@ -44,6 +44,7 @@ fun TechnicalDocumentVisualDispatcher(
         "apuntes_tierras_protecciones" -> ApuntesTierrasProteccionesGodTierView(isDark = isDark)
         "apuntes_publica_concurrencia" -> PublicaConcurrenciaGodTierView(isDark = isDark)
         "apuntes_recarga_ve" -> RecargaVeGodTierView(isDark = isDark)
+        "apuntes_fotovoltaica" -> SolarPhotovoltaicGodTierView(isDark = isDark)
         "apuntes_tramitaciones_cie" -> TramitacionesCieGodTierView(isDark = isDark)
         "boe_rebt" -> BoeRebtCompletoGodTierView(isDark = isDark)
         else -> EsquemaUnifilarGodTierView(isDark = isDark)
@@ -1299,3 +1300,59 @@ fun BoeRebtCompletoGodTierView(isDark: Boolean) {
         }
     }
 }
+
+/* ==========================================================================================
+ * 11. AUTOCONSUMO FOTOVOLTAICO (ITC-BT-40)
+ * ========================================================================================== */
+
+@Composable
+fun SolarPhotovoltaicGodTierView(isDark: Boolean) {
+    var numPanels by remember { mutableIntStateOf(10) }
+    var panelPower by remember { mutableIntStateOf(450) } // Watts
+
+    val totalPowerW = (numPanels * panelPower).toDouble()
+    val totalPowerKW = totalPowerW / 1000.0
+
+    Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(14.dp)) {
+        Text("☀️ AUTOCONSUMO FOTOVOLTAICO (ITC-BT-40)", fontSize = 12.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFFF59E0B))
+
+        Card(
+            shape = RoundedCornerShape(12.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = if (isDark) Color(0xFF161B22) else Color.White
+            ),
+            border = BorderStroke(1.dp, Color(0xFFF59E0B).copy(alpha = 0.5f))
+        ) {
+            Column(modifier = Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text("Calculadora de Potencia Instalada:", fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text("Paneles: $numPanels", fontSize = 12.sp, modifier = Modifier.weight(1f))
+                    Slider(value = numPanels.toFloat(), onValueChange = { numPanels = it.toInt() }, valueRange = 1f..50f, modifier = Modifier.weight(2f))
+                }
+                
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text("Potencia/panel: ${panelPower}W", fontSize = 12.sp, modifier = Modifier.weight(1f))
+                    Slider(value = panelPower.toFloat(), onValueChange = { panelPower = it.toInt() }, valueRange = 300f..700f, modifier = Modifier.weight(2f))
+                }
+
+                Text("Potencia Total: ${"%.2f".format(totalPowerKW)} kW", fontSize = 16.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFFF59E0B))
+            }
+        }
+
+        // Requisitos técnicos
+        Card(
+            shape = RoundedCornerShape(12.dp),
+            colors = CardDefaults.cardColors(containerColor = if (isDark) Color(0xFF1F242C) else Color(0xFFF1F5F9))
+        ) {
+            Column(modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                Text("Requisitos Reglamentarios (ITC-BT-40):", fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                Text("• Inversor: Certificado de conformidad según norma UNE-EN 62109.", fontSize = 11.sp)
+                Text("• Protección DC: Fusibles o seccionadores adaptados a tensiones fotovoltaicas.", fontSize = 11.sp)
+                Text("• Conexión a red: Interruptor de corte visible para aislamiento seguro.", fontSize = 11.sp)
+                Text("• Si P > 10 kW: Requiere PROYECTO VISADO según ITC-BT-04.", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = if (totalPowerKW > 10.0) Color(0xFFF85149) else Color(0xFF3FB950))
+            }
+        }
+    }
+}
+

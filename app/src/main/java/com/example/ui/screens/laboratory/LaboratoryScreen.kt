@@ -31,7 +31,8 @@ fun LaboratoryScreen(viewModel: MainViewModel) {
         if (isPremium) "Previsión Cargas" else "Previsión Cargas 🔒",
         "Tubos ITC-21",
         if (isPremium) "Tierras ITC-18" else "Tierras ITC-18 🔒",
-        if (isPremium) "Protecciones ITC-22/24" else "Protecciones ITC-22/24 🔒"
+        if (isPremium) "Protecciones ITC-22/24" else "Protecciones ITC-22/24 🔒",
+        if (isPremium) "Energías Renovables" else "Energías Renovables 🔒"
     )
 
     Column(
@@ -121,18 +122,19 @@ fun LaboratoryScreen(viewModel: MainViewModel) {
                     isDarkTheme = viewModel.isDarkTheme
                 )
             }
-            4 -> if (isPremium) {
-                ProtectionsTab(viewModel)
+            5 -> if (isPremium) {
+                // Placeholder para la nueva pestaña de Energías Renovables
+                Text("Cálculos de Energía Fotovoltaica y VE", modifier = Modifier.padding(16.dp))
             } else {
                 LockedLabCalculatorCard(
-                    title = "Coordinación y Protecciones Eléctricas",
-                    itcReference = "ITC-BT-22 y ITC-BT-24 Oficial",
-                    description = "Dimensionamiento y comprobación reglamentaria de interruptores automáticos (PIA / IGA), poder de corte, curvas de disparo y sensibilidad de interruptores diferenciales.",
+                    title = "Energías Renovables y Recarga VE",
+                    itcReference = "ITC-BT-40 e ITC-BT-52",
+                    description = "Cálculo de potencia fotovoltaica instalada, dimensionamiento de inversores, protecciones de continua y dimensionamiento de puntos de recarga para vehículo eléctrico.",
                     keyFeatures = listOf(
-                        "Reglas de coordinación conductor-protección (Ib ≤ In ≤ Iz' y I2 ≤ 1.45 · Iz')",
-                        "Calibres comerciales estándar recomendados (10A, 16A, 20A, 25A, 32A, 40A, 50A, 63A)",
-                        "Sensibilidad de interruptores diferenciales (30 mA y 300 mA)",
-                        "Verificación de cumplimiento frente a sobreintensidades y contactos indirectos"
+                        "Dimensionamiento de instalaciones fotovoltaicas de autoconsumo",
+                        "Selección de protecciones en DC y AC",
+                        "Cálculo de puntos de recarga VE (Modos 2, 3, 4)",
+                        "Cumplimiento de normativas de conexión a red"
                     ),
                     onUnlock = {
                         FeedbackManager.playClick(context)

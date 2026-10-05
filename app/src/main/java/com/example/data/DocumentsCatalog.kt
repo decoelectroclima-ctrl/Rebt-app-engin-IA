@@ -599,7 +599,17 @@ Aprobado por Real Decreto 842/2002 de 2 de agosto (BOE núm. 224 de 18 de septie
 - **Especificaciones Particulares de Distribuidoras (Art. 14)**: Si la Comunidad Autónoma no resuelve en un plazo de 3 meses, rige el **SILENCIO ADMINISTRATIVO POSITIVO** (quedan aprobadas).
 - **Excepciones Técnicas por Circunstancias Especiales (Art. 24)**: Si la Dirección General de Industria no resuelve en 3 meses, rige el **SILENCIO ADMINISTRATIVO NEGATIVO** (se consideran desestimadas).
             """.trimIndent()
+        ),
+        SharedDocument(
+            id = "apuntes_fotovoltaica",
+            title = "Autoconsumo Fotovoltaico (ITC-BT-40)",
+            description = "Cálculos de potencia, requisitos del inversor, protecciones y normativa para instalaciones fotovoltaicas conectadas a red.",
+            fileName = "Apuntes_Fotovoltaica_ITC40_Oficial.pdf",
+            fileSize = "1.2 MB",
+            type = "Calculadora",
+            content = "Guía técnica oficial para instalaciones de autoconsumo fotovoltaico en baja tensión según ITC-BT-40. Incluye dimensionamiento, protecciones DC/AC y normativa de conexión a red."
         )
     )
 }
+
 
