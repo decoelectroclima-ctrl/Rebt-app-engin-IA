@@ -349,22 +349,109 @@ Documento oficial expedido por la empresa instaladora habilitada que certifica q
 
         // Documentos Originales Oficiales
         SharedDocument(
-            id = "boe_rebt",
-            title = "BOE Reglamento Electrotécnico de Baja Tensión",
-            description = "Real Decreto 842/2002 oficial completo con todas las ITCs vigentes.",
-            fileName = "BOE_REBT_Completo_2026.pdf",
-            fileSize = "4.2 MB",
-            type = "BOE",
-            content = "Texto oficial completo del Real Decreto 842/2002 por el que se aprueba el Reglamento Electrotécnico para Baja Tensión (BOE núm. 224). Incluye articulado y las 52 Instrucciones Técnicas Complementarias (ITC-BT-01 a ITC-BT-52)."
-        ),
-        SharedDocument(
             id = "esquema_cgmp",
             title = "Esquema Unifilar General Vivienda",
             description = "Guía unifilar de representación técnica obligatoria para cuadros CGMP (C1 a C13).",
             fileName = "Esquema_Unifilar_CGMP_REBT.pdf",
             fileSize = "1.8 MB",
             type = "Esquema",
-            content = "Representación gráfica unifilar normalizada para viviendas de grado básico y elevado. Detalla calibre de IGA, ID 40A/30mA, protecciones contra sobretensiones y peines de distribución."
+            content = """
+# ESQUEMA UNIFILAR NORMALIZADO DE VIVIENDA (ITC-BT-17 e ITC-BT-25)
+## Representación Técnica Oficial Reglamentaria del Cuadro General (CGMP)
+
+---
+
+### 1. ESTRUCTURA JERÁRQUICA DEL ESQUEMA UNIFILAR
+El esquema unifilar es el documento gráfico primordial para la ejecución, legalización y verificación de la instalación interior de cualquier vivienda según el Art. 19 del REBT:
+
+1. **ACOMETIDA Y DERIVACIÓN INDIVIDUAL (DI)**:
+   - Tensión de suministro: 230 V (Fase + Neutro + PE de protección).
+   - Conductor: Cobre unipolar 0,6/1 kV libre de halógenos, no propagador del incendio (tipo RZ1-K o H07Z1-K).
+   - Sección mínima: 6 mm² (10 mm² habitual en electrificación básica 25 A; 16 mm² en electrificación elevada 40 A).
+   - Hilo de mando: Conductor rojo de 1,5 mm² para discriminación horaria / telegestión.
+   - Tubo protector: Diámetro exterior mínimo de 32 mm. Caída de tensión máxima admisible: 1,5% (3,45 V a 230 V).
+
+2. **INTERRUPTOR GENERAL AUTOMÁTICO (IGA)**:
+   - Dispositivo general de corte y protección contra sobrecargas y cortocircuitos.
+   - Corte omnipolar obligatorio (corta simultáneamente fase y neutro).
+   - Poder de corte mínimo: 4.500 A (habitual 6.000 A en cuadros residenciales modernos).
+   - Curva de disparo: Curva C (disparo magnético entre 5 y 10 veces la intensidad nominal In).
+   - Calibre nominal:
+     * 25 A para Electrificación Básica (Potencia máxima contratada 5.750 W).
+     * 40 A para Electrificación Elevada estándar (Potencia 9.200 W).
+     * 50 A para Electrificación Elevada con bomba de calor / calefacción (11.500 W).
+     * 63 A para Electrificación Elevada máxima monofásica (14.490 W).
+
+3. **PROTECTOR CONTRA SOBRETENSIONES (ITC-BT-23)**:
+   - Sobretensiones permanentes (POP): Bobina asociada al IGA que desconecta ante tensiones Fase-Neutro superiores a 255 V (+10% Un) mantenidas en el tiempo por fallo o rotura del neutro de red.
+   - Sobretensiones transitorias: Descargador de sobretensiones Tipo 2 con varistores de óxido de zinc (ZnO), In = 15-20 kA, nivel de protección Up ≤ 1,5 kV, conectado en paralelo a la barra principal de tierra (PE).
+
+4. **INTERRUPTORES DIFERENCIALES (ID)**:
+   - Sensibilidad nominal obligatoria: IΔn = 30 mA (alta sensibilidad para protección de personas contra contactos indirectos y conatos de incendio).
+   - Calibre nominal: Mínimo igual o mayor que el calibre del IGA que lo precede (típicamente 40 A).
+   - Regla limitativa REBT: Máximo 5 circuitos derivados por cada interruptor diferencial.
+   - Tipo de diferencial:
+     * Tipo AC: Para corrientes de fuga alternas sinusoidales puras.
+     * Tipo A: Con detección de corrientes continuas pulsantes (obligatorio para circuitos con electrónica, ordenadores, placas de inducción y cargadores de vehículos eléctricos).
+
+---
+
+### 2. DESGLOSE TÉCNICO DE CIRCUITOS DERIVADOS
+
+#### A) ELECTRIFICACIÓN BÁSICA (IGA 25 A - Mínimo 5.750 W)
+- **C1 - Iluminación y alumbrado**:
+  * PIA: 10 A (Curva C, 6 kA)
+  * Sección: 1,5 mm² Cu (F + N + PE)
+  * Tubo protector: Ø 16 mm exterior
+  * Capacidad máxima: Hasta 30 puntos de luz
+  * Caída de tensión máxima: 3% (6,9 V)
+
+- **C2 - Tomas de corriente de uso general y frigorífico**:
+  * PIA: 16 A (Curva C, 6 kA)
+  * Sección: 2,5 mm² Cu (F + N + PE)
+  * Tubo protector: Ø 20 mm exterior
+  * Capacidad máxima: Hasta 20 tomas de 16 A 2P+T
+  * Caída de tensión máxima: 5% (11,5 V)
+
+- **C3 - Cocina eléctrica y horno**:
+  * PIA: 25 A (Curva C, 6 kA)
+  * Sección: 6 mm² Cu (F + N + PE)
+  * Tubo protector: Ø 25 mm exterior
+  * Capacidad máxima: 2 tomas especiales de 25 A (o 1 caja de conexión)
+
+- **C4 - Lavadora, lavavajillas y termo eléctrico**:
+  * Opción combinada clásica: PIA 20 A, sección 4 mm², tubo Ø 20 mm alimentando 3 tomas de 16 A.
+  * Opción desglosada oficial recomendada:
+    - C4.1 (Lavadora): PIA 16 A | 2,5 mm² | Tubo Ø 20 mm
+    - C4.2 (Lavavajillas): PIA 16 A | 2,5 mm² | Tubo Ø 20 mm
+    - C4.3 (Termo eléctrico): PIA 16 A | 2,5 mm² | Tubo Ø 20 mm
+
+- **C5 - Tomas de corriente en cuartos de baño y auxiliares de cocina**:
+  * PIA: 16 A (Curva C, 6 kA)
+  * Sección: 2,5 mm² Cu (F + N + PE)
+  * Tubo protector: Ø 20 mm exterior
+  * Capacidad máxima: Hasta 6 tomas distribuidas entre cocina y baños
+
+#### B) ELECTRIFICACIÓN ELEVADA (IGA ≥ 40 A - Mínimo 9.200 W)
+Obligatoria si superficie útil > 160 m² o si se instala calefacción eléctrica, aire acondicionado, secadora o punto de recarga VE:
+- Requiere un SEGUNDO Interruptor Diferencial (ID2) de 40 A / 30 mA Tipo A.
+- Circuitos adicionales:
+  * **C6**: Circuito adicional de iluminación (por cada 30 puntos de luz adicionales a C1).
+  * **C7**: Circuito adicional de tomas de corriente (por cada 20 tomas adicionales a C2).
+  * **C8**: Calefacción eléctrica (PIA 25 A | 6 mm² | Tubo Ø 25 mm).
+  * **C9**: Aire acondicionado / Climatización (PIA 25 A | 6 mm² | Tubo Ø 25 mm).
+  * **C10**: Secadora independiente (PIA 16 A | 2,5 mm² | Tubo Ø 20 mm).
+  * **C11**: Automatización, control y domótica (PIA 10 A | 1,5 mm² | Tubo Ø 16 mm).
+  * **C12**: Circuito adicional de tomas o apoyo en cocinas de gran tamaño.
+  * **C13**: Circuito exclusivo de infraestructura para recarga de vehículo eléctrico (ITC-BT-52: PIA 32 A | 6 mm² | Tubo Ø 25 mm + diferencial propio Tipo A).
+
+---
+
+### 3. BARRA COLECTORA Y REPARTIDOR DE TIERRA (PE)
+- Conexión del conductor de protección principal procedente de la arqueta de tierra.
+- Código de color normalizado: Verde-Amarillo.
+- Conexión equipotencial suplementaria a masas metálicas de baños (tuberías de agua fría y caliente, desagües metálicos y marcos de carpintería).
+            """.trimIndent()
         ),
         SharedDocument(
             id = "tabla_itc_21",
@@ -373,7 +460,61 @@ Documento oficial expedido por la empresa instaladora habilitada que certifica q
             fileName = "Prontuario_Tubos_ITC_21.pdf",
             fileSize = "820 KB",
             type = "Calculadora",
-            content = "Tablas oficiales 1 a 5 de la ITC-BT-21. Diámetros exteriores de tubos en función del número y sección de conductores para instalaciones superficiales, empotradas o enterradas."
+            content = """
+# PRONTUARIO OFICIAL: DIÁMETROS DE TUBOS PROTECTORES (ITC-BT-21)
+## Tablas Reglamentarias de Selección según Tipo de Instalación y Sección
+
+---
+
+### 1. REGLAS BÁSICAS DE DIMENSIONAMIENTO REGLAMENTARIO
+1. Los conductores deben poder alojarse y extraerse fácilmente tras la colocación y fijación de los tubos.
+2. Para conductores aislados de tensión asignada 450/750 V alojados en tubos, la sección interior del tubo debe ser como mínimo igual a **3 veces** la sección total ocupada por los conductores (o **4 veces** en canalizaciones enterradas).
+3. En curvas y codos no se admitirán deformaciones del tubo que reduzcan su sección transversal en más de un 15%.
+
+---
+
+### 2. TABLA OFICIAL 2 (ITC-BT-21): CONDUCTORES EN TUBOS EMPOTRADOS EN PAREDES
+Diámetros exteriores mínimos del tubo (en mm) en función del número y sección de conductores unipolares:
+
+| Sección mm² | 1 Conductor | 2 Conductores | 3 Conductores | 4 Conductores | 5 Conductores |
+|:---:|:---:|:---:|:---:|:---:|:---:|
+| **1,5** | 16 | 16 | 16 | 16 | 16 |
+| **2,5** | 16 | 16 | 16 | 20 | 20 |
+| **4** | 16 | 16 | 20 | 20 | 20 |
+| **6** | 16 | 20 | 20 | 25 | 25 |
+| **10** | 20 | 25 | 25 | 32 | 32 |
+| **16** | 20 | 25 | 32 | 32 | 40 |
+| **25** | 25 | 32 | 32 | 40 | 50 |
+| **35** | 25 | 32 | 40 | 50 | 50 |
+| **50** | 32 | 40 | 50 | 50 | 63 |
+| **70** | 32 | 50 | 50 | 63 | 63 |
+| **95** | 40 | 50 | 63 | - | - |
+
+---
+
+### 3. TABLA OFICIAL 1 (ITC-BT-21): CONDUCTORES EN TUBOS EN MONTAJE SUPERFICIAL
+Diámetros exteriores mínimos del tubo (en mm):
+
+| Sección mm² | 1 Conductor | 2 Conductores | 3 Conductores | 4 Conductores | 5 Conductores |
+|:---:|:---:|:---:|:---:|:---:|:---:|
+| **1,5** | 16 | 16 | 16 | 16 | 16 |
+| **2,5** | 16 | 16 | 16 | 20 | 20 |
+| **4** | 16 | 16 | 20 | 20 | 20 |
+| **6** | 16 | 20 | 20 | 25 | 25 |
+| **10** | 20 | 20 | 25 | 32 | 32 |
+| **16** | 20 | 25 | 32 | 32 | 32 |
+| **25** | 25 | 32 | 32 | 40 | 40 |
+| **35** | 25 | 32 | 40 | 40 | 50 |
+| **50** | 32 | 40 | 50 | 50 | 63 |
+
+---
+
+### 4. TABLA OFICIAL 5 (ITC-BT-21): TUBOS ENTERRADOS EN ZANJA
+- Diámetro exterior mínimo comercial para cables enterrados: Ø 40 mm (norma general) y Ø 50 mm para acometidas y redes de distribución subterráneas.
+- Resistencia a la compresión: Mínimo 450 N (código 4541).
+- Profundidad reglamentaria: Mínimo 0,60 m bajo acera y 0,80 m bajo calzada transitable por vehículos.
+- Banda de señalización: Cinta amarilla de advertencia a 20 cm por encima del tubo.
+            """.trimIndent()
         ),
         SharedDocument(
             id = "esquema_tierras",
@@ -382,7 +523,83 @@ Documento oficial expedido por la empresa instaladora habilitada que certifica q
             fileName = "Esquema_Puesta_Tierra_BT.pdf",
             fileSize = "1.1 MB",
             type = "Esquema",
-            content = "Detalle constructivo de arqueta de puesta a tierra con puente de comprobación seccionable, electrodo de pica cobrizada de 2 m y conexión equipotencial principal."
+            content = """
+# DETALLE CONSTRUCTIVO Y ESQUEMA DE PUESTA A TIERRA (ITC-BT-18 e ITC-BT-26)
+## Prescripciones Técnicas Oficiales de Electrodos, Arquetas y Medición
+
+---
+
+### 1. ELEMENTOS CONSTRUCTIVOS DE LA TOMA DE TIERRA
+La instalación de puesta a tierra comprende:
+1. **Toma de tierra / Electrodo**:
+   - Pica vertical de acero con recubrimiento de cobre (mínimo 250 micras), longitud mínima de 2,00 m y diámetro ≥ 14 mm.
+   - Anillo horizontal de cimentación: Conductor de cobre desnudo de 35 mm² de sección mínima enterrado en zanja perimetral a profundidad mínima de 0,80 m.
+   - Placa de cobre: Espesor mínimo de 2 mm y dimensiones habituales de 0,50 m x 1,00 m.
+
+2. **Línea de Enlace con Tierra**:
+   - Une el electrodo de tierra con el borne principal de tierra en la arqueta de registro.
+   - Sección mínima: 35 mm² si es de cobre desnudo o 16 mm² si es de cobre aislado (color verde-amarillo).
+
+3. **Arqueta de Registro con Puente de Comprobación Seccionable**:
+   - Arqueta registrable de hormigón o PVC (mín. 30x30 cm) con tapa de fundición o composite con inscripción reglamentaria "PUESTA A TIERRA".
+   - Aloja el puente de prueba seccionable que permite desconectar mecánicamente mediante tornillería la toma de tierra del resto del edificio para su medición independiente con telurómetro.
+
+4. **Borne Principal de Puesta a Tierra**:
+   - Regleta metálica de cobre o latón en el cuadro general o local de contadores. A él se conectan:
+     * La línea principal de tierra.
+     * Los conductores de protección (PE) de los circuitos.
+     * La unión equipotencial principal (UEP) que conecta las tuberías metálicas de agua, gas, calefacción, chimeneas, antenas y estructura metálica del edificio.
+
+---
+
+### 2. ESQUEMAS DE DISTRIBUCIÓN OFICIALES
+1. **Esquema TT (Regla General en España)**:
+   - Neutro de la compañía distribuidora puesto a tierra en el centro de transformación.
+   - Masas metálicas de la vivienda puestas a tierra independiente.
+   - Condición obligatoria de corte: Ra · IΔn ≤ UL (50 V en seco / 24 V en húmedo). Con ID de 30 mA: Ra ≤ 1.666 Ω (seco) y Ra ≤ 800 Ω (húmedo). En la práctica se exige Ra < 15 Ω para garantizar operatividad.
+
+2. **Esquema TN (Industrial y Redes Propias)**:
+   - Masas conectadas directamente al neutro puesto a tierra. Un defecto masa-fase se convierte en cortocircuito franco.
+   - TN-S: Neutro y conductor de protección separados en toda la instalación.
+   - TN-C: Neutro y conductor de protección comunes en un único conductor PEN (mínimo 10 mm² Cu o 16 mm² Al). Prohibido en viviendas.
+
+3. **Esquema IT (Quirófanos y Procesos Críticos)**:
+   - Neutro aislado de tierra o a través de impedancia elevada (1.000 Ω). Masas a tierra.
+   - El primer defecto a masa no provoca disparo de corriente, permitiendo continuar la intervención médica (requiere vigilante de aislamiento que avise acústica y visualmente).
+            """.trimIndent()
+        ),
+        SharedDocument(
+            id = "boe_rebt",
+            title = "BOE Reglamento Electrotécnico de Baja Tensión",
+            description = "Real Decreto 842/2002 oficial completo con todas las ITCs vigentes.",
+            fileName = "BOE_REBT_Completo_2026.pdf",
+            fileSize = "4.2 MB",
+            type = "BOE",
+            content = """
+# BOE: REAL DECRETO 842/2002 - REGLAMENTO ELECTROTÉCNICO DE BAJA TENSIÓN
+## Marco Jurídico, Articulado y Estructura Completa de las 52 ITCs
+
+---
+
+### 1. MARCO LEGAL Y ESTRUCTURA GENERAL
+Aprobado por Real Decreto 842/2002 de 2 de agosto (BOE núm. 224 de 18 de septiembre de 2002), actualizado con las modificaciones vigentes de eficiencia energética (RD 1890/2008) y recarga de vehículos eléctricos (ITC-BT-52, RD 1053/2014):
+
+- **29 Artículos del Reglamento**: Fijan el régimen jurídico, definiciones, campo de aplicación, exigencias de seguridad, inspecciones de OCA y régimen sancionador de la Ley 21/1992 de Industria.
+- **52 Instrucciones Técnicas Complementarias (ITCs)**: Detallan las especificaciones técnicas obligatorias:
+  * **ITC-BT-01 a 08**: Administrativas, terminología, instaladores, proyectos e inspecciones.
+  * **ITC-BT-09 a 10**: Alumbrado exterior y previsión de cargas.
+  * **ITC-BT-11 a 16**: Redes de distribución y acometidas, LGA y centralización de contadores.
+  * **ITC-BT-17 a 27**: Instalaciones interiores, CGMP, puesta a tierra, tubos, conductores, sobretensiones y locales húmedos.
+  * **ITC-BT-28 a 42**: Locales de pública concurrencia, atmósferas explosivas ATEX, quirófanos, piscinas, obras y caravanas.
+  * **ITC-BT-43 a 52**: Receptores a motor, lámparas de descarga, calderas, vallas, domótica e infraestructura de recarga VE.
+
+---
+
+### 2. SILENCIO ADMINISTRATIVO EN EL REBT (PREGUNTAS TEST CRÍTICAS)
+- **Especificaciones Particulares de Distribuidoras (Art. 14)**: Si la Comunidad Autónoma no resuelve en un plazo de 3 meses, rige el **SILENCIO ADMINISTRATIVO POSITIVO** (quedan aprobadas).
+- **Excepciones Técnicas por Circunstancias Especiales (Art. 24)**: Si la Dirección General de Industria no resuelve en 3 meses, rige el **SILENCIO ADMINISTRATIVO NEGATIVO** (se consideran desestimadas).
+            """.trimIndent()
         )
     )
 }
+

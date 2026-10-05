@@ -178,8 +178,19 @@ fun BoeScreen(viewModel: MainViewModel) {
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Spacer(modifier = Modifier.height(12.dp))
+                    
+                    // Integración de Visuales Nivel Dios
+                    com.example.ui.screens.settings.TechnicalDocumentVisualDispatcher(
+                        docId = currentDoc.id,
+                        isDark = viewModel.isDarkTheme
+                    )
+                    
+                    Spacer(modifier = Modifier.height(16.dp))
+                    
                     HorizontalDivider()
+                    
                     Spacer(modifier = Modifier.height(12.dp))
+                    
                     Text(
                         text = if (currentDoc.content.isNotBlank()) currentDoc.content else "Documento técnico reglamentario oficial para preparación del examen de instalador autorizado en baja tensión.",
                         fontSize = 12.sp,
