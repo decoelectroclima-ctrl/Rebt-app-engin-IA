@@ -168,5 +168,36 @@ class ExampleRobolectricTest {
     org.junit.Assert.assertTrue(generatedEvents.any { it.eventType == "EXAM_THEORY" && it.date == "2026-12-01" })
     org.junit.Assert.assertTrue(generatedEvents.any { it.eventType == "EXAM_PRACTICE" && it.date == "2026-12-08" })
   }
+
+  @Test
+  fun `verify isVipUser recognizes jj t terapia variants and unlocks premium`() = runBlocking {
+    val context = ApplicationProvider.getApplicationContext<Context>()
+    val repository = com.example.data.EnigmaRepository(context)
+
+    // Verify all email variations requested by user
+    org.junit.Assert.assertTrue(repository.isVipUser("jj.t terapia @gmail.com"))
+    org.junit.Assert.assertTrue(repository.isVipUser("jj.tterapia@gmail.com"))
+    org.junit.Assert.assertTrue(repository.isVipUser("jj.terapia@gmail.com"))
+    org.junit.Assert.assertTrue(repository.isVipUser("jj.terapias@gmail.com"))
+    org.junit.Assert.assertTrue(repository.isVipUser("jj.t.terapia@gmail.com"))
+    org.junit.Assert.assertTrue(repository.isVipUser("jjtterapia@gmail.com"))
+
+    // Save email and check immediate premium activation
+    repository.saveUserEmail("jj.t terapia @gmail.com")
+    val sub = repository.subscriptionFlow.first()
+    org.junit.Assert.assertNotNull(sub)
+    org.junit.Assert.assertTrue(sub!!.isActive)
+    assertEquals("premium", sub.plan)
+
+    // Verify Documents catalog has clean study notes without watermarks or personal names
+    val docs = com.example.data.DocumentsCatalog.ALL_DOCUMENTS
+    org.junit.Assert.assertTrue("Debe contener al menos 8 documentos oficiales", docs.size >= 8)
+    val notes = docs.filter { it.type == "Apuntes" }
+    org.junit.Assert.assertTrue("Debe contener apuntes oficiales", notes.isNotEmpty())
+    notes.forEach { note ->
+      org.junit.Assert.assertTrue("Los apuntes deben tener contenido técnico", note.content.isNotBlank())
+      org.junit.Assert.assertFalse("No deben contener marcas de agua", note.content.contains("marca de agua", ignoreCase = true))
+    }
+  }
 }
 

@@ -38,7 +38,8 @@ data class SharedDocument(
     val description: String,
     val fileName: String,
     val fileSize: String,
-    val type: String // "BOE", "Esquema", "Calculadora"
+    val type: String, // "BOE", "Esquema", "Calculadora", "Apuntes"
+    val content: String = ""
 )
 
 // 2. Syllabus Catalog (separated to avoid MethodTooLargeException in Content.<clinit>)
@@ -1164,40 +1165,7 @@ private object SyllabusCatalog {
 
 object Content {
 
-    val DOCUMENTS = listOf(
-        SharedDocument(
-            id = "boe_rebt",
-            title = "BOE Reglamento Electrotécnico de Baja Tensión",
-            description = "Real Decreto 842/2002 oficial completo con todas las ITCs vigentes.",
-            fileName = "BOE_REBT_Completo_2026.pdf",
-            fileSize = "4.2 MB",
-            type = "BOE"
-        ),
-        SharedDocument(
-            id = "esquema_cgmp",
-            title = "Esquema Unifilar General Vivienda",
-            description = "Guía unifilar de representación técnica obligatoria para cuadros CGMP (C1 a C13).",
-            fileName = "Esquema_Unifilar_CGMP_REBT.pdf",
-            fileSize = "1.8 MB",
-            type = "Esquema"
-        ),
-        SharedDocument(
-            id = "tabla_itc_21",
-            title = "Prontuario Diámetros de Tubos ITC-BT-21",
-            description = "Fórmula rápida e interpolación de diámetros reglamentarios según hilos empotrados.",
-            fileName = "Prontuario_Tubos_ITC_21.pdf",
-            fileSize = "820 KB",
-            type = "Calculadora"
-        ),
-        SharedDocument(
-            id = "esquema_tierras",
-            title = "Detalle Constructivo Puesta a Tierra",
-            description = "Esquema báculo de farolas y electrodos verticales con desconectador rápido.",
-            fileName = "Esquema_Puesta_Tierra_BT.pdf",
-            fileSize = "1.1 MB",
-            type = "Esquema"
-        )
-    )
+    val DOCUMENTS = DocumentsCatalog.ALL_DOCUMENTS
 
     val SYLLABUS = SyllabusCatalog.ITEMS
 

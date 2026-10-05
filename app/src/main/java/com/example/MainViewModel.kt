@@ -62,10 +62,27 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     // User profile state
-    var currentUserEmail by mutableStateOf("jj.terapias@gmail.com")
+    var currentUserEmail by mutableStateOf(repository.getUserEmail())
     var currentUserName by mutableStateOf("Instalador Autorizado")
     var showUserEmailDialog by mutableStateOf(false)
-    var inputEmailString by mutableStateOf("jj.terapias@gmail.com")
+    var inputEmailString by mutableStateOf(repository.getUserEmail())
+
+    fun updateUserEmail(newEmail: String) {
+        val clean = newEmail.trim()
+        currentUserEmail = clean
+        inputEmailString = clean
+        repository.saveUserEmail(clean)
+        viewModelScope.launch {
+            if (repository.isVipUser(clean)) {
+                repository.activatePremiumSubscription(
+                    plan = "premium",
+                    price = 49.99,
+                    transactionId = "VIP-LIFETIME-ACCESS",
+                    purchaseTime = System.currentTimeMillis()
+                )
+            }
+        }
+    }
 
     // Theme & UI state
     var isDarkTheme by mutableStateOf(true)
@@ -102,11 +119,12 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     init {
         viewModelScope.launch {
-            if (currentUserEmail.equals("jj.terapias@gmail.com", ignoreCase = true)) {
+            val savedEmail = repository.getUserEmail()
+            if (repository.isVipUser(savedEmail) || repository.isVipUser()) {
                 repository.activatePremiumSubscription(
                     plan = "premium",
-                    price = 0.0,
-                    transactionId = "JJ-TERAPIAS-FULL-ACCESS-TEST",
+                    price = 49.99,
+                    transactionId = "VIP-LIFETIME-ACCESS",
                     purchaseTime = System.currentTimeMillis()
                 )
             }
@@ -887,8 +905,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun changeSubscriberEmail(email: String) {
-        currentUserEmail = email
-        inputEmailString = email
+        updateUserEmail(email)
     }
 
     // -------------------------------------------------------------
@@ -898,7 +915,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     val formattedPrices: StateFlow<Map<String, String>> = billingManager.formattedPrices
 
     val isPremium: Boolean
-        get() = subscriptionFlow.value?.isActive == true
+        get() = (subscriptionFlow.value?.isActive == true) || repository.isVipUser()
 
     fun purchaseSubscription(activity: android.app.Activity, planId: String, planKey: String) {
         val (productId, productType, basePlanId) = when (planId) {

@@ -247,11 +247,11 @@ fun MainAppLayout(viewModel: MainViewModel) {
             confirmButton = {
                 Button(
                     onClick = {
-                        viewModel.changeSubscriberEmail(viewModel.inputEmailString.trim())
+                        viewModel.updateUserEmail(viewModel.inputEmailString.trim())
                         viewModel.showUserEmailDialog = false
                     }
                 ) {
-                    Text("Guardar")
+                    Text("Guardar y Activar")
                 }
             },
             dismissButton = {

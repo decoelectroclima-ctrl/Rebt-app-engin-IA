@@ -716,7 +716,7 @@ private fun ActiveSubscriptionStatusCard(
     }
 
     val planTitle = when (subscriptionPlan) {
-        "premium" -> "Plan Instalador Pro Vitalicio"
+        "premium" -> "Plan Instalador Pro Vitalicio (Apuntes y Fórmulas Desbloqueados)"
         "pro_quarterly" -> "Plan Convocatoria (Trimestral)"
         "pro_monthly" -> "Plan Aspirante Pro (Mensual)"
         else -> "Plan Pro Activo"

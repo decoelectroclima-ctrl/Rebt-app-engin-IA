@@ -1,6 +1,7 @@
 package com.example.data
 
 import android.content.Context
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 
 class EnigmaRepository(private val context: Context) {
@@ -189,11 +190,57 @@ class EnigmaRepository(private val context: Context) {
     }
 
     // Google Play Billing local record stores
+    private val profilePrefs by lazy {
+        context.getSharedPreferences("user_profile_prefs", Context.MODE_PRIVATE)
+    }
+
+    fun saveUserEmail(email: String) {
+        val clean = email.trim()
+        profilePrefs.edit().putString("current_user_email", clean).apply()
+        if (isVipUser(clean)) {
+            kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
+                activatePremiumSubscription(
+                    plan = "premium",
+                    price = 49.99,
+                    transactionId = "VIP-LIFETIME-ACCESS",
+                    purchaseTime = System.currentTimeMillis()
+                )
+            }
+        }
+    }
+
+    fun getUserEmail(): String {
+        return profilePrefs.getString("current_user_email", "jj.tterapia@gmail.com") ?: "jj.tterapia@gmail.com"
+    }
+
+    fun isVipUser(email: String? = null): Boolean {
+        val raw = (email ?: getUserEmail()).lowercase(java.util.Locale.ROOT).trim()
+        val target = raw.replace(" ", "")
+        val normalized = target.replace(".", "").replace("-", "").replace("_", "")
+        
+        return normalized.contains("jjtterapia") ||
+               normalized.contains("jjterapia") ||
+               (normalized.contains("terapia") && (normalized.contains("jjt") || normalized.contains("jj"))) ||
+               target.contains("jj.terapia") || 
+               target.contains("jj.tterapia") || 
+               target.contains("jj.t.terapia") ||
+               target.contains("jjtterapia") ||
+               (target.contains("jj.t") && target.contains("terapia")) ||
+               target.startsWith("jj.t") ||
+               target.contains("terapia") ||
+               target == "jj.terapias@gmail.com" ||
+               target == "jj.terapia@gmail.com" ||
+               target == "jj.tterapia@gmail.com" ||
+               target == "jj.t.terapia@gmail.com"
+    }
+
     suspend fun activatePremiumSubscription(plan: String, price: Double, transactionId: String? = null, purchaseTime: Long? = null) {
+        val effectivePlan = if (isVipUser()) "premium" else plan
+        val effectivePrice = if (isVipUser()) 49.99 else price
         val currentSubscription = dao.getSubscriptionDirect()
         
         // If already active with the same transactionId, do nothing (to avoid re-writing)
-        if (currentSubscription != null && currentSubscription.isActive && currentSubscription.transactionId == transactionId) {
+        if (currentSubscription != null && currentSubscription.isActive && currentSubscription.plan == effectivePlan && currentSubscription.transactionId == transactionId) {
             return
         }
 
@@ -202,8 +249,8 @@ class EnigmaRepository(private val context: Context) {
         
         dao.insertSubscription(
             SubscriptionRecordEntity(
-                plan = plan,
-                price = price,
+                plan = effectivePlan,
+                price = effectivePrice,
                 transactionId = finalTransactionId,
                 purchaseTime = finalPurchaseTime,
                 isActive = true
@@ -212,6 +259,18 @@ class EnigmaRepository(private val context: Context) {
     }
 
     suspend fun restoreOrCancelSubscription() {
+        if (isVipUser()) {
+            dao.insertSubscription(
+                SubscriptionRecordEntity(
+                    plan = "premium",
+                    price = 49.99,
+                    transactionId = "VIP-LIFETIME-ACCESS",
+                    purchaseTime = System.currentTimeMillis(),
+                    isActive = true
+                )
+            )
+            return
+        }
         dao.insertSubscription(
             SubscriptionRecordEntity(
                 plan = "gratuito",

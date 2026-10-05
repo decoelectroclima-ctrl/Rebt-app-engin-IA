@@ -38,6 +38,10 @@ fun BoeScreen(viewModel: MainViewModel) {
     val context = LocalContext.current
     var searchQuery by remember { mutableStateOf("") }
     var selectedTab by remember { mutableIntStateOf(0) } // 0: Documentos Oficiales, 1: Articulado BOE RD 842/2002
+    var readingDoc by remember { mutableStateOf<com.example.data.SharedDocument?>(null) }
+    var selectedDocCategory by remember { mutableStateOf("Todos") }
+
+    val docCategories = listOf("Todos", "Apuntes", "Esquema", "BOE", "Calculadora")
 
     val boeArticles = remember {
         listOf(
@@ -114,13 +118,94 @@ fun BoeScreen(viewModel: MainViewModel) {
         }
     }
 
-    val filteredDocs = remember(searchQuery) {
-        if (searchQuery.isBlank()) Content.DOCUMENTS
-        else Content.DOCUMENTS.filter {
-            it.title.contains(searchQuery, ignoreCase = true) ||
-                    it.description.contains(searchQuery, ignoreCase = true) ||
-                    it.type.contains(searchQuery, ignoreCase = true)
+    val filteredDocs = remember(searchQuery, selectedDocCategory) {
+        Content.DOCUMENTS.filter { doc ->
+            val matchCategory = selectedDocCategory == "Todos" || doc.type.equals(selectedDocCategory, ignoreCase = true)
+            val matchQuery = searchQuery.isBlank() ||
+                    doc.title.contains(searchQuery, ignoreCase = true) ||
+                    doc.description.contains(searchQuery, ignoreCase = true) ||
+                    doc.type.contains(searchQuery, ignoreCase = true) ||
+                    doc.content.contains(searchQuery, ignoreCase = true)
+            matchCategory && matchQuery
         }
+    }
+
+    if (readingDoc != null) {
+        val currentDoc = readingDoc!!
+        AlertDialog(
+            onDismissRequest = { readingDoc = null },
+            title = {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        imageVector = Icons.Default.MenuBook,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(24.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = currentDoc.title,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 16.sp,
+                        maxLines = 2
+                    )
+                }
+            },
+            text = {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .heightIn(max = 500.dp)
+                        .verticalScroll(rememberScrollState())
+                ) {
+                    Surface(
+                        shape = RoundedCornerShape(8.dp),
+                        color = Color(0xFF58A6FF).copy(alpha = 0.15f)
+                    ) {
+                        Text(
+                            text = "${currentDoc.type} • Documentación Técnica Oficial REBT",
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFF58A6FF),
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Text(
+                        text = currentDoc.description,
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Spacer(modifier = Modifier.height(12.dp))
+                    HorizontalDivider()
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Text(
+                        text = if (currentDoc.content.isNotBlank()) currentDoc.content else "Documento técnico reglamentario oficial para preparación del examen de instalador autorizado en baja tensión.",
+                        fontSize = 12.sp,
+                        lineHeight = 18.sp,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                }
+            },
+            confirmButton = {
+                Button(onClick = { readingDoc = null }) {
+                    Text("Cerrar")
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        val clipboard = context.getSystemService(android.content.Context.CLIPBOARD_SERVICE) as? android.content.ClipboardManager
+                        val clip = android.content.ClipData.newPlainText("Apuntes REBT", "${currentDoc.title}\n\n${currentDoc.content}")
+                        clipboard?.setPrimaryClip(clip)
+                        Toast.makeText(context, "Apuntes copiados al portapapeles", Toast.LENGTH_SHORT).show()
+                    }
+                ) {
+                    Text("Copiar Texto")
+                }
+            }
+        )
     }
 
     Scaffold(
@@ -184,7 +269,7 @@ fun BoeScreen(viewModel: MainViewModel) {
                         FeedbackManager.playClick(context)
                         selectedTab = 0
                     },
-                    text = { Text("Documentos Oficiales", fontSize = 12.sp, fontWeight = FontWeight.Bold) }
+                    text = { Text("Apuntes & Documentos", fontSize = 12.sp, fontWeight = FontWeight.Bold) }
                 )
                 Tab(
                     selected = selectedTab == 1,
@@ -201,7 +286,7 @@ fun BoeScreen(viewModel: MainViewModel) {
                 OutlinedTextField(
                     value = searchQuery,
                     onValueChange = { searchQuery = it },
-                    placeholder = { Text("Buscar en documentos o articulado BOE...") },
+                    placeholder = { Text("Buscar en apuntes, guías o articulado...") },
                     leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
                     trailingIcon = {
                         if (searchQuery.isNotEmpty()) {
@@ -244,7 +329,7 @@ fun BoeScreen(viewModel: MainViewModel) {
                                     )
                                     Spacer(modifier = Modifier.width(8.dp))
                                     Text(
-                                        text = "Textos Oficiales del Ministerio de Industria",
+                                        text = "Apuntes Técnicos y Documentación Oficial",
                                         fontWeight = FontWeight.Bold,
                                         fontSize = 13.sp,
                                         color = if (viewModel.isDarkTheme) Color(0xFF58A6FF) else Color(0xFF0969DA)
@@ -252,7 +337,7 @@ fun BoeScreen(viewModel: MainViewModel) {
                                 }
                                 Spacer(modifier = Modifier.height(4.dp))
                                 Text(
-                                    text = "Los siguientes documentos contienen la normativa completa del REBT, esquemas unifilares CGMP y tablas de tubos para consulta técnica durante el estudio.",
+                                    text = "Apuntes limpios de estudio (sin marcas de agua ni nombres), esquemas unifilares y textos reglamentarios autorizados para el examen oficial de Instalador.",
                                     fontSize = 12.sp,
                                     lineHeight = 16.sp,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -261,8 +346,34 @@ fun BoeScreen(viewModel: MainViewModel) {
                         }
                     }
 
+                    // Category Filter Chips for Documents
+                    item {
+                        androidx.compose.foundation.lazy.LazyRow(
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            items(docCategories) { cat ->
+                                val isSelected = selectedDocCategory == cat
+                                FilterChip(
+                                    selected = isSelected,
+                                    onClick = {
+                                        FeedbackManager.playClick(context)
+                                        selectedDocCategory = cat
+                                    },
+                                    label = { Text(cat, fontSize = 12.sp) },
+                                    leadingIcon = if (isSelected) {
+                                        { Icon(Icons.Default.Check, contentDescription = null, modifier = Modifier.size(16.dp)) }
+                                    } else null
+                                )
+                            }
+                        }
+                    }
+
                     items(filteredDocs, key = { it.id }) { doc ->
                         Card(
+                            onClick = {
+                                FeedbackManager.playClick(context)
+                                readingDoc = doc
+                            },
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(14.dp),
                             colors = CardDefaults.cardColors(
@@ -281,6 +392,7 @@ fun BoeScreen(viewModel: MainViewModel) {
                                         .background(
                                             when (doc.type) {
                                                 "BOE" -> Color(0xFF58A6FF).copy(alpha = 0.15f)
+                                                "Apuntes" -> Color(0xFF7EE787).copy(alpha = 0.15f)
                                                 "Esquema" -> Color(0xFF3FB950).copy(alpha = 0.15f)
                                                 else -> Color(0xFFF39C12).copy(alpha = 0.15f)
                                             }
@@ -290,12 +402,14 @@ fun BoeScreen(viewModel: MainViewModel) {
                                     Icon(
                                         imageVector = when (doc.type) {
                                             "BOE" -> Icons.Default.Description
+                                            "Apuntes" -> Icons.Default.MenuBook
                                             "Esquema" -> Icons.Default.AccountTree
                                             else -> Icons.Default.Calculate
                                         },
                                         contentDescription = null,
                                         tint = when (doc.type) {
                                             "BOE" -> Color(0xFF58A6FF)
+                                            "Apuntes" -> if (viewModel.isDarkTheme) Color(0xFF7EE787) else Color(0xFF1A7F37)
                                             "Esquema" -> Color(0xFF3FB950)
                                             else -> Color(0xFFF39C12)
                                         },
@@ -321,7 +435,7 @@ fun BoeScreen(viewModel: MainViewModel) {
                                     )
                                     Spacer(modifier = Modifier.height(4.dp))
                                     Text(
-                                        text = "${doc.fileName} • ${doc.fileSize}",
+                                        text = "${doc.type} • ${doc.fileName} • ${doc.fileSize}",
                                         fontSize = 11.sp,
                                         fontWeight = FontWeight.Medium,
                                         color = MaterialTheme.colorScheme.primary
@@ -333,12 +447,12 @@ fun BoeScreen(viewModel: MainViewModel) {
                                 FilledTonalIconButton(
                                     onClick = {
                                         FeedbackManager.playClick(context)
-                                        Toast.makeText(context, "Abriendo ${doc.title}...", Toast.LENGTH_SHORT).show()
+                                        readingDoc = doc
                                     }
                                 ) {
                                     Icon(
-                                        imageVector = Icons.Default.Download,
-                                        contentDescription = "Descargar",
+                                        imageVector = Icons.Default.Visibility,
+                                        contentDescription = "Leer",
                                         tint = MaterialTheme.colorScheme.primary
                                     )
                                 }

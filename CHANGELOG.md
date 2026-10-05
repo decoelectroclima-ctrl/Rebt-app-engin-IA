@@ -1,5 +1,26 @@
 # Changelog
 
+## v34.0 - 05 Octubre 2026
+
+### Calendario del Alumno, Fechas Oficiales y Plan de Estudios Guiado
+- **Módulo de Calendario Interactivo**:
+  - Vista mensual interactiva de cuadrícula (Lunes a Domingo) con navegación entre meses y acceso directo a "Hoy".
+  - Codificación por colores según el tipo de actividad: Examen Teórico (rojo), Examen Práctico (verde), Clases Teóricas (azul), Clases Prácticas / Taller de Medidas (morado), y Sesiones de Estudio / Simulacros (ámbar/naranja).
+  - Agenda del día seleccionado con horario, duración, ITC asociada, ubicación/notas y casilla interactiva para marcar hitos completados.
+  - Filtros dinámicos: *Todos*, *Exámenes Oficiales*, *Clases*, y *Plan de Estudio*.
+- **Fechas Oficiales con Cuenta Atrás Dinámica**:
+  - Tarjetas destacadas en tiempo real para el **Examen Teórico Oficial** y el **Examen Práctico Oficial**.
+  - Acceso para configurar y editar fecha, hora, sede oficial y recomendaciones de material a llevar (reglamento sin anotaciones, DNI, calculadora homologada).
+  - Widget integrado en el **Inicio (Dashboard)** con cuenta atrás directa y próxima clase programada.
+- **Diseñador Guiado de Plan de Estudios**:
+  - Asistente para generar automáticamente una ruta formativa en función de las fechas fijadas para los exámenes.
+  - Modos de dedicación: **Intensivo** (15h/semana, 3 semanas), **Estándar** (8h/semana, 6 semanas) o **Extendido** (4h/semana, 12 semanas).
+  - Distribución progresiva de sesiones por ITCs críticas (ITC-01 a 52, tierras, protecciones, locales especiales), clases de taller y simulacros cronometrados.
+  - Barra de progreso que refleja el porcentaje de avance del plan de estudios.
+- **Persistencia en Room Database**:
+  - Entidades `StudentCalendarEventEntity` y `StudyPlanEntity` en base de datos local con consultas reactivas (`Flow`).
+- **Configuración de Release**: `versionCode = 34`, `versionName = "34.0"`, `applicationId = "com.aistudio.enginia.pwtvzc"`.
+
 ## v26.0 - 01 Octubre 2026
 
 ### Consolidación y Resolución de las 5 Tareas REBT

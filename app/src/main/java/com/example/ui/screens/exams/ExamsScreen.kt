@@ -51,7 +51,7 @@ fun ExamsScreen(viewModel: MainViewModel) {
 @Composable
 fun ExamSelectionHub(viewModel: MainViewModel) {
     val context = LocalContext.current
-    var selectedTab by remember { mutableStateOf(0) } // 0: Simulacros, 1: Por Tema, 2: Mis Errores, 3: Historial
+    var selectedTab by remember { mutableStateOf(0) } // 0: Simulacros, 1: Por Tema, 2: Fórmulas, 3: Mis Errores, 4: Historial
     val mistakeReviews by viewModel.questionReviewsFlow.collectAsState()
     val examHistory by viewModel.examHistoryFlow.collectAsState()
 
@@ -70,7 +70,7 @@ fun ExamSelectionHub(viewModel: MainViewModel) {
         )
         Spacer(modifier = Modifier.height(4.dp))
         Text(
-            text = "Simulacros reales de convocatorias oficiales de Industria y autoevaluaciones por módulo.",
+            text = "Simulacros reales de convocatorias oficiales de Industria, autoevaluaciones por módulo y formulario oficial.",
             fontSize = 13.sp,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
@@ -87,22 +87,28 @@ fun ExamSelectionHub(viewModel: MainViewModel) {
             Tab(
                 selected = selectedTab == 0,
                 onClick = { selectedTab = 0 },
-                text = { Text("Simulacros", fontSize = 12.sp, maxLines = 1) },
-                icon = { Icon(Icons.Default.Timer, contentDescription = null, modifier = Modifier.size(18.dp)) }
+                text = { Text("Simulacros", fontSize = 11.sp, maxLines = 1) },
+                icon = { Icon(Icons.Default.Timer, contentDescription = null, modifier = Modifier.size(17.dp)) }
             )
             Tab(
                 selected = selectedTab == 1,
                 onClick = { selectedTab = 1 },
-                text = { Text("Por Tema", fontSize = 12.sp, maxLines = 1) },
-                icon = { Icon(Icons.Default.Category, contentDescription = null, modifier = Modifier.size(18.dp)) }
+                text = { Text("Por Tema", fontSize = 11.sp, maxLines = 1) },
+                icon = { Icon(Icons.Default.Category, contentDescription = null, modifier = Modifier.size(17.dp)) }
             )
             Tab(
                 selected = selectedTab == 2,
                 onClick = { selectedTab = 2 },
+                text = { Text("Fórmulas", fontSize = 11.sp, maxLines = 1) },
+                icon = { Icon(Icons.Default.Functions, contentDescription = null, modifier = Modifier.size(17.dp)) }
+            )
+            Tab(
+                selected = selectedTab == 3,
+                onClick = { selectedTab = 3 },
                 text = {
                     Text(
                         text = if (mistakeReviews.isNotEmpty()) "Fallos (${mistakeReviews.size})" else "Fallos",
-                        fontSize = 12.sp,
+                        fontSize = 11.sp,
                         maxLines = 1,
                         color = if (mistakeReviews.isNotEmpty()) Color(0xFFF85149) else MaterialTheme.colorScheme.onSurface
                     )
@@ -111,16 +117,16 @@ fun ExamSelectionHub(viewModel: MainViewModel) {
                     Icon(
                         imageVector = Icons.Default.RestartAlt,
                         contentDescription = null,
-                        modifier = Modifier.size(18.dp),
+                        modifier = Modifier.size(17.dp),
                         tint = if (mistakeReviews.isNotEmpty()) Color(0xFFF85149) else MaterialTheme.colorScheme.onSurface
                     )
                 }
             )
             Tab(
-                selected = selectedTab == 3,
-                onClick = { selectedTab = 3 },
-                text = { Text("Historial", fontSize = 12.sp, maxLines = 1) },
-                icon = { Icon(Icons.Default.History, contentDescription = null, modifier = Modifier.size(18.dp)) }
+                selected = selectedTab == 4,
+                onClick = { selectedTab = 4 },
+                text = { Text("Historial", fontSize = 11.sp, maxLines = 1) },
+                icon = { Icon(Icons.Default.History, contentDescription = null, modifier = Modifier.size(17.dp)) }
             )
         }
 
@@ -129,8 +135,9 @@ fun ExamSelectionHub(viewModel: MainViewModel) {
         when (selectedTab) {
             0 -> OfficialSimulationsTab(viewModel)
             1 -> TopicPracticeTab(viewModel)
-            2 -> MistakesReviewTab(viewModel, mistakeReviews)
-            3 -> ExamHistoryTab(viewModel, examHistory)
+            2 -> ExamFormulasView(viewModel)
+            3 -> MistakesReviewTab(viewModel, mistakeReviews)
+            4 -> ExamHistoryTab(viewModel, examHistory)
         }
     }
 }
@@ -1177,6 +1184,7 @@ fun ActiveExamView(viewModel: MainViewModel) {
     }
 
     var showExitConfirmDialog by remember { mutableStateOf(false) }
+    var showFormulasModal by remember { mutableStateOf(false) }
 
     if (showExitConfirmDialog) {
         AlertDialog(
@@ -1197,6 +1205,34 @@ fun ActiveExamView(viewModel: MainViewModel) {
             dismissButton = {
                 TextButton(onClick = { showExitConfirmDialog = false }) {
                     Text("Continuar examen")
+                }
+            }
+        )
+    }
+
+    if (showFormulasModal) {
+        AlertDialog(
+            onDismissRequest = { showFormulasModal = false },
+            title = {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        imageVector = Icons.Default.Functions,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(24.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text("Fórmulas Oficiales REBT", fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                }
+            },
+            text = {
+                Box(modifier = Modifier.height(480.dp)) {
+                    ExamFormulasView(viewModel)
+                }
+            },
+            confirmButton = {
+                Button(onClick = { showFormulasModal = false }) {
+                    Text("Volver al Examen")
                 }
             }
         )
@@ -1231,12 +1267,26 @@ fun ActiveExamView(viewModel: MainViewModel) {
                 color = MaterialTheme.colorScheme.onSurface
             )
 
-            // Timer display
-            Surface(
-                shape = RoundedCornerShape(10.dp),
-                color = if (viewModel.examRemainingSeconds < 300) Color(0xFFF85149).copy(alpha = 0.15f) else Color(0xFF58A6FF).copy(alpha = 0.15f),
-                border = BorderStroke(1.dp, if (viewModel.examRemainingSeconds < 300) Color(0xFFF85149) else Color(0xFF58A6FF).copy(alpha = 0.3f))
-            ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                IconButton(
+                    onClick = {
+                        FeedbackManager.playClick(context)
+                        showFormulasModal = true
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Functions,
+                        contentDescription = "Fórmulas REBT",
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                }
+
+                // Timer display
+                Surface(
+                    shape = RoundedCornerShape(10.dp),
+                    color = if (viewModel.examRemainingSeconds < 300) Color(0xFFF85149).copy(alpha = 0.15f) else Color(0xFF58A6FF).copy(alpha = 0.15f),
+                    border = BorderStroke(1.dp, if (viewModel.examRemainingSeconds < 300) Color(0xFFF85149) else Color(0xFF58A6FF).copy(alpha = 0.3f))
+                ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
@@ -1257,6 +1307,7 @@ fun ActiveExamView(viewModel: MainViewModel) {
                 }
             }
         }
+    }
 
         Spacer(modifier = Modifier.height(6.dp))
 

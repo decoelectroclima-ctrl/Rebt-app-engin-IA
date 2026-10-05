@@ -76,6 +76,46 @@ fun SettingsScreen(viewModel: MainViewModel) {
         )
     }
 
+    if (viewModel.showUserEmailDialog) {
+        AlertDialog(
+            onDismissRequest = { viewModel.showUserEmailDialog = false },
+            title = { Text("Cuenta de Usuario", fontWeight = FontWeight.Bold) },
+            text = {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text(
+                        text = "Introduce tu correo electrónico para vincular tu licencia de Instalador y desbloquear todas las funciones oficiales.",
+                        fontSize = 13.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    OutlinedTextField(
+                        value = viewModel.inputEmailString,
+                        onValueChange = { viewModel.inputEmailString = it },
+                        label = { Text("Correo electrónico") },
+                        singleLine = true,
+                        modifier = Modifier.fillMaxWidth().testTag("input_user_email")
+                    )
+                }
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        FeedbackManager.playClick(context)
+                        viewModel.updateUserEmail(viewModel.inputEmailString)
+                        viewModel.showUserEmailDialog = false
+                    },
+                    modifier = Modifier.testTag("btn_save_user_email")
+                ) {
+                    Text("Guardar y Activar")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { viewModel.showUserEmailDialog = false }) {
+                    Text("Cancelar")
+                }
+            }
+        )
+    }
+
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -141,7 +181,7 @@ fun SettingsScreen(viewModel: MainViewModel) {
                             Text(
                                 text = if (isPremium) {
                                     val planName = when (subscription?.plan) {
-                                        "premium" -> "Plan Instalador Pro Vitalicio (49,99 €)"
+                                        "premium" -> "Plan Instalador Pro Vitalicio (Apuntes y Fórmulas Desbloqueados)"
                                         "pro_quarterly" -> "Plan Convocatoria Trimestral (29,99 €)"
                                         "pro_monthly" -> "Plan Aspirante Pro Mensual (14,99 €)"
                                         else -> "Plan Pro"
@@ -485,23 +525,41 @@ fun SettingsScreen(viewModel: MainViewModel) {
 
                     HorizontalDivider(color = if (viewModel.isDarkTheme) Color(0xFF30363D) else Color(0xFFE1E4E8))
 
-                    // Documentos descargables existentes
-                    Content.DOCUMENTS.forEach { doc ->
+                    // Documentos y Apuntes Oficiales
+                    Content.DOCUMENTS.take(5).forEach { doc ->
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.SpaceBetween,
-                            modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    FeedbackManager.playClick(context)
+                                    viewModel.activeTab = "boe"
+                                }
+                                .padding(vertical = 4.dp)
                         ) {
                             Column(modifier = Modifier.weight(1f)) {
                                 Text(doc.title, fontSize = 13.sp, fontWeight = FontWeight.Medium)
-                                Text("${doc.type} • ${doc.fileSize}", fontSize = 11.sp, color = Color.Gray)
+                                Text("${doc.type} • ${doc.fileSize} • Toca para leer", fontSize = 11.sp, color = Color.Gray)
                             }
                             Icon(
-                                imageVector = Icons.Default.Download,
-                                contentDescription = "Descargar",
+                                imageVector = Icons.Default.Visibility,
+                                contentDescription = "Leer",
                                 tint = MaterialTheme.colorScheme.primary,
                                 modifier = Modifier.size(20.dp)
                             )
+                        }
+                    }
+
+                    if (Content.DOCUMENTS.size > 5) {
+                        TextButton(
+                            onClick = {
+                                FeedbackManager.playClick(context)
+                                viewModel.activeTab = "boe"
+                            },
+                            modifier = Modifier.align(Alignment.End)
+                        ) {
+                            Text("Ver todos los apuntes (${Content.DOCUMENTS.size}) →", fontSize = 12.sp)
                         }
                     }
                 }
