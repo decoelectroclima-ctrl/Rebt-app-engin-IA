@@ -122,9 +122,28 @@ fun LaboratoryScreen(viewModel: MainViewModel) {
                     isDarkTheme = viewModel.isDarkTheme
                 )
             }
+            4 -> if (isPremium) {
+                ProtectionsTab(viewModel)
+            } else {
+                LockedLabCalculatorCard(
+                    title = "Coordinación y Protecciones Eléctricas",
+                    itcReference = "ITC-BT-22 y ITC-BT-24 Oficial",
+                    description = "Dimensionamiento y comprobación reglamentaria de interruptores automáticos (PIA / IGA), poder de corte, curvas de disparo y sensibilidad de interruptores diferenciales.",
+                    keyFeatures = listOf(
+                        "Reglas de coordinación conductor-protección (Ib ≤ In ≤ Iz' y I2 ≤ 1.45 · Iz')",
+                        "Calibres comerciales estándar recomendados (10A, 16A, 20A, 25A, 32A, 40A, 50A, 63A)",
+                        "Sensibilidad de interruptores diferenciales (30 mA y 300 mA)",
+                        "Verificación de cumplimiento frente a sobreintensidades y contactos indirectos"
+                    ),
+                    onUnlock = {
+                        FeedbackManager.playClick(context)
+                        viewModel.activeTab = "subscription"
+                    },
+                    isDarkTheme = viewModel.isDarkTheme
+                )
+            }
             5 -> if (isPremium) {
-                // Placeholder para la nueva pestaña de Energías Renovables
-                Text("Cálculos de Energía Fotovoltaica y VE", modifier = Modifier.padding(16.dp))
+                RenewableEnergyTab(viewModel)
             } else {
                 LockedLabCalculatorCard(
                     title = "Energías Renovables y Recarga VE",
@@ -142,6 +161,91 @@ fun LaboratoryScreen(viewModel: MainViewModel) {
                     },
                     isDarkTheme = viewModel.isDarkTheme
                 )
+            }
+        }
+    }
+}
+
+// -------------------------------------------------------------
+// SUB-TAB 5: RENEWABLE ENERGY & EV CHARGING (ITC-BT-40 / ITC-BT-52)
+// -------------------------------------------------------------
+@Composable
+fun RenewableEnergyTab(viewModel: MainViewModel) {
+    var numPanels by remember { mutableIntStateOf(10) }
+    var panelPower by remember { mutableIntStateOf(450) } // Watts
+    
+    var batteryCapacity by remember { mutableIntStateOf(60) } // kWh
+    var chargerPower by remember { mutableIntStateOf(7) } // kW
+
+    val totalPowerW = (numPanels * panelPower).toDouble()
+    val totalPowerKW = totalPowerW / 1000.0
+    val chargingTimeHours = if (chargerPower > 0) batteryCapacity.toDouble() / chargerPower else 0.0
+
+    LazyColumn(
+        verticalArrangement = Arrangement.spacedBy(14.dp),
+        contentPadding = PaddingValues(bottom = 32.dp)
+    ) {
+        // --- Fotovoltaica ---
+        item {
+            Card(
+                shape = RoundedCornerShape(14.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = if (viewModel.isDarkTheme) Color(0xFF161B22) else Color.White
+                ),
+                border = BorderStroke(1.dp, Color(0xFFF59E0B).copy(alpha = 0.5f))
+            ) {
+                Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Text(
+                        text = "☀️ Fotovoltaica (ITC-BT-40)",
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFFF59E0B)
+                    )
+                    
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text("Paneles: $numPanels", fontSize = 13.sp, modifier = Modifier.weight(1f))
+                        Slider(value = numPanels.toFloat(), onValueChange = { numPanels = it.toInt() }, valueRange = 1f..50f, modifier = Modifier.weight(2f))
+                    }
+                    
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text("Potencia/panel: ${panelPower}W", fontSize = 13.sp, modifier = Modifier.weight(1f))
+                        Slider(value = panelPower.toFloat(), onValueChange = { panelPower = it.toInt() }, valueRange = 300f..700f, modifier = Modifier.weight(2f))
+                    }
+
+                    Text("Potencia Total: ${"%.2f".format(totalPowerKW)} kW", fontSize = 18.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFFF59E0B))
+                }
+            }
+        }
+
+        // --- Recarga VE ---
+        item {
+            Card(
+                shape = RoundedCornerShape(14.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = if (viewModel.isDarkTheme) Color(0xFF161B22) else Color.White
+                ),
+                border = BorderStroke(1.dp, Color(0xFF10B981).copy(alpha = 0.5f))
+            ) {
+                Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Text(
+                        text = "🚗 Recarga VE (ITC-BT-52)",
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF10B981)
+                    )
+                    
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text("Batería: ${batteryCapacity}kWh", fontSize = 13.sp, modifier = Modifier.weight(1f))
+                        Slider(value = batteryCapacity.toFloat(), onValueChange = { batteryCapacity = it.toInt() }, valueRange = 10f..120f, modifier = Modifier.weight(2f))
+                    }
+                    
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text("Cargador: ${chargerPower}kW", fontSize = 13.sp, modifier = Modifier.weight(1f))
+                        Slider(value = chargerPower.toFloat(), onValueChange = { chargerPower = it.toInt() }, valueRange = 2f..22f, modifier = Modifier.weight(2f))
+                    }
+
+                    Text("Tiempo estimado: ${"%.1f".format(chargingTimeHours)} horas", fontSize = 18.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF10B981))
+                }
             }
         }
     }
