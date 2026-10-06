@@ -1,5 +1,14 @@
 # Changelog
 
+## v25.0 - 05 Octubre 2026
+
+### Auditoría de Seguridad, Monetización y Estructura
+- **Acceso Premium**: Eliminado sistema de acceso VIP basado en email. La suscripción Pro ahora se gestiona exclusivamente vía Google Play Billing, con acceso de creador restringido estrictamente a builds Debug (`DevAccess`).
+- **Room Database**: Eliminado `fallbackToDestructiveMigration` y activado `exportSchema = true` para control de versiones.
+- **Seguridad**: Eliminadas contraseñas de firma codificadas en `build.gradle.kts`. Leídas ahora desde variables de entorno.
+- **Identidad**: Cambio de `applicationId` a `com.factorneurotech.enginia`.
+- **README**: Neutralizadas claims comerciales no verificables.
+
 ## v34.0 - 05 Octubre 2026
 
 ### Calendario del Alumno, Fechas Oficiales y Plan de Estudios Guiado
@@ -19,7 +28,7 @@
   - Barra de progreso que refleja el porcentaje de avance del plan de estudios.
 - **Persistencia en Room Database**:
   - Entidades `StudentCalendarEventEntity` y `StudyPlanEntity` en base de datos local con consultas reactivas (`Flow`).
-- **Configuración de Release**: `versionCode = 34`, `versionName = "34.0"`, `applicationId = "com.aistudio.enginia.pwtvzc"`.
+- **Configuración de Release**: `versionCode = 34`, `versionName = "34.0"`, `applicationId = "com.factorneurotech.enginia"`.
 
 ## v26.0 - 01 Octubre 2026
 
@@ -29,7 +38,7 @@
 - **Tarea 3 (Unificación del Banco y Eliminación de Shadowing)**: Corregido el shadowing en `MainViewModel` (`startItcPractice`, `startArticuladoPractice`, `startOfficialSimulation`); todas las modalidades consumen de forma coherente el banco integrado (`Content.kt` + CSV fusionado). Eliminado el script temporal `fix_vm.py`.
 - **Tarea 4 (Barajado Aleatorio Seguro en Interfaz)**: Implementación de barajado dinámico de opciones en `ActiveExamView` (`remember(currentQuestion, module.id)`) con recálculo transparente del índice de respuesta correcta y excepción inteligente para preguntas con dependencia de orden textual (`hasOrderDependentOptions()`).
 - **Tarea 5 (Cobertura de las 52 ITCs)**: Rellenadas todas las ITCs del reglamento (52 de 52 con cobertura activa en `Content.kt`).
-- **Configuración de Release**: `versionCode = 26`, `versionName = "26.0"`, `isMinifyEnabled = true`, `allowBackup = false`, y `applicationId = "com.aistudio.enginia.pwtvzc"`.
+- **Configuración de Release**: `versionCode = 26`, `versionName = "26.0"`, `isMinifyEnabled = true`, `allowBackup = false`, y `applicationId = "com.factorneurotech.enginia"`.
 
 ## v24.0 - 28 Septiembre 2026
 

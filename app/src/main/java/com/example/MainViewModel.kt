@@ -36,12 +36,20 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     // Load and merge questions
     val allQuestions = Content.QUESTIONS.toMutableMap().apply {
         val loadedQuestions = QuestionLoader.loadQuestions(application)
+        val existingQuestions = Content.QUESTIONS.values.flatMap { it.questions }.map { normalize(it.q) }.toSet()
+        
         loadedQuestions.forEach { q ->
-            val moduleKey = inferModuleKeyFromRef(q.ref)
-            this[moduleKey] = this[moduleKey]?.let {
-                it.copy(questions = it.questions + q)
-            } ?: ModuleDefinition(moduleKey, moduleKey, "⚡", "#CCCCCC", listOf(q))
+            if (normalize(q.q) !in existingQuestions) {
+                val moduleKey = inferModuleKeyFromRef(q.ref)
+                this[moduleKey] = this[moduleKey]?.let {
+                    it.copy(questions = it.questions + q)
+                } ?: ModuleDefinition(moduleKey, moduleKey, "⚡", "#CCCCCC", listOf(q))
+            }
         }
+    }
+
+    private fun normalize(text: String): String {
+        return text.lowercase().replace(Regex("[^a-z0-9]"), "").replace(Regex("\\s+"), "")
     }
 
     private fun inferModuleKeyFromRef(ref: String): String {
@@ -72,16 +80,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         currentUserEmail = clean
         inputEmailString = clean
         repository.saveUserEmail(clean)
-        viewModelScope.launch {
-            if (repository.isVipUser(clean)) {
-                repository.activatePremiumSubscription(
-                    plan = "premium",
-                    price = 49.99,
-                    transactionId = "VIP-LIFETIME-ACCESS",
-                    purchaseTime = System.currentTimeMillis()
-                )
-            }
-        }
     }
 
     // Theme & UI state
@@ -119,15 +117,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     init {
         viewModelScope.launch {
-            val savedEmail = repository.getUserEmail()
-            if (repository.isVipUser(savedEmail) || repository.isVipUser()) {
-                repository.activatePremiumSubscription(
-                    plan = "premium",
-                    price = 49.99,
-                    transactionId = "VIP-LIFETIME-ACCESS",
-                    purchaseTime = System.currentTimeMillis()
-                )
-            }
             delay(300)
             if (studentEventsFlow.value.isEmpty()) {
                 repository.initializeDefaultCalendarAndPlan()
@@ -915,7 +904,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     val formattedPrices: StateFlow<Map<String, String>> = billingManager.formattedPrices
 
     val isPremium: Boolean
-        get() = (subscriptionFlow.value?.isActive == true) || repository.isVipUser()
+        get() = (subscriptionFlow.value?.isActive == true) || DevAccess.UNLOCK_ALL
 
     fun purchaseSubscription(activity: android.app.Activity, planId: String, planKey: String) {
         val (productId, productType, basePlanId) = when (planId) {

@@ -22,7 +22,7 @@ import androidx.room.RoomDatabase
         StudyPlanEntity::class
     ],
     version = 7,
-    exportSchema = false
+    exportSchema = true
 )
 abstract class EnigmaDatabase : RoomDatabase() {
     abstract fun enigmaDao(): EnigmaDao
@@ -38,7 +38,7 @@ abstract class EnigmaDatabase : RoomDatabase() {
                     EnigmaDatabase::class.java,
                     "enigma_rebt_database"
                 )
-                .fallbackToDestructiveMigration()
+                // Toda modificación de entidades exige subir version y añadir un Migration explícito
                 .build()
                 INSTANCE = instance
                 instance

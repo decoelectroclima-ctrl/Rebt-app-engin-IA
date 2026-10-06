@@ -239,25 +239,13 @@ class BillingManager(
                     onFinished?.invoke(true)
                 } else {
                     // Check if current user is authorized VIP before revoking
-                    if (repository.isVipUser()) {
-                        coroutineScope.launch {
-                            repository.activatePremiumSubscription(
-                                "premium", 
-                                49.99, 
-                                "VIP-LIFETIME-ACCESS", 
-                                System.currentTimeMillis()
-                            )
-                        }
-                        onFinished?.invoke(true)
-                    } else {
-                        // Neither active subscription nor active in-app purchase was found.
-                        // Revoke local Premium state and restore to gratuito.
-                        coroutineScope.launch {
-                            repository.restoreOrCancelSubscription()
-                            Log.d("BillingManager", "No se detectaron compras activas en Google Play. Estado restablecido a Gratuito.")
-                        }
-                        onFinished?.invoke(false)
+                    // Neither active subscription nor active in-app purchase was found.
+                    // Revoke local Premium state and restore to gratuito.
+                    coroutineScope.launch {
+                        repository.restoreOrCancelSubscription()
+                        Log.d("BillingManager", "No se detectaron compras activas en Google Play. Estado restablecido a Gratuito.")
                     }
+                    onFinished?.invoke(false)
                 }
             } else {
                 onFinished?.invoke(false)

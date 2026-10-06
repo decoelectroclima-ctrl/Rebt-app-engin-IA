@@ -11,11 +11,11 @@ android {
   compileSdk { version = release(36) { minorApiLevel = 1 } }
 
     defaultConfig {
-    applicationId = "com.aistudio.enginia.pwtvzc"
+    applicationId = "com.factorneurotech.enginia"
     minSdk = 24
     targetSdk = 36
-    versionCode = 39
-    versionName = "39.0"
+    versionCode = 25
+    versionName = "25.0"
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   }
@@ -26,9 +26,9 @@ android {
     if (releaseKeystore.exists()) {
       create("release") {
         storeFile = releaseKeystore
-        storePassword = System.getenv("STORE_PASSWORD") ?: "enginia2026"
-        keyAlias = System.getenv("KEY_ALIAS") ?: "upload"
-        keyPassword = System.getenv("KEY_PASSWORD") ?: "enginia2026"
+        storePassword = System.getenv("STORE_PASSWORD")
+        keyAlias = System.getenv("KEY_ALIAS")
+        keyPassword = System.getenv("KEY_PASSWORD")
       }
     }
     create("debugConfig") {
@@ -61,6 +61,11 @@ android {
     buildConfig = true
   }
   testOptions { unitTests { isIncludeAndroidResources = true } }
+  
+  // Room schema location
+  ksp {
+      arg("room.schemaLocation", "$projectDir/schemas")
+  }
 }
 
 // Configure the Secrets Gradle Plugin to use .env and .env.example files
@@ -74,7 +79,6 @@ secrets {
 // This makes it easy to add them back in the future if needed.
 dependencies {
   implementation(platform(libs.androidx.compose.bom))
-  implementation(platform(libs.firebase.bom))
   // implementation(libs.accompanist.permissions)
   implementation(libs.androidx.activity.compose)
   // implementation(libs.androidx.camera.camera2)

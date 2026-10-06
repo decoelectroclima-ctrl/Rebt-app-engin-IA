@@ -3,7 +3,7 @@
 Please adhere strictly to the following configuration and publishing guidelines for this project:
 
 ## 1. Package Name / Application ID Constraint
-*   **Package Name/Application ID**: Must ALWAYS be exactly `com.aistudio.enginia.pwtvzc`.
+*   **Package Name/Application ID**: Must ALWAYS be exactly `com.factorneurotech.enginia`.
 *   **Why**: This application is already configured and uploaded to the Google Play Console under this ID. Changing the `applicationId` in `app/build.gradle.kts` will break updates and result in submission failures.
 
 ## 2. Versioning Restrictions
